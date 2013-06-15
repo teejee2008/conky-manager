@@ -265,6 +265,7 @@ public class ConkyTheme : GLib.Object {
 				while ((file = enumerator.next_file ()) != null) {
 					string filePath = dirPath + "/" + file.get_name();
 					if (Utility.file_exists(filePath) == false) { continue; }
+					if (filePath.has_suffix("~")) { continue; } //ignore backups of config files
 					if (checkExt && (filePath.down().has_suffix(".conkyrc") == false)) { continue; }
 					
 					var conf = new ConkyConfig(filePath, this);
