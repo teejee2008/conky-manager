@@ -1,0 +1,468 @@
+/*
+ * MainWindow.vala
+ * 
+ * Copyright 2012 Tony George <teejee2008@gmail.com>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ * 
+ */
+ 
+using Gtk;
+
+public class MainWindow : Window 
+{
+	private Notebook tabMain;
+
+	private Label lblThemeTab;
+	private Box vboxTheme;
+
+	private Label lblOptionsTab;
+	private Box vboxOptions;
+
+	private Label lblEditTab;
+	private Box vboxEdit;
+	private Box hboxEdit;
+
+	private Label lblHeaderStartup;
+	private CheckButton chkStartup;
+	
+	private TreeView tvTheme;
+	private ScrolledWindow swTheme;
+	
+	private TreeView tvConfig;
+	private ScrolledWindow swConfig;
+
+
+	private ComboBox comboTheme;
+	
+	private Button btnApply;
+	private Image imgPreview;
+	
+	
+	public MainWindow() {
+		this.title = AppName + " v" + AppVersion + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
+        this.window_position = WindowPosition.CENTER;
+        this.destroy.connect (Gtk.main_quit);
+        set_default_size (600, 20);	
+
+		// tabMain
+        tabMain = new Notebook ();
+		tabMain.margin = 6;
+		add(tabMain);
+		
+		// vboxTheme
+        vboxTheme = new Box (Orientation.VERTICAL, 6);
+		vboxTheme.margin = 6;
+
+        // lblThemeTab
+		lblThemeTab = new Label ("Theme");
+
+		tabMain.append_page (vboxTheme, lblThemeTab);
+		
+        // hboxTheme
+        //hboxTheme = new Box (Orientation.HORIZONTAL, 6);
+        //vboxTheme.add(hboxTheme);
+
+		//tvTheme
+		tvTheme = new TreeView();
+		tvTheme.get_selection().mode = SelectionMode.SINGLE;
+		tvTheme.get_selection().changed.connect(tvTheme_selection_changed);
+		tvTheme.set_tooltip_text ("");
+		tvTheme.set_rules_hint (true);
+		//tvTheme.headers_visible = false;
+		
+		swTheme = new ScrolledWindow(tvTheme.get_hadjustment (), tvTheme.get_vadjustment ());
+		swTheme.set_shadow_type (ShadowType.ETCHED_IN);
+		swTheme.add (tvTheme);
+		swTheme.set_size_request (-1, 250);
+		vboxTheme.pack_start (swTheme, false, false, 0);
+		
+		// Theme Name Column
+		TreeViewColumn colName = new TreeViewColumn();
+		colName.title = "Theme";
+		colName.resizable = true;
+		colName.expand = true;
+		
+		CellRendererText cellName = new CellRendererText ();
+		cellName.ellipsize = Pango.EllipsizeMode.END;
+		cellName.width = 200;
+		colName.pack_start (cellName, false);
+		colName.set_cell_data_func (cellName, tvTheme_cellName_render);
+		tvTheme.append_column(colName);
+		
+		// 'Enabled' Column
+		TreeViewColumn colEnabled = new TreeViewColumn();
+		colEnabled.title = "Enable";
+		colEnabled.resizable = false;
+		//colEnabled.sizing = TreeViewColumnSizing.AUTOSIZE; 
+		colEnabled.expand = false;
+		
+		CellRendererToggle cellEnabled = new CellRendererToggle ();
+		cellEnabled.radio = false;
+		cellEnabled.activatable = true;
+		cellEnabled.width = 50;
+		cellEnabled.toggled.connect (tvTheme_cellEnabled_toggled);
+		colEnabled.pack_start (cellEnabled, false);
+		colEnabled.set_cell_data_func (cellEnabled, tvTheme_cellEnabled_render);
+		tvTheme.append_column(colEnabled);
+		
+		//tvConfig
+		tvConfig = new TreeView();
+		tvConfig.get_selection().mode = SelectionMode.MULTIPLE;
+		tvConfig.set_tooltip_text ("");
+		tvConfig.set_rules_hint (true);
+		//tvConfig.headers_visible = false;
+		
+		swConfig = new ScrolledWindow(tvConfig.get_hadjustment (), tvConfig.get_vadjustment ());
+		swConfig.set_shadow_type (ShadowType.ETCHED_IN);
+		swConfig.add (tvConfig);
+		swConfig.set_size_request (-1, 150);
+		vboxTheme.pack_start (swConfig, false, false, 0);
+		
+		// Theme Name Column
+		colName = new TreeViewColumn();
+		colName.title = "Config";
+		colName.resizable = true;
+		colName.expand = true;
+		
+		cellName = new CellRendererText ();
+		cellName.ellipsize = Pango.EllipsizeMode.END;
+		cellName.width = 200;
+		colName.pack_start (cellName, false);
+		colName.set_cell_data_func (cellName, tvConfig_cellName_render);
+		tvConfig.append_column(colName);
+		
+		// 'Enabled' Column
+		colEnabled = new TreeViewColumn();
+		colEnabled.title = "Enable";
+		colEnabled.resizable = false;
+		colEnabled.expand = false;
+		
+		cellEnabled = new CellRendererToggle ();
+		cellEnabled.radio = false;
+		cellEnabled.activatable = true;
+		cellEnabled.width = 50;
+		cellEnabled.toggled.connect (tvConfig_cellEnabled_toggled);
+		colEnabled.pack_start (cellEnabled, false);
+		colEnabled.set_cell_data_func (cellEnabled, tvConfig_cellEnabled_render);
+		tvConfig.append_column(colEnabled);
+		
+		
+		// Options tab ---------------------------
+		
+		// vboxOptions
+        vboxOptions = new Box (Orientation.VERTICAL, 6);
+		vboxOptions.margin = 12;
+
+        // lblOptionsTab
+		lblOptionsTab = new Label ("Options");
+
+		tabMain.append_page (vboxOptions, lblOptionsTab);
+		
+        // hboxOptions
+        //hboxOptions = new Box (Orientation.HORIZONTAL, 6);
+        //vboxOptions.add(hboxOptions);
+        
+        // lblHeaderStartup
+		lblHeaderStartup = new Gtk.Label(_("<b>Startup</b>"));
+		lblHeaderStartup.set_use_markup(true);
+		lblHeaderStartup.xalign = (float) 0.0;
+		//lblHeaderStartup.margin_top = 6;
+		lblHeaderStartup.margin_bottom = 6;
+		vboxOptions.add(lblHeaderStartup);
+		
+		// chkStartup
+		chkStartup = new CheckButton.with_label (_("Run Conky at system startup"));
+		chkStartup.active = App.check_startup();
+		chkStartup.clicked.connect (chkStartup_clicked);
+		vboxOptions.add(chkStartup);
+		
+		
+        // Edit tab ---------------------------
+		
+		// vboxEdit
+        vboxEdit = new Box (Orientation.VERTICAL, 6);
+		vboxEdit.margin = 6;
+
+        // lblEditTab
+		lblEditTab = new Label ("Edit");
+
+		tabMain.append_page (vboxEdit, lblEditTab);
+		
+        // hboxEdit
+        hboxEdit = new Box (Orientation.HORIZONTAL, 6);
+        vboxEdit.add(hboxEdit);
+        
+        
+        
+        
+        // comboTheme
+        comboTheme = new ComboBox ();
+        comboTheme.set_size_request (400,-1);
+        comboTheme.changed.connect(comboTheme_changed);
+        //hboxTheme.pack_start (comboTheme, true, true, 0);
+
+		CellRendererText cell = new CellRendererText();
+        comboTheme.pack_start( cell, false );
+        comboTheme.set_attributes( cell, "text", 0 );
+        comboTheme.set_tooltip_text ("Theme");
+        
+        // btnApply
+		btnApply = new Button.with_label("Apply");
+		btnApply.set_image (new Image.from_stock (Stock.APPLY, IconSize.MENU));
+        btnApply.clicked.connect (btnApply_clicked);
+        btnApply.set_tooltip_text ("Apply Changes");
+        //hboxTheme.add (btnApply);
+		
+		// hboxThemeRC
+        //hboxThemeRC = new Box (Orientation.HORIZONTAL, 6);
+        //vboxTheme.add(hboxThemeRC);
+        
+        // lblThemeRC
+		//lblThemeRC = new Label ("Config:");
+        //hboxThemeRC.add(lblThemeRC);
+        
+        //imgPreview
+		imgPreview = new Image();
+		imgPreview.margin_top = 12;
+		vboxTheme.add(imgPreview);
+		
+		reload_themes();
+		
+		
+		Utility.execute_command_async(new string[]{"sleep","10"});
+	}
+
+	public void reload_themes() {
+		App.reload_themes();
+
+		ListStore model = new ListStore(1,typeof(ConkyTheme));
+		TreeIter iter;
+		foreach(ConkyTheme theme in App.ThemeList) {
+			model.append(out iter);
+			model.set(iter, 0, theme);
+		}
+		tvTheme.model = model;
+	}
+	
+	// tvTheme Handlers -----------
+	
+	private void tvTheme_cellEnabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
+		ConkyTheme theme;
+		model.get (iter, 0, out theme, -1);
+		(cell as Gtk.CellRendererToggle).active = theme.Enabled;
+	}
+	
+	private void tvTheme_cellName_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
+		ConkyTheme theme;
+		model.get (iter, 0, out theme, -1);
+		(cell as Gtk.CellRendererText).text = theme.Name;
+	}
+	
+	private void tvTheme_cellEnabled_toggled (string path)
+	{
+		set_busy(true, this);
+		
+		ConkyTheme theme;
+		TreeIter iter;
+		
+		ListStore model = (ListStore) tvTheme.model; //get model
+		model.get_iter_from_string (out iter, path); //get selected iter
+		model.get (iter, 0, out theme, -1); //get theme
+		
+		theme.Enabled = !theme.Enabled;
+
+		//refresh tvConfig 
+		//Thread.usleep((ulong)1000000);
+		model = (ListStore) tvConfig.model;
+		tvConfig.model = null;
+		tvConfig.model = model;
+		
+		set_busy(false, this);
+	}
+
+	private void tvTheme_selection_changed () 
+	{
+		set_busy(true, this);
+		
+		ConkyTheme theme;
+		TreeIter iter;
+		TreeModel model;
+		ListStore store;
+		
+		if (tvTheme.get_selection().get_selected(out model, out iter)){
+			model.get (iter, 0, out theme, -1); //get theme
+			
+			store = new ListStore(1,typeof(ConkyConfig));
+			foreach(ConkyConfig conf in theme.ConfigList){
+				store.append(out iter);
+				store.set(iter, 0, conf);
+				//debug("add: %s\n".printf(conf.Path));
+			}
+			tvConfig.model = store;
+		}
+		
+		set_busy(false, this);
+	}
+	
+	// tvConfig Handlers -----------
+	
+	private void tvConfig_cellEnabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
+		ConkyConfig conf;
+		model.get (iter, 0, out conf, -1);
+		(cell as Gtk.CellRendererToggle).active = conf.Enabled;
+	}
+	
+	private void tvConfig_cellName_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
+		ConkyConfig conf;
+		model.get (iter, 0, out conf, -1);
+		(cell as Gtk.CellRendererText).text = conf.Name;
+	}
+	
+	private void tvConfig_cellEnabled_toggled (string path)
+	{
+		set_busy(true, this);
+		
+		ConkyConfig conf;
+		TreeIter iter;
+		
+		ListStore model = (ListStore) tvConfig.model; //get model
+		model.get_iter_from_string (out iter, path); //get selected iter
+		model.get (iter, 0, out conf, -1); //get theme
+		
+		if (conf.Enabled){
+			conf.stop_conky();
+		}
+		else{
+			conf.start_conky();
+		} 
+		
+		set_busy(false, this);
+	}
+	
+	private void set_busy (bool busy, Gtk.Window win) 
+	{
+		Gdk.Cursor? cursor = null;
+
+		if (busy){
+			cursor = new Gdk.Cursor(Gdk.CursorType.WATCH);
+		}
+		else{
+			cursor = new Gdk.Cursor(Gdk.CursorType.ARROW);
+		}
+		
+		var window = win.get_window ();
+		
+		if (window != null) {
+			window.set_cursor (cursor);
+		}
+		
+		do_events ();
+	}
+	
+	private void do_events ()
+    {
+		while(Gtk.events_pending ())
+			Gtk.main_iteration ();
+	}
+	
+	// tbOptions handlers -------------------------
+	
+	private void chkStartup_clicked ()
+	{
+		App.autostart(chkStartup.active);
+	}
+	
+	
+	public void comboTheme_changed () {
+		/*
+		ConkyTheme selectedTheme = App.ThemeList[comboTheme.get_active()];
+
+		try {
+			
+			if (rcWidgetList != null) {
+				foreach(CheckButton chk in rcWidgetList) {
+					hboxThemeRC.remove(chk);
+				}
+			}
+		
+			rcWidgetList = new Gee.ArrayList<CheckButton>();
+			foreach (string name in selectedTheme.ConfigList.keys) {
+				CheckButton chk = new CheckButton.with_label(name);
+				chk.active = true;
+				hboxThemeRC.add(chk);
+				rcWidgetList.add(chk);
+			}
+			hboxThemeRC.show_all();
+			
+			Gdk.Pixbuf px = new Gdk.Pixbuf.from_file_at_size (selectedTheme.PreviewImage, 400, 200);
+			//Gdk.Pixbuf px = new Gdk.Pixbuf.from_file (selectedTheme.PreviewImage);
+			imgPreview.set_size_request (400,-1);
+			imgPreview.pixbuf = px;
+		} 
+		catch (Error e) {
+			log_error(e.message);
+		}
+		*/
+	}
+	
+	private void btnApply_clicked () {
+		ConkyTheme selectedTheme = App.ThemeList[comboTheme.get_active()];
+		/*
+		//string theme_name = 
+		string HOME = Environment.get_home_dir ();
+		
+		// copy fonts
+		foreach (string key in selectedTheme.FontList.keys) {
+			Utility.copy_file(selectedTheme.FontList.@get(key), @"$HOME/.fonts");
+		}
+		
+		// copy files
+		foreach (string key in selectedTheme.FileList.keys) {
+			Utility.copy_file(selectedTheme.FileList.@get(key), @"$HOME/.conky");
+		}
+		
+		// kill conky
+		try {
+			Process.spawn_command_line_sync("killall conky");
+		}
+		catch(Error e) {
+			log_error(e.message);
+		}
+	
+		// start conky
+		foreach(CheckButton chk in rcWidgetList) {
+			if (chk.active) { 
+				string cmd = "conky -c \"" + selectedTheme.ConfigList.@get(chk.label) + "\"";
+				Utility.execute_command_async_batch (cmd); 
+				Thread.usleep((ulong)1000000);
+			}
+		}
+		* 
+		* */
+	}
+}
+
+public enum InputField
+{
+	STATE,
+	NAME
+}

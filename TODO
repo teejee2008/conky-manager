@@ -1,0 +1,6 @@
+
+ * Add options to open temp and output directories.
+   - Add options to right-click menu
+   - Add options to toolbar?
+   
+ * Customize the right-click menu based on APP_STATE

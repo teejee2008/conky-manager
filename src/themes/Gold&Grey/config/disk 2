@@ -1,0 +1,56 @@
+# — SETTINGS — #
+background		no
+update_interval		0.5
+cpu_avg_samples		2
+net_avg_samples		2
+double_buffer		yes
+no_buffers		yes
+text_buffer_size	1024
+
+# — WINDOW — #
+own_window		yes
+own_window_type		normal
+own_window_transparent	yes
+own_window_hints	undecorate,sticky,skip_taskbar,skip_pager,below
+
+# — BORDER — #
+border_inner_margin	1
+border_outer_margin	1
+
+# — SIZE — #
+#minimum_size		125
+#maximum_width		125
+
+# — ALIGNMENT — #
+alignment		bl
+gap_x			730
+gap_y			20
+
+# — GRAPHIC — #
+draw_shades		no
+draw_outline		no
+draw_borders		no
+draw_graph_borders	no
+#default_bar_size	40 8
+#default_shade_color
+#own_window_colour	808080
+
+# — TEXT — #
+use_xft			yes
+xftfont			Dejavu Sans:size=8
+xftalpha		0.8
+uppercase		no
+override_utf8_locale	yes
+default_color		666
+
+# — LUA — #
+#lua_load		~/Conky/bgcolor/bg.lua
+#lua_draw_hook_pre	conky_draw_bg
+
+# — Colors — #
+color1			C18C24
+
+TEXT
+${voffset -3}${font Poky:size=20}y${voffset -10}${goto 30}${font} Root${goto 70}${voffset -10}${font Poky:size=20}y${voffset -10}${font}${goto 100} Home
+${offset 2}${voffset 2}${fs_bar 3,23 /}${goto 30}${voffset -2}${font Dejavu Sans:size=9:condensed:bold}$color1 ${fs_used_perc /} %$color${goto 70}${offset 2}${voffset 2}${fs_bar 3,23 /home}${goto 100}${voffset -2}$color1 ${fs_used_perc /home} %$color
+${offset 2}${voffset 1}${font Dejavu Sans:size=8}I/O » $color1${diskio}$color${alignr 5}${diskiograph 8,30}

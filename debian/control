@@ -1,0 +1,16 @@
+Source: conky-manager
+Section: utility
+Priority: extra
+Maintainer: Tony George <tony.george.kol@gmail.com>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, valac, libgtk-3-dev, libgee-dev
+Standards-Version: 3.9.3
+Homepage: http://teejeetech.blogspot.in/
+#Vcs-Git: git://git.debian.org/collab-maint/hello.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/hello.git;a=summary
+
+Package: conky-manager
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, realpath, conky-all
+#Recommends: 
+Description: Simple tool for managing conky scripts
+ Simple tool for managing conky scripts

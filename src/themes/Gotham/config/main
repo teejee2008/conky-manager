@@ -1,0 +1,35 @@
+use_xft yes
+xftfont 123:size=8
+xftalpha 0.1
+update_interval 1
+total_run_times 0
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+minimum_size 250 5
+maximum_width 550
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+default_color white
+default_shade_color red
+default_outline_color green
+alignment top_left
+gap_x 60
+gap_y 300
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+net_avg_samples 1
+override_utf8_locale yes
+use_spacer left
+
+
+TEXT
+${voffset 10}${color EAEAEA}${font Ubuntu:pixelsize=80}${time %H:%M}${font}${voffset -84}${offset 10}${color FFA300}${font Ubuntu:pixelsize=42}${time %d} ${voffset -15}${color EAEAEA}${font Ubuntu:pixelsize=22}${time  %B} ${time %Y}${font}${voffset 24}${font Ubuntu:pixelsize=58}${offset -148}${time %A}${font}
+${voffset 1}${offset 12}${font Ubuntu:pixelsize=14}${color FFA300}HD ${offset 9}$color${fs_free /} / ${fs_size /}${offset 30}${color FFA300}RAM ${offset 9}$color$mem / $memmax${offset 30}${color FFA300}CPU ${offset 9}$color${cpu cpu0}%
+
+

@@ -1,0 +1,65 @@
+2006-09-02  Karl Berry  <karl@gnu.org>
+
+	* Makefile.am (hello.1): downcase description.
+
+2006-08-22  Karl Berry  <karl@gnu.org>
+
+	* Makefile.am (hello.1): use -o, to help `missing'.
+	From Ralf Wildenhues.
+
+2006-05-03  Karl Berry  <karl@gnu.org>
+
+	* Makefile.am (hello.1): no, can't use $(srcdir)/help2man, because
+	it ends up being "./bin/sh help2man".
+
+2006-04-22  Karl Berry  <karl@gnu.org>
+
+	* Makefile.am (hello.1): find help2man in $(srcdir), for when
+	srcdir!=builddir.
+
+2004-05-14  Karl Eichwalder  <ke@gnu.franken.de>
+
+	* Makefile.am (hello.1): Missing Perl at installation time is not
+	fatal.
+
+2002-07-20  Karl Eichwalder  <keichwa@gmx.net>
+
+	* Makefile.am (CLEANFILES): New variable, add $(man_MANS).
+
+2002-07-20  Karl Eichwalder  <keichwa@gmx.net>
+
+	* Makefile.am (hello.1): Add $(srcdir)/; thus perl will find
+	$(HELP2MAN) compilations takes place outside the source tree.
+
+2002-01-25  Karl Eichwalder  <keichwa@gmx.net>
+
+	* Makefile.am (hello.1): Use ../src/hello instead of $< for
+	compatibility.
+	Reported by Bruno Haible.
+
+2002-01-19  Karl Eichwalder  <keichwa@gmx.net>
+
+	* help2man: Copy version 1.024 from gettext-0.11-pre5+;
+	recommended by Bruno Haible.
+
+1999-10-03  Karl Eichwalder  <ke@gnu.franken.de>
+
+	* Makefile.am: Rewritten:
+	(man_MANS): New variable, add hello.1.
+	(HELP2MAN): Ditto, add help2man.
+	(noinst_SCRIPTS): Ditto, add $(HELP2MAN).
+	(EXTRA_DIST): Ditto, add $(man_MANS) $(noinst_SCRIPTS).
+	(hello.1): New target.
+
+1999-08-21  Karl Eichwalder  <ke@gnu.franken.de>
+
+	* help2man: Add this file from the textutils package.
+
+	* Makefile.am: New file; filled with template information from the
+	textutils package.
+
+Copyright (C) 1999, 2002, 2004, 2006 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.

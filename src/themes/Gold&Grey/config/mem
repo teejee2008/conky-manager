@@ -1,0 +1,60 @@
+# — SETTINGS — #
+background		no
+update_interval		1
+cpu_avg_samples		2
+net_avg_samples		2
+double_buffer		yes
+no_buffers yes
+text_buffer_size	1024
+imlib_cache_size	0
+
+# — WINDOW — #
+own_window yes
+own_window_type  normal
+own_window_transparent  yes
+own_window_hints  undecorate,sticky,skip_taskbar,skip_pager,below
+
+# — BORDER — #
+border_inner_margin	2
+border_outer_margin	1
+border_width		1
+
+# — SIZE — #
+#minimum_size		135
+#maximum_width		135
+#default_bar_size	150 4
+
+# — ALIGNMENT — #
+alignment		bl
+gap_x			550
+gap_y			20
+
+# — GRAPHIC — #
+draw_shades		no
+draw_outline		no
+draw_borders		no
+draw_graph_borders	yes
+#default_shade_color 
+#default_outline_color	909090
+#own_window_colour	808080
+
+# — TEXT — #
+use_xft			yes
+xftfont			Dejavu Sans:size=8
+xftalpha		1.0
+uppercase		no
+override_utf8_locale	yes
+default_color		666
+
+# — LUA — #
+#lua_load		~/Conky/bgcolor/bg.lua
+#lua_draw_hook_pre	conky_draw_bg
+
+# — Colors — #
+color1			C18C24
+
+
+TEXT
+${voffset -3}${font Poky:size=20}M${goto 35}${font Impact:size=16}${voffset -3}$color1${memperc}$color${goto 65}%${font}${goto 90}${voffset -8}$color1${mem}$color${voffset 9}${goto 90}${membar 3,40}${voffset -8}
+${voffset 12}${goto 5}${font Poky:size=14}i${font}${voffset -3} SWAP » $color1${swapperc}%$color  -  $color1$swap$color
+${voffset -4}
