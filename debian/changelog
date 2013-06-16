@@ -1,5 +1,9 @@
 conky-manager (1.0.2) quantal; urgency=low
 
+  * Rev:10, 2013-06-16
+  
   * Initial Release
   
+  * Added application menu entry
+
  -- Tony George <tony.george.kol@gmail.com>  Sun, 16 Jun 2013 11:00:00 +0530

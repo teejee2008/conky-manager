@@ -1,6 +1,6 @@
 Source: conky-manager
 Section: utils
-Priority: standard
+Priority: extra
 Maintainer: Tony George <tony.george.kol@gmail.com>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, valac, libgtk-3-dev, libgee-dev
 Standards-Version: 3.9.3
