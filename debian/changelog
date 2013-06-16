@@ -1,6 +1,6 @@
-conky-manager (1.0.3) quantal; urgency=low
+conky-manager (1.0.4) quantal; urgency=low
 
-  * Rev:12, 2013-06-16
+  * Rev:13, 2013-06-16
   
   * Fixed an issue with starting Conky at system startup
 

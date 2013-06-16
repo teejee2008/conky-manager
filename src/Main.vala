@@ -271,7 +271,7 @@ Name=Conky
 Comment[en_IN]=
 Comment=
 """;
-			txt = txt.replace("{command}", home + "/conky-manager/conky-startup.sh");
+			txt = txt.replace("{command}", "sh \"" + home + "/conky-manager/conky-startup.sh\"");
 			
 			Utility.write_file(startupFile, txt);
 		}
