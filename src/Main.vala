@@ -98,10 +98,18 @@ public class Main : GLib.Object {
 			debug(_("Directory Created") + ": " + path);
 		}
 		
+		// install shared theme pack ---------------
+		
+		string sharePath = "/usr/share/conky-manager";
+		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
+		if (Utility.file_exists(pkgPath)){
+			install_theme_pack(pkgPath);
+		}
+		
 		//install theme packs -----------
 
 		string appPath = (File.new_for_path (arg0)).get_parent().get_path ();
-		string pkgPath = appPath + "/conky-manager-theme-pack.zip";
+		pkgPath = appPath + "/conky-manager-theme-pack.zip";
 		if (Utility.file_exists(pkgPath)){
 			install_theme_pack(pkgPath);
 		} 
@@ -147,9 +155,6 @@ public class Main : GLib.Object {
 	    }
 
 		Posix.system("rm -rf \"" + temp_dir + "\"");
-		Posix.system("rm -rf \"" + pkgPath + "\"");
-		
-		debug(_("ThemePack Deleted") + ": " + pkgPath);
 	}
 	
 	public void reload_themes() {

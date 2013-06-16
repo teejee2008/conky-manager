@@ -10,7 +10,7 @@ Homepage: http://teejeetech.blogspot.in/
 
 Package: conky-manager
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, realpath, conky-all
+Depends: ${shlibs:Depends}, ${misc:Depends}, realpath, conky-all, unzip
 #Recommends: 
 Description: Simple tool for managing conky scripts
  Simple tool for managing conky scripts
