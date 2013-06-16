@@ -37,7 +37,15 @@ public class MainWindow : Window
 	private Label lblEditTab;
 	private Box vboxEdit;
 	private Box hboxEdit;
+	
+	private Label lblAboutTab;
+	private Box vboxAbout;
 
+	private Label lblAppName;
+	private Label lblAppVersion;
+	private Label lblAuthor;
+	private LinkButton lnkBlog;
+	
 	private Label lblHeaderStartup;
 	private CheckButton chkStartup;
 	
@@ -220,11 +228,52 @@ public class MainWindow : Window
         // lblEditTab
 		lblEditTab = new Label (_("Edit"));
 
-		tabMain.append_page (vboxEdit, lblEditTab);
+		//tabMain.append_page (vboxEdit, lblEditTab);
 		
         // hboxEdit
         hboxEdit = new Box (Orientation.HORIZONTAL, 6);
         vboxEdit.add(hboxEdit);
+		
+		// About tab ---------------------------
+		
+		// vboxAbout
+        vboxAbout = new Box (Orientation.VERTICAL, 6);
+		vboxAbout.margin = 12;
+
+        // lblAboutTab
+		lblAboutTab = new Label (_("About"));
+
+		tabMain.append_page (vboxAbout, lblAboutTab);
+		
+        // lblAppName
+		lblAppName = new Gtk.Label("""<span size="x-large" weight="bold">""" + AppName + "</span>");
+		lblAppName.set_use_markup(true);
+		lblAppName.xalign = (float) 0.0;
+		lblAppName.margin_top = 0;
+		lblAppName.margin_bottom = 6;
+		vboxAbout.add(lblAppName);
+		
+		lblAppVersion = new Gtk.Label(_("Version") + ": " + AppVersion);
+		lblAppVersion.set_use_markup(true);
+		lblAppVersion.xalign = (float) 0.0;
+		vboxAbout.add(lblAppVersion);
+		
+		lblAuthor = new Gtk.Label("(c) 2013, " + AppAuthor + " (" + AppAuthorEmail + ")");
+		lblAuthor.set_use_markup(true);
+		lblAuthor.xalign = (float) 0.0;
+		vboxAbout.add(lblAuthor);
+		
+		lnkBlog = new Gtk.LinkButton("http://teejeetech.blogspot.in");
+		lnkBlog.xalign = (float) 0.0;
+		lnkBlog.uri = "http://teejeetech.blogspot.in";
+		vboxAbout.add(lnkBlog);
+		
+		lnkBlog.activate_link.connect(() => { 
+			Posix.system("xdg-open \"http://teejeetech.blogspot.in\"");
+			return true;
+		});
+		
+		
 
         /*// comboTheme
         comboTheme = new ComboBox ();
