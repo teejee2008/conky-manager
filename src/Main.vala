@@ -1,7 +1,7 @@
 /*
  * Main.vala
  * 
- * Copyright 2012 Tony George <teejee@teejee-pc>
+ * Copyright 2013 Tony George <teejee@teejee-pc>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,19 +77,19 @@ public class Main : GLib.Object {
 		path = home + "/conky";
 		if (Utility.dir_exists(path) == false){
 			Utility.create_dir(path);
-			debug("Directory Created: " + path);
+			debug(_("Directory created") + ": " + path);
 		}
 		
 		path = home + "/.fonts";
 		if (Utility.dir_exists(path) == false){
 			Utility.create_dir(path);
-			debug("Directory Created: " + path);
+			debug(_("Directory created") + ": " + path);
 		}
 		
 		path = home + "/.config/autostart";
 		if (Utility.dir_exists(path) == false){
 			Utility.create_dir(path);
-			debug("Directory Created: " + path);
+			debug(_("Directory created") + ": " + path);
 		}
 		
 		//load themes --------
@@ -284,7 +284,7 @@ public class ConkyTheme : GLib.Object {
 					var conf = new ConkyConfig(filePath, this);
 					ConfigList.add(conf);
 					
-					debug("found: %s".printf(filePath));
+					debug(_("Found") + ": " + filePath);
 				} 
 			}
 		}
@@ -333,7 +333,7 @@ public class ConkyTheme : GLib.Object {
 			
 			if (Utility.file_exists(targetFile) == false){
 				Utility.copy_file(filePath, targetFile);
-				debug("Font Installed: " + targetFile);
+				debug(_("Font Installed: ") + targetFile);
 			}
 		}
 	}
@@ -384,10 +384,11 @@ public class ConkyConfig : GLib.Object {
 	{
 		Theme.Install();
 		
-		string cmd = "conky -c \"" + Path + "\"";
+		string cmd = "cd \"" + Theme.BasePath + "\"\n";
+		cmd += "conky -c \"" + Path + "\"\n";
 		Utility.execute_command_async_batch (cmd); 
 		Thread.usleep((ulong)1000000);
-		debug("Started: %s".printf(Path));
+		debug(_("Started") + ": " + Path);
 		
 		//set the flag for immediate effect
 		//will be updated by the refresh_status() timer
@@ -408,7 +409,7 @@ public class ConkyConfig : GLib.Object {
 			if (line.index_of(cmd) != -1){
 				pid = line.strip().split(" ")[0];
 				Posix.kill ((Pid) int.parse(pid), 15);
-				debug("Stopped: %s: %s".printf(pid, Path));
+				debug(_("Stopped") + ": [PID=" + pid + "] " + Path);
 			}
 		}
 		

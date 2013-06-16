@@ -50,12 +50,8 @@ public class MainWindow : Window
 	private Button btnThemeInfo;
 	private Button btnThemePreview;
 	
-	private ComboBox comboTheme;
-	
-	private Button btnApply;
-	private Image imgPreview;
-	
-	
+	//private ComboBox comboTheme;
+
 	public MainWindow() {
 		this.title = AppName + " v" + AppVersion + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
         this.window_position = WindowPosition.CENTER;
@@ -72,7 +68,7 @@ public class MainWindow : Window
 		vboxTheme.margin = 6;
 
         // lblThemeTab
-		lblThemeTab = new Label ("Theme");
+		lblThemeTab = new Label (_("Theme"));
 
 		tabMain.append_page (vboxTheme, lblThemeTab);
 		
@@ -96,7 +92,7 @@ public class MainWindow : Window
 		
 		// Theme Name Column
 		TreeViewColumn colName = new TreeViewColumn();
-		colName.title = "Theme";
+		colName.title = _("Theme");
 		colName.resizable = true;
 		colName.expand = true;
 		
@@ -109,7 +105,7 @@ public class MainWindow : Window
 		
 		// 'Enabled' Column
 		TreeViewColumn colEnabled = new TreeViewColumn();
-		colEnabled.title = "Enable";
+		colEnabled.title = _("Enable");
 		colEnabled.resizable = false;
 		//colEnabled.sizing = TreeViewColumnSizing.AUTOSIZE; 
 		colEnabled.expand = false;
@@ -138,7 +134,7 @@ public class MainWindow : Window
 		
 		// Theme Name Column
 		colName = new TreeViewColumn();
-		colName.title = "Config";
+		colName.title = _("Config");
 		colName.resizable = true;
 		colName.expand = true;
 		
@@ -151,7 +147,7 @@ public class MainWindow : Window
 		
 		// 'Enabled' Column
 		colEnabled = new TreeViewColumn();
-		colEnabled.title = "Enable";
+		colEnabled.title = _("Enable");
 		colEnabled.resizable = false;
 		colEnabled.expand = false;
 		
@@ -170,18 +166,18 @@ public class MainWindow : Window
 		vboxTheme.add(hboxThemeButtons);
 		
 		//btnThemeInfo
-		btnThemeInfo = new Button.with_label("Info");
+		btnThemeInfo = new Button.with_label(_("Info"));
 		btnThemeInfo.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
         btnThemeInfo.clicked.connect (btnThemeInfo_clicked);
-        btnThemeInfo.set_tooltip_text ("Theme Info");
+        btnThemeInfo.set_tooltip_text (_("Theme Info"));
         btnThemeInfo.set_sensitive(false);
 		hboxThemeButtons.add(btnThemeInfo);
 		
 		//btnThemePreview
-		btnThemePreview = new Button.with_label("Preview");
+		btnThemePreview = new Button.with_label(_("Preview"));
 		//btnThemePreview.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
         btnThemePreview.clicked.connect (btnThemePreview_clicked);
-        btnThemePreview.set_tooltip_text ("Preview Theme");
+        btnThemePreview.set_tooltip_text (_("Preview Theme"));
         btnThemePreview.set_sensitive(false);
 		hboxThemeButtons.add(btnThemePreview);
 		
@@ -192,7 +188,7 @@ public class MainWindow : Window
 		vboxOptions.margin = 12;
 
         // lblOptionsTab
-		lblOptionsTab = new Label ("Options");
+		lblOptionsTab = new Label (_("Options"));
 
 		tabMain.append_page (vboxOptions, lblOptionsTab);
 		
@@ -201,7 +197,7 @@ public class MainWindow : Window
         //vboxOptions.add(hboxOptions);
         
         // lblHeaderStartup
-		lblHeaderStartup = new Gtk.Label(_("<b>Startup</b>"));
+		lblHeaderStartup = new Gtk.Label("<b>" + _("Startup") + "</b>");
 		lblHeaderStartup.set_use_markup(true);
 		lblHeaderStartup.xalign = (float) 0.0;
 		//lblHeaderStartup.margin_top = 6;
@@ -222,7 +218,7 @@ public class MainWindow : Window
 		vboxEdit.margin = 6;
 
         // lblEditTab
-		lblEditTab = new Label ("Edit");
+		lblEditTab = new Label (_("Edit"));
 
 		tabMain.append_page (vboxEdit, lblEditTab);
 		
@@ -230,7 +226,7 @@ public class MainWindow : Window
         hboxEdit = new Box (Orientation.HORIZONTAL, 6);
         vboxEdit.add(hboxEdit);
 
-        // comboTheme
+        /*// comboTheme
         comboTheme = new ComboBox ();
         comboTheme.set_size_request (400,-1);
         comboTheme.changed.connect(comboTheme_changed);
@@ -239,31 +235,10 @@ public class MainWindow : Window
 		CellRendererText cell = new CellRendererText();
         comboTheme.pack_start( cell, false );
         comboTheme.set_attributes( cell, "text", 0 );
-        comboTheme.set_tooltip_text ("Theme");
+        comboTheme.set_tooltip_text (_("Theme"));
+        */
         
-        // btnApply
-		btnApply = new Button.with_label("Apply");
-		btnApply.set_image (new Image.from_stock (Stock.APPLY, IconSize.MENU));
-        btnApply.clicked.connect (btnApply_clicked);
-        btnApply.set_tooltip_text ("Apply Changes");
-        //hboxTheme.add (btnApply);
-		
-		// hboxThemeRC
-        //hboxThemeRC = new Box (Orientation.HORIZONTAL, 6);
-        //vboxTheme.add(hboxThemeRC);
-        
-        // lblThemeRC
-		//lblThemeRC = new Label ("Config:");
-        //hboxThemeRC.add(lblThemeRC);
-        
-        //imgPreview
-		imgPreview = new Image();
-		imgPreview.margin_top = 12;
-		//vboxTheme.add(imgPreview);
-		
 		reload_themes();
-		
-		
 		Utility.execute_command_async(new string[]{"sleep","10"});
 	}
 
@@ -424,7 +399,7 @@ public class MainWindow : Window
 			Gtk.main_iteration ();
 	}
 	
-	private ConkyTheme tvTheme_get_selected_theme(){
+	private ConkyTheme? tvTheme_get_selected_theme(){
 		ConkyTheme theme = null;
 		TreeIter iter;
 		TreeModel model;
@@ -447,7 +422,7 @@ public class MainWindow : Window
 				info = Utility.read_file(theme.InfoFile);
 			}
 			
-			Utility.messagebox_show(theme.Name, info);
+			Utility.messagebox_show("[" + _("Info") + "] " + theme.Name, info);
 		}
 	}
 	
@@ -467,7 +442,7 @@ public class MainWindow : Window
 				dlg.window_position = Gtk.WindowPosition.CENTER;
 				dlg.resizable = false;
 				dlg.has_resize_grip = false;
-				dlg.title = "[Preview] " + theme.Name;
+				dlg.title = "[" + _("Preview") + "] " + theme.Name;
 				var vboxImage = new Box (Orientation.VERTICAL, 6);
 				dlg.add(vboxImage);
 				var imgPreview = new Image();
@@ -480,8 +455,6 @@ public class MainWindow : Window
 				imgPreview.pixbuf = px;
 				
 				dlg.show_all();
-				//dlg.run();
-
 			}
 			catch(Error e){
 				log_error (e.message);
@@ -495,79 +468,4 @@ public class MainWindow : Window
 	{
 		App.autostart(chkStartup.active);
 	}
-	
-	
-	public void comboTheme_changed () {
-		/*
-		ConkyTheme selectedTheme = App.ThemeList[comboTheme.get_active()];
-
-		try {
-			
-			if (rcWidgetList != null) {
-				foreach(CheckButton chk in rcWidgetList) {
-					hboxThemeRC.remove(chk);
-				}
-			}
-		
-			rcWidgetList = new Gee.ArrayList<CheckButton>();
-			foreach (string name in selectedTheme.ConfigList.keys) {
-				CheckButton chk = new CheckButton.with_label(name);
-				chk.active = true;
-				hboxThemeRC.add(chk);
-				rcWidgetList.add(chk);
-			}
-			hboxThemeRC.show_all();
-			
-			Gdk.Pixbuf px = new Gdk.Pixbuf.from_file_at_size (selectedTheme.PreviewImage, 400, 200);
-			//Gdk.Pixbuf px = new Gdk.Pixbuf.from_file (selectedTheme.PreviewImage);
-			imgPreview.set_size_request (400,-1);
-			imgPreview.pixbuf = px;
-		} 
-		catch (Error e) {
-			log_error(e.message);
-		}
-		*/
-	}
-	
-	private void btnApply_clicked () {
-		ConkyTheme selectedTheme = App.ThemeList[comboTheme.get_active()];
-		/*
-		//string theme_name = 
-		string HOME = Environment.get_home_dir ();
-		
-		// copy fonts
-		foreach (string key in selectedTheme.FontList.keys) {
-			Utility.copy_file(selectedTheme.FontList.@get(key), @"$HOME/.fonts");
-		}
-		
-		// copy files
-		foreach (string key in selectedTheme.FileList.keys) {
-			Utility.copy_file(selectedTheme.FileList.@get(key), @"$HOME/.conky");
-		}
-		
-		// kill conky
-		try {
-			Process.spawn_command_line_sync("killall conky");
-		}
-		catch(Error e) {
-			log_error(e.message);
-		}
-	
-		// start conky
-		foreach(CheckButton chk in rcWidgetList) {
-			if (chk.active) { 
-				string cmd = "conky -c \"" + selectedTheme.ConfigList.@get(chk.label) + "\"";
-				Utility.execute_command_async_batch (cmd); 
-				Thread.usleep((ulong)1000000);
-			}
-		}
-		* 
-		* */
-	}
-}
-
-public enum InputField
-{
-	STATE,
-	NAME
 }
