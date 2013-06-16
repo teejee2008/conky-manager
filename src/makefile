@@ -21,7 +21,7 @@ install:
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/conky-manager
 	install -m 0755 conky-manager $(DESTDIR)$(bindir)
-	install -m 0644 conky-manager-theme-pack.zip $(DESTDIR)$(sharedir)/conky-manager
+	install -m 0644 "conky-manager-theme-pack.zip" "$(DESTDIR)$(sharedir)/conky-manager"
 	
 uninstall:
 	rm -f /usr/bin/conky-manager
