@@ -504,6 +504,34 @@ namespace Utility
 		}
 	}
 	
+	public bool execute_command_sync_batch (string cmd)
+	{
+		try {
+			
+			string scriptfile = create_temp_bash_script ("#!/bin/bash\n" + cmd);
+			
+			string[] argv = new string[1];
+			argv[0] = scriptfile;
+			
+			Process.spawn_sync(
+			    null, //working dir
+			    argv, //argv
+			    null, //environment
+			    SpawnFlags.SEARCH_PATH, //flags
+			    null, //child setup
+			    null, //stdOutput
+			    null, //stdError
+			    null  //exitCode
+			    ); 
+			    
+			return true;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return false;
+	    }
+	}
+	
 	public string? create_temp_bash_script (string cmd)
 	{
 		string script_path = Environment.get_tmp_dir () + "/" + timestamp2() + ".sh";

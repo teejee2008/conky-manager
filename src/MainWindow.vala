@@ -238,13 +238,10 @@ public class MainWindow : Window
         comboTheme.set_tooltip_text (_("Theme"));
         */
         
-		reload_themes();
-		Utility.execute_command_async(new string[]{"sleep","10"});
+		load_themes();
 	}
 
-	public void reload_themes() {
-		App.reload_themes();
-
+	public void load_themes() {
 		ListStore model = new ListStore(1,typeof(ConkyTheme));
 		TreeIter iter;
 		foreach(ConkyTheme theme in App.ThemeList) {

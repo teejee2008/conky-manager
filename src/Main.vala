@@ -66,36 +66,90 @@ public class Main : GLib.Object {
     }
     
     public Main(string arg0) {
-		ThemeDir = (File.new_for_path (arg0)).get_parent ().get_path ();
-		ThemeDir = ThemeDir + "/themes";
+		string home = Environment.get_home_dir ();
+
+		ThemeDir = home + "/conky-manager/themes";
 		
 		//create missing directories --------
 		
 		string path = "";
-		string home = Environment.get_home_dir ();
-		
-		path = home + "/conky";
+
+		path = home + "/conky-manager";
 		if (Utility.dir_exists(path) == false){
 			Utility.create_dir(path);
-			debug(_("Directory created") + ": " + path);
+			debug(_("Directory Created") + ": " + path);
+		}
+		
+		path = home + "/conky-manager/themes";
+		if (Utility.dir_exists(path) == false){
+			Utility.create_dir(path);
+			debug(_("Directory Created") + ": " + path);
 		}
 		
 		path = home + "/.fonts";
 		if (Utility.dir_exists(path) == false){
 			Utility.create_dir(path);
-			debug(_("Directory created") + ": " + path);
+			debug(_("Directory Created") + ": " + path);
 		}
 		
 		path = home + "/.config/autostart";
 		if (Utility.dir_exists(path) == false){
 			Utility.create_dir(path);
-			debug(_("Directory created") + ": " + path);
+			debug(_("Directory Created") + ": " + path);
 		}
 		
+		//install theme packs -----------
+
+		string appPath = (File.new_for_path (arg0)).get_parent().get_path ();
+		string pkgPath = appPath + "/conky-manager-theme-pack.zip";
+		if (Utility.file_exists(pkgPath)){
+			install_theme_pack(pkgPath);
+		} 
+		        
 		//load themes --------
 		
 		reload_themes();
 		start_status_thread();
+	}
+	
+	public void install_theme_pack(string pkgPath){
+		string temp_dir = Environment.get_tmp_dir();
+		temp_dir = temp_dir + "/" + Utility.timestamp2();
+		Utility.create_dir(temp_dir);
+		
+		debug(_("Found ThemePack") + ": " + pkgPath);
+		
+		string cmd = "cd \"" + temp_dir + "\"\n";
+		cmd += "unzip  \"" + pkgPath + "\"\n";
+		Utility.execute_command_sync_batch (cmd); 
+		
+		try
+		{
+			File f_temp_dir = File.parse_name (temp_dir);
+	        FileEnumerator enumerator = f_temp_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+	
+	        FileInfo file;
+	        while ((file = enumerator.next_file ()) != null) {
+				string source_dir = temp_dir + "/" + file.get_name();
+				string target_dir = ThemeDir + "/" + file.get_name();
+				
+				if (Utility.dir_exists(target_dir)) { 
+					continue; 
+				}
+				else{
+					debug(_("Theme Copied") + ": " + target_dir);
+					Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
+				}
+	        } 
+        }
+        catch(Error e){
+	        log_error (e.message);
+	    }
+
+		Posix.system("rm -rf \"" + temp_dir + "\"");
+		Posix.system("rm -rf \"" + pkgPath + "\"");
+		
+		debug(_("ThemePack Deleted") + ": " + pkgPath);
 	}
 	
 	public void reload_themes() {
@@ -170,7 +224,7 @@ public class Main : GLib.Object {
 	
 	public void update_startup_script(){
 		string home = Environment.get_home_dir ();
-		string startupScript = home + "/conky/conky-startup.sh";
+		string startupScript = home + "/conky-manager/conky-startup.sh";
 		
 		string txt= "killall conky\n";
 		foreach(ConkyTheme theme in ThemeList){
@@ -208,7 +262,7 @@ Name=Conky
 Comment[en_IN]=
 Comment=
 """;
-			txt = txt.replace("{command}", home + "/conky/conky-startup.sh");
+			txt = txt.replace("{command}", home + "/conky-manager/conky-startup.sh");
 			
 			Utility.write_file(startupFile, txt);
 		}
@@ -284,7 +338,7 @@ public class ConkyTheme : GLib.Object {
 					var conf = new ConkyConfig(filePath, this);
 					ConfigList.add(conf);
 					
-					debug(_("Found") + ": " + filePath);
+					debug(_("Found Config") + ": " + filePath);
 				} 
 			}
 		}
