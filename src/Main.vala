@@ -228,6 +228,7 @@ public class ConkyTheme : GLib.Object {
 	//public bool Enabled = false;
 	public string BasePath = "";
 	public string PreviewImage = "";
+	public string InfoFile = "";
 
 	public Gee.ArrayList<ConkyConfig> ConfigList;
 	public Gee.ArrayList<string> FontList;
@@ -249,6 +250,18 @@ public class ConkyTheme : GLib.Object {
 		//find font files
 		find_fonts(BasePath);
 		find_fonts(BasePath + "/fonts");
+		
+		//find info file
+		string infoFile = BasePath + "/info.txt";
+		if (Utility.file_exists(infoFile)){
+			InfoFile = infoFile;
+		}
+		
+		//find preview image
+		string previewFile = BasePath + "/preview.png";
+		if (Utility.file_exists(previewFile)){
+			PreviewImage = previewFile;
+		}
 	}
 	
 	private void find_conkyrc(string dirPath, bool checkExt)

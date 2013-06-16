@@ -29,6 +29,7 @@ public class MainWindow : Window
 
 	private Label lblThemeTab;
 	private Box vboxTheme;
+	private Box hboxThemeButtons;
 
 	private Label lblOptionsTab;
 	private Box vboxOptions;
@@ -46,7 +47,9 @@ public class MainWindow : Window
 	private TreeView tvConfig;
 	private ScrolledWindow swConfig;
 
-
+	private Button btnThemeInfo;
+	private Button btnThemePreview;
+	
 	private ComboBox comboTheme;
 	
 	private Button btnApply;
@@ -89,7 +92,7 @@ public class MainWindow : Window
 		swTheme.set_shadow_type (ShadowType.ETCHED_IN);
 		swTheme.add (tvTheme);
 		swTheme.set_size_request (-1, 250);
-		vboxTheme.pack_start (swTheme, false, false, 0);
+		vboxTheme.pack_start (swTheme, true, true, 0);
 		
 		// Theme Name Column
 		TreeViewColumn colName = new TreeViewColumn();
@@ -130,8 +133,8 @@ public class MainWindow : Window
 		swConfig = new ScrolledWindow(tvConfig.get_hadjustment (), tvConfig.get_vadjustment ());
 		swConfig.set_shadow_type (ShadowType.ETCHED_IN);
 		swConfig.add (tvConfig);
-		swConfig.set_size_request (-1, 150);
-		vboxTheme.pack_start (swConfig, false, false, 0);
+		swConfig.set_size_request (-1, 180);
+		vboxTheme.pack_start (swConfig, false, true, 0);
 		
 		// Theme Name Column
 		colName = new TreeViewColumn();
@@ -161,6 +164,26 @@ public class MainWindow : Window
 		colEnabled.set_cell_data_func (cellEnabled, tvConfig_cellEnabled_render);
 		tvConfig.append_column(colEnabled);
 		
+		//hboxThemeButtons
+		hboxThemeButtons = new Box (Orientation.HORIZONTAL, 6); 
+		hboxThemeButtons.set_homogeneous(true);
+		vboxTheme.add(hboxThemeButtons);
+		
+		//btnThemeInfo
+		btnThemeInfo = new Button.with_label("Info");
+		btnThemeInfo.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
+        btnThemeInfo.clicked.connect (btnThemeInfo_clicked);
+        btnThemeInfo.set_tooltip_text ("Theme Info");
+        btnThemeInfo.set_sensitive(false);
+		hboxThemeButtons.add(btnThemeInfo);
+		
+		//btnThemePreview
+		btnThemePreview = new Button.with_label("Preview");
+		//btnThemePreview.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
+        btnThemePreview.clicked.connect (btnThemePreview_clicked);
+        btnThemePreview.set_tooltip_text ("Preview Theme");
+        btnThemePreview.set_sensitive(false);
+		hboxThemeButtons.add(btnThemePreview);
 		
 		// Options tab ---------------------------
 		
@@ -206,10 +229,7 @@ public class MainWindow : Window
         // hboxEdit
         hboxEdit = new Box (Orientation.HORIZONTAL, 6);
         vboxEdit.add(hboxEdit);
-        
-        
-        
-        
+
         // comboTheme
         comboTheme = new ComboBox ();
         comboTheme.set_size_request (400,-1);
@@ -239,7 +259,7 @@ public class MainWindow : Window
         //imgPreview
 		imgPreview = new Image();
 		imgPreview.margin_top = 12;
-		vboxTheme.add(imgPreview);
+		//vboxTheme.add(imgPreview);
 		
 		reload_themes();
 		
@@ -301,7 +321,9 @@ public class MainWindow : Window
 	{
 		set_busy(true, this);
 		
-		ConkyTheme theme;
+		// populate config list ----------
+		
+		ConkyTheme theme = null;
 		TreeIter iter;
 		TreeModel model;
 		ListStore store;
@@ -316,6 +338,24 @@ public class MainWindow : Window
 				//debug("add: %s\n".printf(conf.Path));
 			}
 			tvConfig.model = store;
+		}
+		
+		// set preview and info buttons ---------
+		
+		if (theme != null) {
+			if (Utility.file_exists(theme.InfoFile)){
+				btnThemeInfo.set_sensitive(true);
+			}
+			else{
+				btnThemeInfo.set_sensitive(false);
+			}
+			
+			if (Utility.file_exists(theme.PreviewImage)){
+				btnThemePreview.set_sensitive(true);
+			}
+			else{
+				btnThemePreview.set_sensitive(false);
+			}
 		}
 		
 		set_busy(false, this);
@@ -382,6 +422,71 @@ public class MainWindow : Window
     {
 		while(Gtk.events_pending ())
 			Gtk.main_iteration ();
+	}
+	
+	private ConkyTheme tvTheme_get_selected_theme(){
+		ConkyTheme theme = null;
+		TreeIter iter;
+		TreeModel model;
+
+		if (tvTheme.get_selection().get_selected(out model, out iter)){
+			model.get (iter, 0, out theme, -1); //get theme
+			return theme;
+		}
+		
+		return null;
+	}
+	
+	// hboxThemeButtons ------------------------
+	
+	private void btnThemeInfo_clicked () {
+		ConkyTheme theme = tvTheme_get_selected_theme();
+		if (theme != null){
+			string info = "";
+			if (Utility.file_exists(theme.InfoFile)){
+				info = Utility.read_file(theme.InfoFile);
+			}
+			
+			Utility.messagebox_show(theme.Name, info);
+		}
+	}
+	
+	private void btnThemePreview_clicked () {
+		ConkyTheme theme = tvTheme_get_selected_theme();;
+		if (theme != null){
+			
+			try{
+				//Gdk.Pixbuf px = new Gdk.Pixbuf.from_file_at_size (theme.PreviewImage, 400, 200);
+				Gdk.Pixbuf px = new Gdk.Pixbuf.from_file (theme.PreviewImage);
+				
+				var dlg = new Window();
+				dlg.modal = true;
+				dlg.skip_pager_hint = true;
+				dlg.skip_taskbar_hint = true;
+				dlg.type_hint = Gdk.WindowTypeHint.MENU;
+				dlg.window_position = Gtk.WindowPosition.CENTER;
+				dlg.resizable = false;
+				dlg.has_resize_grip = false;
+				dlg.title = "[Preview] " + theme.Name;
+				var vboxImage = new Box (Orientation.VERTICAL, 6);
+				dlg.add(vboxImage);
+				var imgPreview = new Image();
+				
+				EventBox ebox = new EventBox();
+				ebox.button_press_event.connect(() => { dlg.destroy(); return true;});
+				ebox.add(imgPreview);
+				vboxImage.add(ebox);
+				
+				imgPreview.pixbuf = px;
+				
+				dlg.show_all();
+				//dlg.run();
+
+			}
+			catch(Error e){
+				log_error (e.message);
+			}
+		}
 	}
 	
 	// tbOptions handlers -------------------------
