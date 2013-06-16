@@ -225,6 +225,10 @@ public class Main : GLib.Object {
 	
 	private void exit_app(){
 		update_startup_script();
+		
+		if (check_startup()){
+			autostart(true); //overwrite the startup entry
+		}
 	}
 	
 	public void update_startup_script(){
