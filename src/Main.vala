@@ -574,8 +574,8 @@ public class ConkyConfig : GLib.Object {
 		}
 		set
 		{
-			own_window_transparent = "false";
-			own_window_argb_visual = "true";
+			own_window_transparent = "no";
+			own_window_argb_visual = "yes";
 			
 			string newLine = "own_window_argb_value " + value;
 			set_value("own_window_argb_value", newLine);
@@ -598,12 +598,27 @@ public class ConkyConfig : GLib.Object {
 		}
 	}
 	
+	public string minimum_size{
+		owned get{
+			string s = get_value("minimum_size");
+			if ((s == "")||(s.split(" ").length != 2)) { s = "0 0"; }
+			debug("Get: minimum_size " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "minimum_size " + value;
+			set_value("minimum_size", newLine);
+			debug("Set: minimum_size " + value);
+		}
+	}
+	
 	public string get_value(string param){
 		foreach(string line in Utility.read_file(Path).split("\n")){
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
-				if (s.split(" ").length >= 2){
-					return s.split(" ")[1].strip().down();;
+				if (s.index_of(" ") != -1){
+					return s[s.index_of(" ")+1:s.length].strip();
 				}
 			}
 		}

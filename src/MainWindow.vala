@@ -56,11 +56,15 @@ public class MainWindow : Window
 	private Label lblEditWidgetStatus;
 	private Label lblHeaderBackground;
 	private Label lblTransparency;
+	private Label lblMinWidth;
+	private Label lblMinHeight;
 	private ComboBox cmbAlignment;
 	private ComboBox cmbWidget;
 	private SpinButton spinGapX;
 	private SpinButton spinGapY;
 	private SpinButton spinTransparency;
+	private SpinButton spinMinWidth;
+	private SpinButton spinMinHeight;
 	private ColorButton cbtnBackgroundColor;
 	
 	private TreeView tvTheme;
@@ -302,6 +306,7 @@ public class MainWindow : Window
         cmbWidget.pack_start( textCell, false );
         cmbWidget.set_attributes( textCell, "text", 0 );
         cmbWidget.changed.connect(cmbWidget_changed);
+        cmbWidget.margin_left = 6;
         gridEdit.attach(cmbWidget,0,++row,4,1);
 		
         //btnEditReloadWidget
@@ -421,6 +426,32 @@ public class MainWindow : Window
 		//cbtnBackgroundColor
 		cbtnBackgroundColor = new ColorButton();
 		gridEdit.attach(cbtnBackgroundColor,2,row,1,1);
+		
+		//lblMinWidth
+		lblMinWidth = new Gtk.Label(_("Minimum Width"));
+		lblMinWidth.margin_left = 6;
+		lblMinWidth.xalign = (float) 0.0;
+		gridEdit.attach(lblMinWidth,0,++row,2,1);
+		
+		//spinMinWidth
+		spinMinWidth = new SpinButton.with_range(0,9999,10);
+		spinMinWidth.xalign = (float) 0.5;
+		spinMinWidth.value = 100.0;
+		spinMinWidth.set_tooltip_text(_("Minimum Width"));
+		gridEdit.attach(spinMinWidth,2,row,1,1);
+		
+		//lblMinHeight
+		lblMinHeight = new Gtk.Label(_("Minimum Height"));
+		lblMinHeight.margin_left = 6;
+		lblMinHeight.xalign = (float) 0.0;
+		gridEdit.attach(lblMinHeight,0,++row,2,1);
+		
+		//spinMinHeight
+		spinMinHeight = new SpinButton.with_range(0,9999,10);
+		spinMinHeight.xalign = (float) 0.5;
+		spinMinHeight.value = 100.0;
+		spinMinHeight.set_tooltip_text(_("Minimum Height"));
+		gridEdit.attach(spinMinHeight,2,row,1,1);
 		
 		//hboxCommands
         Box hboxEditButtons = new Box (Orientation.HORIZONTAL, 6);
@@ -542,7 +573,7 @@ public class MainWindow : Window
 		spinGapX.value = double.parse(conf.gap_x);
 		spinGapY.value = double.parse(conf.gap_y);
 		
-		if (conf.own_window_transparent == "true"){
+		if (conf.own_window_transparent == "yes"){
 			spinTransparency.value = 100;
 		}
 		else if (conf.own_window_argb_value == ""){
@@ -553,6 +584,10 @@ public class MainWindow : Window
 		}
 		
 		cbtnBackgroundColor.rgba = Utility.hex_to_rgba(conf.own_window_colour);
+		
+		string size = conf.minimum_size;
+		spinMinWidth.value = int.parse(size.split(" ")[0]);
+		spinMinHeight.value = int.parse(size.split(" ")[1]);
 	}
 	
 	private void btnEditApplyChanges_clicked () {
@@ -568,6 +603,7 @@ public class MainWindow : Window
 		
 		conf.own_window_argb_value = "%.0f".printf(((100.0 - spinTransparency.value) / 100.0) * 255.0);
 		conf.own_window_colour = Utility.rgba_to_hex(cbtnBackgroundColor.rgba, false, false);  
+		conf.minimum_size = spinMinWidth.value.to_string() + " " + spinMinHeight.value.to_string();
 	}
 	
 	private void btnEditDiscardChanges_clicked () {
@@ -590,11 +626,16 @@ public class MainWindow : Window
 	
 	private void set_editing_options_enabled (bool enable){
 		btnEditReloadWidget.sensitive = enable;
+		lblEditWidgetStatus.label = "";
 		cmbAlignment.sensitive = enable;
 		spinGapX.sensitive = enable;
 		spinGapY.sensitive = enable;
+		spinTransparency.sensitive = enable;
+		cbtnBackgroundColor.sensitive = enable;
+		spinMinWidth.sensitive = enable;
+		spinMinHeight.sensitive = enable;
 		btnEditApplyChanges.sensitive = enable;
-		lblEditWidgetStatus.label = "";
+		btnEditDiscardChanges.sensitive = enable;
 	}
 	
 	//tvTheme Handlers -----------
