@@ -23,10 +23,10 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=12679;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_1=14463;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
-FILE_NAME_2=16896;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
+current_page=1
+FILE_NAME_0=15466;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_1=15175;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+FILE_NAME_2=17691;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
 FILE_NAME_3=16398;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fselene%2Fsrc%2FMain.vala;0;4
 FILE_NAME_4=3400;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fselene%2Fsrc%2FPrefWindow.vala;0;4
 FILE_NAME_5=1071;Make;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4

@@ -542,6 +542,9 @@ public class MainWindow : Window
 		}
 		cmbWidget.set_model(model);
 		cmbWidget.set_active (0);
+		
+		ListStore store = new ListStore(1,typeof(ConkyConfig));
+		tvConfig.model = store;
 	}
 	
 	//Edit tab handlers ----------
