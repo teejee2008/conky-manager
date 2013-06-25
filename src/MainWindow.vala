@@ -223,56 +223,6 @@ public class MainWindow : Window
 			});
         btnReloadThemes.set_tooltip_text (_("Reload list of themes"));
 		hboxThemeButtons.add(btnReloadThemes);
-		
-		//Options tab ---------------------------
-		
-		//vboxOptions
-        vboxOptions = new Box (Orientation.VERTICAL, 6);
-		vboxOptions.margin = 12;
-
-        //lblOptionsTab
-		lblOptionsTab = new Label (_("Options"));
-
-		tabMain.append_page (vboxOptions, lblOptionsTab);
-
-        //lblHeaderStartup
-		lblHeaderStartup = new Gtk.Label("<b>" + _("Startup") + "</b>");
-		lblHeaderStartup.set_use_markup(true);
-		lblHeaderStartup.xalign = (float) 0.0;
-		//lblHeaderStartup.margin_top = 6;
-		lblHeaderStartup.margin_bottom = 6;
-		vboxOptions.add(lblHeaderStartup);
-		
-		//chkStartup
-		chkStartup = new CheckButton.with_label (_("Run Conky at system startup"));
-		chkStartup.active = App.check_startup();
-		chkStartup.clicked.connect (chkStartup_clicked);
-		chkStartup.margin_left = 6;
-		chkStartup.margin_bottom = 12;
-		vboxOptions.add(chkStartup);
-		
-		//lblHeaderKillConky
-		lblHeaderKillConky = new Gtk.Label("<b>" + _("Commands") + "</b>");
-		lblHeaderKillConky.set_use_markup(true);
-		lblHeaderKillConky.xalign = (float) 0.0;
-		lblHeaderKillConky.margin_bottom = 6;
-		vboxOptions.add(lblHeaderKillConky);
-		
-		//hboxCommands
-        Box hboxCommands = new Box (Orientation.HORIZONTAL, 6);
-        vboxOptions.add(hboxCommands);
-        
-		//btnKillConky
-		btnKillConky = new Button.with_label("  " + _("Kill Conky"));
-		btnKillConky.set_image (new Image.from_stock (Stock.STOP, IconSize.MENU));
-        btnKillConky.clicked.connect (() => {
-			App.kill_all_conky();
-			});
-        btnKillConky.set_tooltip_text (_("Kill all running Conky instances"));
-        btnKillConky.set_size_request(150,30);
-        btnKillConky.margin_left = 6;
-        btnKillConky.expand = false;
-		hboxCommands.add(btnKillConky);
 
         //Edit tab ---------------------------
 		
@@ -476,6 +426,56 @@ public class MainWindow : Window
         btnEditDiscardChanges.set_tooltip_text (_("Apply Changes"));
         btnEditDiscardChanges.set_size_request(-1,30);
 		hboxEditButtons.add(btnEditDiscardChanges);
+		
+		//Options tab ---------------------------
+		
+		//vboxOptions
+        vboxOptions = new Box (Orientation.VERTICAL, 6);
+		vboxOptions.margin = 12;
+
+        //lblOptionsTab
+		lblOptionsTab = new Label (_("Options"));
+
+		tabMain.append_page (vboxOptions, lblOptionsTab);
+
+        //lblHeaderStartup
+		lblHeaderStartup = new Gtk.Label("<b>" + _("Startup") + "</b>");
+		lblHeaderStartup.set_use_markup(true);
+		lblHeaderStartup.xalign = (float) 0.0;
+		//lblHeaderStartup.margin_top = 6;
+		lblHeaderStartup.margin_bottom = 6;
+		vboxOptions.add(lblHeaderStartup);
+		
+		//chkStartup
+		chkStartup = new CheckButton.with_label (_("Run Conky at system startup"));
+		chkStartup.active = App.check_startup();
+		chkStartup.clicked.connect (chkStartup_clicked);
+		chkStartup.margin_left = 6;
+		chkStartup.margin_bottom = 12;
+		vboxOptions.add(chkStartup);
+		
+		//lblHeaderKillConky
+		lblHeaderKillConky = new Gtk.Label("<b>" + _("Commands") + "</b>");
+		lblHeaderKillConky.set_use_markup(true);
+		lblHeaderKillConky.xalign = (float) 0.0;
+		lblHeaderKillConky.margin_bottom = 6;
+		vboxOptions.add(lblHeaderKillConky);
+		
+		//hboxCommands
+        Box hboxCommands = new Box (Orientation.HORIZONTAL, 6);
+        vboxOptions.add(hboxCommands);
+        
+		//btnKillConky
+		btnKillConky = new Button.with_label("  " + _("Kill Conky"));
+		btnKillConky.set_image (new Image.from_stock (Stock.STOP, IconSize.MENU));
+        btnKillConky.clicked.connect (() => {
+			App.kill_all_conky();
+			});
+        btnKillConky.set_tooltip_text (_("Kill all running Conky instances"));
+        btnKillConky.set_size_request(150,30);
+        btnKillConky.margin_left = 6;
+        btnKillConky.expand = false;
+		hboxCommands.add(btnKillConky);
 		
 		//About tab ---------------------------
 		
