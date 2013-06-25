@@ -1,7 +1,9 @@
-conky-manager (1.0.4) quantal; urgency=low
+conky-manager (1.1) quantal; urgency=low
 
-  * Rev:14, 2013-06-16
+  * Rev:15, 2013-06-23
   
-  * Fixed an issue with starting Conky at system startup
+  * Added options for changing widget location
+
+  * Added option to kill Conky
 
  -- Tony George <tony.george.kol@gmail.com>  Sun, 16 Jun 2013 11:00:00 +0530

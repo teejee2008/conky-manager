@@ -735,7 +735,7 @@ namespace Utility
 			Gtk.main_iteration ();
 	}
 
-	public bool Combo_SelectValue (ComboBox combo, int index, string val)
+	public bool gtk_combobox_set_value (ComboBox combo, int index, string val)
 	{
 		TreeIter iter;
 		string comboVal;
@@ -754,7 +754,7 @@ namespace Utility
 		return false;
 	}
 	
-	public string Combo_GetSelectedValue (ComboBox combo, int index, string default_value)
+	public string gtk_combobox_get_value (ComboBox combo, int index, string default_value)
 	{
 		if (combo.model == null) { return default_value; }
 		if (combo.active < 0) { return default_value; }
@@ -766,6 +766,45 @@ namespace Utility
 		model.get(iter, index, out val);
 			
 		return val;
+	}
+	
+	public static string rgba_to_hex (Gdk.RGBA color, bool alpha = false, bool prefix_hash = true){
+		string hex = "";
+		
+		if (alpha){
+			hex = "%02x%02x%02x%02x".printf((uint)(Math.round(color.red*255)),
+									(uint)(Math.round(color.green*255)),
+									(uint)(Math.round(color.blue*255)),
+									(uint)(Math.round(color.alpha*255)))
+									.up();
+		}
+		else {														
+			hex = "%02x%02x%02x".printf((uint)(Math.round(color.red*255)),
+									(uint)(Math.round(color.green*255)),
+									(uint)(Math.round(color.blue*255)))
+									.up();
+		}	
+		
+		if (prefix_hash){
+			hex = "#" + hex;
+		}	
+		
+		return hex;													
+	}
+	
+	public static Gdk.RGBA hex_to_rgba (string hex_color){
+		string hex = hex_color.strip().down();
+		if (hex.has_prefix("#") == false){
+			hex = "#" + hex;
+		}
+		
+		Gdk.RGBA color = Gdk.RGBA();
+		if(color.parse(hex) == false){
+			color.parse("#000000");
+		}
+		color.alpha = 255;
+		
+		return color;
 	}
 	
 	public static Gee.ArrayList<UsbDevice> get_usb_device_list()

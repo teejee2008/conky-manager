@@ -27,7 +27,7 @@ using Gee;
 
 public Main App;
 public const string AppName = "Conky Manager";
-public const string AppVersion = "1.0";
+public const string AppVersion = "1.1";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 public const bool LogTimestamp = false;
@@ -279,6 +279,10 @@ Comment=
 			Utility.file_delete(startupFile);			
 		}
 	}
+	
+	public void kill_all_conky(){
+		Posix.system("killall conky");
+	}
 }
 
 public class ConkyTheme : GLib.Object {
@@ -410,6 +414,11 @@ public class ConkyTheme : GLib.Object {
 					break;
 				}
 			}
+			
+			if (ConfigList.size == 0){
+				allEnabled = false;
+			}
+			
 			return allEnabled;
 		}
 		
@@ -479,5 +488,153 @@ public class ConkyConfig : GLib.Object {
 		//set the flag for immediate effect
 		//will be updated by the refresh_status() timer
 		Enabled = false; 
+	}
+	
+	public string alignment{
+		owned get{
+			string s = get_value("alignment");
+			if (s == "") { s = "top_left"; }
+			debug("Get: alignment " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "alignment " + value;
+			set_value("alignment", newLine);
+			debug("Set: alignment " + value);
+		}
+	}
+	
+	public string gap_x{
+		owned get{
+			string s = get_value("gap_x");
+			if (s == "") { s = "0"; }
+			debug("Get: gap_x " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "gap_x " + value;
+			set_value("gap_x", newLine);
+			debug("Set: gap_x " + value);
+		}
+	}
+	
+	public string gap_y{
+		owned get{
+			string s = get_value("gap_y");
+			if (s == "") { s = "0"; }
+			debug("Get: gap_y " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "gap_y " + value;
+			set_value("gap_y", newLine);
+			debug("Set: gap_y " + value);
+		}
+	}
+	
+	public string own_window_transparent{
+		owned get{
+			string s = get_value("own_window_transparent");
+			if (s == "") { s = ""; }
+			debug("Get: own_window_transparent " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "own_window_transparent " + value;
+			set_value("own_window_transparent", newLine);
+			debug("Set: own_window_transparent " + value);
+		}
+	}
+	
+	public string own_window_argb_visual{
+		owned get{
+			string s = get_value("own_window_argb_visual");
+			if (s == "") { s = ""; }
+			debug("Get: own_window_argb_visual " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "own_window_argb_visual " + value;
+			set_value("own_window_argb_visual", newLine);
+			debug("Set: own_window_argb_visual " + value);
+		}
+	}
+	
+	public string own_window_argb_value{
+		owned get{
+			string s = get_value("own_window_argb_value");
+			if (s == "") { s = ""; }
+			debug("Get: own_window_argb_value " + s);
+			return s;
+		}
+		set
+		{
+			own_window_transparent = "false";
+			own_window_argb_visual = "true";
+			
+			string newLine = "own_window_argb_value " + value;
+			set_value("own_window_argb_value", newLine);
+			debug("Set: own_window_argb_value " + value);
+		}
+	}
+	
+	public string own_window_colour{
+		owned get{
+			string s = get_value("own_window_colour");
+			if (s == "") { s = "000000"; }
+			debug("Get: own_window_colour " + s);
+			return s.up();
+		}
+		set
+		{
+			string newLine = "own_window_colour " + value.up();
+			set_value("own_window_colour", newLine);
+			debug("Set: own_window_colour " + value.up());
+		}
+	}
+	
+	public string get_value(string param){
+		foreach(string line in Utility.read_file(Path).split("\n")){
+			string s = line.down().strip();
+			if (s.has_prefix(param)){
+				if (s.split(" ").length >= 2){
+					return s.split(" ")[1].strip().down();;
+				}
+			}
+		}
+		
+		return "";
+	}
+	
+	public void set_value(string param, string newLine){
+		string oldText = Utility.read_file(this.Path);
+		string newText = "";
+		bool found = false;
+		
+		foreach(string line in oldText.split("\n")){
+			string s = line.down().strip();
+			if (s.has_prefix(param)){
+				newText += newLine + "\n";
+				found = true;
+			}
+			else if ((s == "text")&&(!found)){
+				//insert line
+				newText += newLine + "\n";
+				newText += line + "\n";
+				found = true;
+			}
+			else{
+				newText += line + "\n";
+			}
+		}
+		
+		newText = newText[0:newText.length-1];
+		
+		Utility.write_file(this.Path, newText);
 	}
 }
