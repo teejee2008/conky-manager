@@ -46,6 +46,9 @@ public class MainWindow : Window
 	
 	private Label lblHeaderStartup;
 	private CheckButton chkStartup;
+	private Label lblHeaderThemePack;
+	private LinkButton lnkInstallNewThemes;
+	private Button btnInstallThemePack;
 	
 	private Label lblHeaderWidget;
 	private Label lblBackgroundColor;
@@ -56,6 +59,7 @@ public class MainWindow : Window
 	private Label lblEditWidgetStatus;
 	private Label lblHeaderBackground;
 	private Label lblTransparency;
+	private Label lblHeaderSize;
 	private Label lblMinWidth;
 	private Label lblMinHeight;
 	private ComboBox cmbAlignment;
@@ -66,6 +70,7 @@ public class MainWindow : Window
 	private SpinButton spinMinWidth;
 	private SpinButton spinMinHeight;
 	private ColorButton cbtnBackgroundColor;
+	private CheckButton chkBackgroundTransparent;
 	
 	private TreeView tvTheme;
 	private ScrolledWindow swTheme;
@@ -78,12 +83,11 @@ public class MainWindow : Window
 	private Button btnReloadThemes;
 	private Button btnEditApplyChanges;
 	private Button btnEditDiscardChanges;
-	private Button btnEditReloadWidget;
+	private Button btnReloadWidget;
+	private Button btnStopWidget;
 	
 	private Label lblHeaderKillConky;
 	private Button btnKillConky;
-	
-	//private ComboBox comboTheme;
 
 	public MainWindow() {
 		this.title = AppName + " v" + AppVersion + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
@@ -94,6 +98,7 @@ public class MainWindow : Window
 		//tabMain
         tabMain = new Notebook ();
 		tabMain.margin = 6;
+		tabMain.tab_pos = PositionType.LEFT;
 		add(tabMain);
 		
 		//vboxTheme
@@ -104,10 +109,6 @@ public class MainWindow : Window
 		lblThemeTab = new Label (_("Theme"));
 
 		tabMain.append_page (vboxTheme, lblThemeTab);
-		
-        //hboxTheme
-        //hboxTheme = new Box (Orientation.HORIZONTAL, 6);
-        //vboxTheme.add(hboxTheme);
 
 		//tvTheme
 		tvTheme = new TreeView();
@@ -259,19 +260,27 @@ public class MainWindow : Window
         cmbWidget.margin_left = 6;
         gridEdit.attach(cmbWidget,0,++row,4,1);
 		
-        //btnEditReloadWidget
-		btnEditReloadWidget = new Button.with_label("");
-		btnEditReloadWidget.set_image (new Image.from_stock (Stock.REFRESH, IconSize.MENU));
-        btnEditReloadWidget.clicked.connect (btnEditReloadWidget_clicked);
-        btnEditReloadWidget.set_tooltip_text (_("Start / Restart widget"));
-        btnEditReloadWidget.set_size_request(40,30);
-		gridEdit.attach(btnEditReloadWidget,4,row,1,1);
-
+        //btnReloadWidget
+		btnReloadWidget = new Button.with_label("");
+		btnReloadWidget.set_image (new Image.from_stock (Stock.REFRESH, IconSize.MENU));
+        btnReloadWidget.clicked.connect (btnReloadWidget_clicked);
+        btnReloadWidget.set_tooltip_text (_("Start / Restart Widget"));
+        btnReloadWidget.set_size_request(30,30);
+		gridEdit.attach(btnReloadWidget,4,row,1,1);
+		
+		//btnStopWidget
+		btnStopWidget = new Button.with_label("");
+		btnStopWidget.set_image (new Image.from_stock (Stock.STOP, IconSize.MENU));
+        btnStopWidget.clicked.connect (btnStopWidget_clicked);
+        btnStopWidget.set_tooltip_text (_("Stop Widget"));
+        btnStopWidget.set_size_request(30,30);
+		gridEdit.attach(btnStopWidget,5,row,1,1);
+		
 		//lblEditWidgetStatus
 		lblEditWidgetStatus = new Gtk.Label("");
 		lblEditWidgetStatus.xalign = (float) 0.5;
 		lblEditWidgetStatus.set_use_markup(true);
-		gridEdit.attach(lblEditWidgetStatus,5,row,1,1);
+		gridEdit.attach(lblEditWidgetStatus,6,row,1,1);
 
 		//lblHeaderLocation
 		lblHeaderLocation = new Gtk.Label("<b>" + _("Location") + "</b>");
@@ -344,14 +353,22 @@ public class MainWindow : Window
 		gridEdit.attach(spinGapY,2,row,1,1);
 
 		//lblHeaderBackground
-		lblHeaderBackground = new Gtk.Label("<b>" + _("Background") + "</b>");
+		lblHeaderBackground = new Gtk.Label("<b>" + _("Transparency") + "</b>");
 		lblHeaderBackground.set_use_markup(true);
 		lblHeaderBackground.xalign = (float) 0.0;
 		lblHeaderBackground.margin_top = 12;
 		lblHeaderBackground.margin_bottom = 6;
 		gridEdit.attach(lblHeaderBackground,0,++row,grid_col_count,1);
 		
-		string tt = _("Background transparency \n0   = Fully Opaque, \n100 = Fully Transparent");
+		//chkBackgroundTransparent
+		chkBackgroundTransparent = new CheckButton.with_label (_("Transparent Background"));
+		chkBackgroundTransparent.active = App.check_startup();
+		chkBackgroundTransparent.clicked.connect (chkBackgroundTransparent_clicked);
+		chkBackgroundTransparent.set_tooltip_text(_("Background Transparency\n\nMakes the background transparent.\nText and images in the foreground will remain opaque.\nTo get a semi-transparent window, uncheck this option\nand set the window transparency."));
+		chkBackgroundTransparent.margin_left = 6;
+		gridEdit.attach(chkBackgroundTransparent,0,++row,grid_col_count,1);
+		
+		string tt = _("Window Transparency\n\n0 = Fully Opaque, 100 = Fully Transparent\n\nThis options sets the transparency of the whole window.\nTo make only the background transparent,\nuse the 'Transparent Background' checkbox");
 		
 		//lblTransparency
 		lblTransparency = new Gtk.Label(_("Transparency (%)"));
@@ -376,6 +393,14 @@ public class MainWindow : Window
 		//cbtnBackgroundColor
 		cbtnBackgroundColor = new ColorButton();
 		gridEdit.attach(cbtnBackgroundColor,2,row,1,1);
+		
+		//lblHeaderBackground
+		lblHeaderSize = new Gtk.Label("<b>" + _("Window Size") + "</b>");
+		lblHeaderSize.set_use_markup(true);
+		lblHeaderSize.xalign = (float) 0.0;
+		lblHeaderSize.margin_top = 12;
+		lblHeaderSize.margin_bottom = 6;
+		gridEdit.attach(lblHeaderSize,0,++row,grid_col_count,1);
 		
 		//lblMinWidth
 		lblMinWidth = new Gtk.Label(_("Minimum Width"));
@@ -453,11 +478,43 @@ public class MainWindow : Window
 		chkStartup.margin_left = 6;
 		chkStartup.margin_bottom = 12;
 		vboxOptions.add(chkStartup);
+
+		//lblHeaderThemePack
+		lblHeaderThemePack = new Gtk.Label("<b>" + _("Theme Packs") + "</b>");
+		lblHeaderThemePack.set_use_markup(true);
+		lblHeaderThemePack.xalign = (float) 0.0;
+		lblHeaderThemePack.margin_bottom = 6;
+		vboxOptions.add(lblHeaderThemePack);
 		
+		//btnInstallThemePack
+		btnInstallThemePack = new Button.with_label("  " + _("Import Themes from ZIP package"));
+		btnInstallThemePack.set_image (new Image.from_stock (Stock.ADD, IconSize.MENU));
+        btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
+        btnInstallThemePack.expand = false;
+        btnInstallThemePack.set_size_request(500,30);
+        btnInstallThemePack.margin_left = 6;
+		vboxOptions.add(btnInstallThemePack);
+		
+		//lnkInstallNewThemes
+		lnkInstallNewThemes = new Gtk.LinkButton("New Themes Available! Click here to Import.");
+		lnkInstallNewThemes.xalign = (float) 0.0;
+		lnkInstallNewThemes.activate_link.connect(()=> {
+			lnkInstallNewThemes.label = App.install_new_themes().to_string() + " new themes installed";
+			lnkInstallNewThemes.sensitive = false;
+			return true;
+			});
+		bool newThemesAvailable = (App.check_for_new_themes() > 0);
+		debug(newThemesAvailable.to_string());
+		lnkInstallNewThemes.no_show_all = true;
+		lnkInstallNewThemes.visible = newThemesAvailable;
+		
+		vboxOptions.add(lnkInstallNewThemes);
+
 		//lblHeaderKillConky
 		lblHeaderKillConky = new Gtk.Label("<b>" + _("Commands") + "</b>");
 		lblHeaderKillConky.set_use_markup(true);
 		lblHeaderKillConky.xalign = (float) 0.0;
+		lblHeaderKillConky.margin_top = 6;
 		lblHeaderKillConky.margin_bottom = 6;
 		vboxOptions.add(lblHeaderKillConky);
 		
@@ -472,7 +529,7 @@ public class MainWindow : Window
 			App.kill_all_conky();
 			});
         btnKillConky.set_tooltip_text (_("Kill all running Conky instances"));
-        btnKillConky.set_size_request(150,30);
+        btnKillConky.set_size_request(200,30);
         btnKillConky.margin_left = 6;
         btnKillConky.expand = false;
 		hboxCommands.add(btnKillConky);
@@ -566,28 +623,27 @@ public class MainWindow : Window
 		
 		if (conf.Enabled){
 			lblEditWidgetStatus.label = "<span foreground=\"green\">[" + _("Running") + "]</span>";
-			//lblEditWidgetStatus.
 		}
 		else{
 			lblEditWidgetStatus.label = "<span foreground=\"brown\">[" + _("Stopped") + "]</span>";
 		}
 		
+		//location
 		Utility.gtk_combobox_set_value(cmbAlignment, 1, conf.alignment);
 		spinGapX.value = double.parse(conf.gap_x);
 		spinGapY.value = double.parse(conf.gap_y);
 		
-		if (conf.own_window_transparent == "yes"){
-			spinTransparency.value = 100;
-		}
-		else if (conf.own_window_argb_value == ""){
+		//transparency
+		chkBackgroundTransparent.active = (conf.own_window_transparent == "yes");
+		if (conf.own_window_argb_value == ""){
 			spinTransparency.value = 100;
 		}
 		else{
 			spinTransparency.value = ((255.0 - int.parse(conf.own_window_argb_value)) / 255.0) * 100;
 		}
-		
 		cbtnBackgroundColor.rgba = Utility.hex_to_rgba(conf.own_window_colour);
 		
+		//window size 
 		string size = conf.minimum_size;
 		spinMinWidth.value = int.parse(size.split(" ")[0]);
 		spinMinHeight.value = int.parse(size.split(" ")[1]);
@@ -600,20 +656,44 @@ public class MainWindow : Window
 		cmbWidget.get_active_iter(out iter);
 		(cmbWidget.model).get(iter, 1, out conf);
 		
+		conf.stop_conky();
+		
+		//location
 		conf.alignment = Utility.gtk_combobox_get_value(cmbAlignment,1,"top_left");
 		conf.gap_x = spinGapX.value.to_string();
 		conf.gap_y = spinGapY.value.to_string();
 		
-		conf.own_window_argb_value = "%.0f".printf(((100.0 - spinTransparency.value) / 100.0) * 255.0);
-		conf.own_window_colour = Utility.rgba_to_hex(cbtnBackgroundColor.rgba, false, false);  
+		//transparency
+		if (chkBackgroundTransparent.active){
+			conf.own_window_transparent = "yes";
+		}
+		else{
+			conf.own_window_transparent = "no";
+			conf.own_window_argb_value = "%.0f".printf(((100.0 - spinTransparency.value) / 100.0) * 255.0);
+		}
+		conf.own_window_colour = Utility.rgba_to_hex(cbtnBackgroundColor.rgba, false, false); 
+		
+		//window size 
 		conf.minimum_size = spinMinWidth.value.to_string() + " " + spinMinHeight.value.to_string();
+		
+		conf.start_conky();
 	}
 	
 	private void btnEditDiscardChanges_clicked () {
 		cmbWidget_changed();
 	}
 	
-	private void btnEditReloadWidget_clicked () {
+	private void btnReloadWidget_clicked () {
+		TreeIter iter;
+		ConkyConfig conf;
+		
+		cmbWidget.get_active_iter(out iter);
+		(cmbWidget.model).get(iter, 1, out conf);
+		
+		conf.restart_conky();
+	}
+
+	private void btnStopWidget_clicked () {
 		TreeIter iter;
 		ConkyConfig conf;
 		
@@ -623,12 +703,11 @@ public class MainWindow : Window
 		if (conf.Enabled) {
 			conf.stop_conky();
 		}
-		
-		conf.start_conky();
 	}
 	
 	private void set_editing_options_enabled (bool enable){
-		btnEditReloadWidget.sensitive = enable;
+		btnReloadWidget.sensitive = enable;
+		btnStopWidget.sensitive = enable;
 		lblEditWidgetStatus.label = "";
 		cmbAlignment.sensitive = enable;
 		spinGapX.sensitive = enable;
@@ -639,7 +718,21 @@ public class MainWindow : Window
 		spinMinHeight.sensitive = enable;
 		btnEditApplyChanges.sensitive = enable;
 		btnEditDiscardChanges.sensitive = enable;
+		chkBackgroundTransparent.sensitive = enable;
 	}
+	
+		
+	private void chkBackgroundTransparent_clicked ()
+	{
+		TreeIter iter;
+		ConkyConfig conf;
+		
+		cmbWidget.get_active_iter(out iter);
+		(cmbWidget.model).get(iter, 1, out conf);
+		
+		spinTransparency.sensitive = !chkBackgroundTransparent.active;
+	}
+	
 	
 	//tvTheme Handlers -----------
 	
@@ -798,7 +891,7 @@ public class MainWindow : Window
 		
 		return null;
 	}
-	
+
 	//hboxThemeButtons ------------------------
 	
 	private void btnThemeInfo_clicked () {
@@ -855,4 +948,11 @@ public class MainWindow : Window
 	{
 		App.autostart(chkStartup.active);
 	}
+	
+	private void btnInstallThemePack_clicked ()
+	{
+		
+	}
+	
+	
 }

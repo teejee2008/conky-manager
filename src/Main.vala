@@ -98,29 +98,71 @@ public class Main : GLib.Object {
 			debug(_("Directory Created") + ": " + path);
 		}
 		
-		// install shared theme pack ---------------
-		
-		string sharePath = "/usr/share/conky-manager";
-		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
-		if (Utility.file_exists(pkgPath)){
-			install_theme_pack(pkgPath);
+		if (get_installed_theme_count() == 0){
+			// install shared theme pack ---------------
+			string sharePath = "/usr/share/conky-manager";
+			string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
+			if (Utility.file_exists(pkgPath)){
+				install_theme_pack(pkgPath);
+			}
+
+			//install theme packs -----------
+			string appPath = (File.new_for_path (arg0)).get_parent().get_path ();
+			pkgPath = appPath + "/conky-manager-theme-pack.zip";
+			if (Utility.file_exists(pkgPath)){
+				install_theme_pack(pkgPath);
+			} 
 		}
 		
-		//install theme packs -----------
-
-		string appPath = (File.new_for_path (arg0)).get_parent().get_path ();
-		pkgPath = appPath + "/conky-manager-theme-pack.zip";
-		if (Utility.file_exists(pkgPath)){
-			install_theme_pack(pkgPath);
-		} 
-		        
 		//load themes --------
 		
 		reload_themes();
 		start_status_thread();
 	}
 	
-	public void install_theme_pack(string pkgPath){
+	public int get_installed_theme_count(){
+		string home = Environment.get_home_dir ();
+		string path = home + "/conky-manager/themes";
+		var directory = File.new_for_path (path);
+		int count = 0;
+		
+		try{
+			var enumerator = directory.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+			FileInfo info;
+			while ((info = enumerator.next_file ()) != null) {
+				if (info.get_file_type () == FileType.DIRECTORY){
+					count++;
+				}
+			}
+		}
+        catch(Error e){
+	        log_error (e.message);
+	    }
+		
+        return count;
+	}
+	
+	public int check_for_new_themes(){
+		string sharePath = "/usr/share/conky-manager";
+		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
+		if (Utility.file_exists(pkgPath)){
+			return install_theme_pack(pkgPath, true);
+		}
+			
+		return 0;
+	}
+	
+	public int install_new_themes(){
+		string sharePath = "/usr/share/conky-manager";
+		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
+		if (Utility.file_exists(pkgPath)){
+			return install_theme_pack(pkgPath, false);
+		}
+			
+		return 0;
+	}
+	
+	public int install_theme_pack(string pkgPath, bool checkOnly = false){
 		string temp_dir = Environment.get_tmp_dir();
 		temp_dir = temp_dir + "/" + Utility.timestamp2();
 		Utility.create_dir(temp_dir);
@@ -130,6 +172,8 @@ public class Main : GLib.Object {
 		string cmd = "cd \"" + temp_dir + "\"\n";
 		cmd += "unzip  \"" + pkgPath + "\"\n";
 		Utility.execute_command_sync_batch (cmd); 
+		
+		int count = 0;
 		
 		try
 		{
@@ -145,8 +189,13 @@ public class Main : GLib.Object {
 					continue; 
 				}
 				else{
-					debug(_("Theme Copied") + ": " + target_dir);
-					Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
+					count++;
+					
+					if (!checkOnly){
+						//install
+						debug(_("Theme Copied") + ": " + target_dir);
+						Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
+					}
 				}
 	        } 
         }
@@ -155,6 +204,8 @@ public class Main : GLib.Object {
 	    }
 
 		Posix.system("rm -rf \"" + temp_dir + "\"");
+		
+		return count;
 	}
 	
 	public void reload_themes() {
@@ -452,8 +503,11 @@ public class ConkyConfig : GLib.Object {
 		Name = f.get_basename();
 	}
 	
-	public void start_conky()
-	{
+	public void start_conky(){
+		if (Enabled) {
+			return;
+		}
+		
 		Theme.Install();
 		
 		string cmd = "cd \"" + Theme.BasePath + "\"\n";
@@ -467,8 +521,11 @@ public class ConkyConfig : GLib.Object {
 		Enabled = true; 
 	}
 	
-	public void stop_conky()
-	{
+	public void stop_conky(){
+		if (!Enabled) {
+			return;
+		}
+		
 		//Note: There may be more than one running instance of the same config
 		//We need to kill all instances
 		
@@ -488,6 +545,13 @@ public class ConkyConfig : GLib.Object {
 		//set the flag for immediate effect
 		//will be updated by the refresh_status() timer
 		Enabled = false; 
+	}
+	
+	public void restart_conky(){
+		if (Enabled) {
+			stop_conky();
+		}
+		start_conky();
 	}
 	
 	public string alignment{
@@ -544,6 +608,13 @@ public class ConkyConfig : GLib.Object {
 		}
 		set
 		{
+			if(value == "yes") { 
+				own_window_argb_visual = "no";
+			}
+			else{
+				own_window_argb_visual = "yes";
+			}
+		
 			string newLine = "own_window_transparent " + value;
 			set_value("own_window_transparent", newLine);
 			debug("Set: own_window_transparent " + value);
@@ -574,9 +645,6 @@ public class ConkyConfig : GLib.Object {
 		}
 		set
 		{
-			own_window_transparent = "no";
-			own_window_argb_visual = "yes";
-			
 			string newLine = "own_window_argb_value " + value;
 			set_value("own_window_argb_value", newLine);
 			debug("Set: own_window_argb_value " + value);
@@ -630,16 +698,22 @@ public class ConkyConfig : GLib.Object {
 		string oldText = Utility.read_file(this.Path);
 		string newText = "";
 		bool found = false;
+		bool remove = (newLine.strip() == param);
 		
 		foreach(string line in oldText.split("\n")){
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
-				newText += newLine + "\n";
+				if (!remove){
+					//replace line
+					newText += newLine + "\n";
+				}
 				found = true;
 			}
 			else if ((s == "text")&&(!found)){
-				//insert line
-				newText += newLine + "\n";
+				if (!remove){
+					//insert line
+					newText += newLine + "\n";
+				}
 				newText += line + "\n";
 				found = true;
 			}
@@ -648,6 +722,7 @@ public class ConkyConfig : GLib.Object {
 			}
 		}
 		
+		//remove extra newline from end of text
 		newText = newText[0:newText.length-1];
 		
 		Utility.write_file(this.Path, newText);
