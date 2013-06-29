@@ -56,7 +56,7 @@ public class MainWindow : Window
 	private Label lblAlignment;
 	private Label lblGapX;
 	private Label lblGapY;
-	private Label lblEditWidgetStatus;
+	private Label lblWidgetStatus;
 	private Label lblTransparency;
 	private Label lblMinWidth;
 	private Label lblMinHeight;
@@ -80,8 +80,8 @@ public class MainWindow : Window
 	private Button btnThemeInfo;
 	private Button btnThemePreview;
 	private Button btnReloadThemes;
-	private Button btnEditApplyChanges;
-	private Button btnEditDiscardChanges;
+	private Button btnApplyChanges;
+	private Button btnDiscardChanges;
 	private Button btnReloadWidget;
 	private Button btnStopWidget;
 	
@@ -273,25 +273,24 @@ public class MainWindow : Window
         btnStopWidget.set_size_request(30,30);
 		gridEdit.attach(btnStopWidget,2,1,1,1);
 		
-		//lblEditWidgetStatus
-		lblEditWidgetStatus = new Gtk.Label("");
-		lblEditWidgetStatus.xalign = (float) 0.5;
-		lblEditWidgetStatus.set_use_markup(true);
-		gridEdit.attach(lblEditWidgetStatus,3,1,1,1);
+		//lblWidgetStatus
+		lblWidgetStatus = new Gtk.Label("");
+		lblWidgetStatus.xalign = (float) 0.5;
+		lblWidgetStatus.set_use_markup(true);
+		gridEdit.attach(lblWidgetStatus,3,1,1,1);
 
 		//lblHeaderWidgetProperties
 		Label lblHeaderWidgetProperties = new Gtk.Label("<b>" + _("Properties") + "</b>");
 		lblHeaderWidgetProperties.set_use_markup(true);
 		lblHeaderWidgetProperties.xalign = (float) 0.0;
 		lblHeaderWidgetProperties.margin_top = 6;
-		lblHeaderWidgetProperties.margin_bottom = 6;
 		gridEdit.attach(lblHeaderWidgetProperties,0,2,1,1);
 		
         //tabWidgetProperties ---------------------------------------
         tabWidgetProperties = new Notebook ();
 		tabWidgetProperties.margin = 6;
 		tabWidgetProperties.tab_pos = PositionType.LEFT;
-		tabWidgetProperties.set_size_request (300, 300);
+		tabWidgetProperties.expand = true;
 		gridEdit.attach(tabWidgetProperties,0,3,4,1);
 		
 		//lblWidgetLocation
@@ -572,26 +571,23 @@ public class MainWindow : Window
 		
         Box hboxEditButtons = new Box (Orientation.HORIZONTAL, 6);
         hboxEditButtons.homogeneous = true;
-        hboxEditButtons.margin_top = 12;
-        hboxEditButtons.vexpand = true;
-        hboxEditButtons.valign = Align.END;
         gridEdit.attach(hboxEditButtons,0,5,4,1);
         
-		//btnEditApplyChanges
-		btnEditApplyChanges = new Button.with_label("  " + _("Apply Changes"));
-		btnEditApplyChanges.set_image (new Image.from_stock (Stock.APPLY, IconSize.MENU));
-        btnEditApplyChanges.clicked.connect (btnEditApplyChanges_clicked);
-        btnEditApplyChanges.set_tooltip_text (_("Apply Changes"));
-        btnEditApplyChanges.set_size_request(-1,30);
-		hboxEditButtons.add(btnEditApplyChanges);
+		//btnApplyChanges
+		btnApplyChanges = new Button.with_label("  " + _("Apply Changes"));
+		btnApplyChanges.set_image (new Image.from_stock (Stock.APPLY, IconSize.MENU));
+        btnApplyChanges.clicked.connect (btnApplyChanges_clicked);
+        btnApplyChanges.set_tooltip_text (_("Apply Changes"));
+        btnApplyChanges.set_size_request(-1,30);
+		hboxEditButtons.add(btnApplyChanges);
 		
-		//btnEditDiscardChanges
-		btnEditDiscardChanges = new Button.with_label("  " + _("Discard"));
-		btnEditDiscardChanges.set_image (new Image.from_stock (Stock.CANCEL, IconSize.MENU));
-        btnEditDiscardChanges.clicked.connect (btnEditDiscardChanges_clicked);
-        btnEditDiscardChanges.set_tooltip_text (_("Apply Changes"));
-        btnEditDiscardChanges.set_size_request(-1,30);
-		hboxEditButtons.add(btnEditDiscardChanges);
+		//btnDiscardChanges
+		btnDiscardChanges = new Button.with_label("  " + _("Discard"));
+		btnDiscardChanges.set_image (new Image.from_stock (Stock.CANCEL, IconSize.MENU));
+        btnDiscardChanges.clicked.connect (btnDiscardChanges_clicked);
+        btnDiscardChanges.set_tooltip_text (_("Apply Changes"));
+        btnDiscardChanges.set_size_request(-1,30);
+		hboxEditButtons.add(btnDiscardChanges);
 		
 		//Options tab ---------------------------
 		
@@ -763,10 +759,10 @@ public class MainWindow : Window
 		(cmbWidget.model).get(iter, 1, out conf);
 		
 		if (conf.Enabled){
-			lblEditWidgetStatus.label = "<span foreground=\"green\">[" + _("Running") + "]</span>";
+			lblWidgetStatus.label = "<span foreground=\"green\">[" + _("Running") + "]</span>";
 		}
 		else{
-			lblEditWidgetStatus.label = "<span foreground=\"brown\">[" + _("Stopped") + "]</span>";
+			lblWidgetStatus.label = "<span foreground=\"brown\">[" + _("Stopped") + "]</span>";
 		}
 		
 		//location
@@ -829,7 +825,7 @@ public class MainWindow : Window
 		spinHeightPadding.value = conf.height_padding;
 	}
 	
-	private void btnEditApplyChanges_clicked () {
+	private void btnApplyChanges_clicked () {
 		TreeIter iter;
 		ConkyConfig conf;
 		
@@ -875,7 +871,7 @@ public class MainWindow : Window
 		conf.start_conky();
 	}
 	
-	private void btnEditDiscardChanges_clicked () {
+	private void btnDiscardChanges_clicked () {
 		cmbWidget_changed();
 	}
 	
@@ -904,10 +900,10 @@ public class MainWindow : Window
 	private void set_editing_options_enabled (bool enable){
 		btnReloadWidget.sensitive = enable;
 		btnStopWidget.sensitive = enable;
-		lblEditWidgetStatus.label = "";
+		lblWidgetStatus.label = "";
 		tabWidgetProperties.sensitive = enable;
-		btnEditApplyChanges.sensitive = enable;
-		btnEditDiscardChanges.sensitive = enable;
+		btnApplyChanges.sensitive = enable;
+		btnDiscardChanges.sensitive = enable;
 	}
 
 	private void cmbTransparencyType_changed(){
