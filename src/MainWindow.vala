@@ -48,7 +48,7 @@ public class MainWindow : Window
 	private Label lblHeaderStartup;
 	private CheckButton chkStartup;
 	private Label lblHeaderThemePack;
-	private LinkButton lnkInstallNewThemes;
+	private Button btnInstallNewThemes;
 	private Button btnInstallThemePack;
 	
 	private Label lblHeaderWidget;
@@ -630,22 +630,28 @@ public class MainWindow : Window
         btnInstallThemePack.expand = false;
         btnInstallThemePack.set_size_request(500,30);
         btnInstallThemePack.margin_left = 6;
-		vboxOptions.add(btnInstallThemePack);
+		//vboxOptions.add(btnInstallThemePack);
 		
-		//lnkInstallNewThemes
-		lnkInstallNewThemes = new Gtk.LinkButton("New Themes Available! Click here to Import.");
-		lnkInstallNewThemes.xalign = (float) 0.0;
-		lnkInstallNewThemes.activate_link.connect(()=> {
-			lnkInstallNewThemes.label = App.install_new_themes().to_string() + " new themes installed";
-			lnkInstallNewThemes.sensitive = false;
-			return true;
-			});
 		bool newThemesAvailable = (App.check_for_new_themes() > 0);
-		debug(newThemesAvailable.to_string());
-		lnkInstallNewThemes.no_show_all = true;
-		lnkInstallNewThemes.visible = newThemesAvailable;
 		
-		vboxOptions.add(lnkInstallNewThemes);
+		//btnInstallNewThemes
+		btnInstallNewThemes = new Button.with_label("");
+		btnInstallNewThemes.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
+        btnInstallNewThemes.clicked.connect (()=> {
+			btnInstallNewThemes.label = "  " + App.install_new_themes().to_string() + " new themes installed";
+			btnInstallNewThemes.sensitive = false;
+			});
+        btnInstallNewThemes.expand = false;
+        btnInstallNewThemes.set_size_request(500,30);
+        btnInstallNewThemes.margin_left = 6;
+        btnInstallNewThemes.sensitive = newThemesAvailable;
+        if (newThemesAvailable){
+			btnInstallNewThemes.label = "  " + _("New Themes Available! Click here to Import.");
+		}
+		else{
+			btnInstallNewThemes.label = "  " + _("All available themes are already installed");
+		}
+		vboxOptions.add(btnInstallNewThemes);
 
 		//lblHeaderKillConky
 		lblHeaderKillConky = new Gtk.Label("<b>" + _("Commands") + "</b>");
