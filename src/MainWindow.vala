@@ -626,7 +626,7 @@ public class MainWindow : Window
 		//btnInstallThemePack
 		btnInstallThemePack = new Button.with_label("  " + _("Import Themes from ZIP package"));
 		btnInstallThemePack.set_image (new Image.from_stock (Stock.ADD, IconSize.MENU));
-        btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
+        //btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
         btnInstallThemePack.expand = false;
         btnInstallThemePack.set_size_request(500,30);
         btnInstallThemePack.margin_left = 6;
@@ -640,6 +640,8 @@ public class MainWindow : Window
         btnInstallNewThemes.clicked.connect (()=> {
 			btnInstallNewThemes.label = "  " + App.install_new_themes().to_string() + " new themes installed";
 			btnInstallNewThemes.sensitive = false;
+			App.reload_themes();
+			load_themes();
 			});
         btnInstallNewThemes.expand = false;
         btnInstallNewThemes.set_size_request(500,30);
@@ -1137,11 +1139,5 @@ public class MainWindow : Window
 	{
 		App.autostart(chkStartup.active);
 	}
-	
-	private void btnInstallThemePack_clicked ()
-	{
-		
-	}
-	
-	
+
 }

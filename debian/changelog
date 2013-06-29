@@ -1,6 +1,6 @@
-conky-manager (1.1) quantal; urgency=low
+conky-manager (1.1.0.1) quantal; urgency=low
 
-  * Rev:26, 2013-06-29
+  * Rev:27, 2013-06-29
   
   * Added options for changing widget location, transparency and size
 
