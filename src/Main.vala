@@ -740,6 +740,9 @@ public class ConkyConfig : GLib.Object {
 				if (s.index_of(" ") != -1){
 					return s[s.index_of(" ")+1:s.length].strip();
 				}
+				else if (s.index_of("\t") != -1){
+					return s[s.index_of("\t")+1:s.length].replace("\t"," ").strip();
+				}
 			}
 		}
 		
