@@ -62,7 +62,7 @@ public class MainWindow : Window
 	private Label lblMinHeight;
 	private ComboBox cmbAlignment;
 	private ComboBox cmbWidget;
-	private ComboBox cmbBackgroundType;
+	private ComboBox cmbTransparencyType;
 	private SpinButton spinGapX;
 	private SpinButton spinGapY;
 	private SpinButton spinOpacity;
@@ -70,8 +70,7 @@ public class MainWindow : Window
 	private SpinButton spinMinHeight;
 	private SpinButton spinHeightPadding;
 	private ColorButton cbtnBackgroundColor;
-	private CheckButton chkBackgroundTransparent;
-	
+
 	private TreeView tvTheme;
 	private ScrolledWindow swTheme;
 	
@@ -388,28 +387,24 @@ public class MainWindow : Window
         
         row = -1;
         
-        string tt = _("Opaque - Solid window background") + "\n\n" 
-        + _("Transparent - Transparent window background") + "\n\n" 
-        + _("Semi-Transparent - Enables ARGB Visual. Transparency of window can be adjusted. Requires a composite window manager.");
+		string tt = "";
 		
         //lblBackgroundType
-		Label lblBackgroundType = new Gtk.Label(_("Type"));
+		Label lblBackgroundType = new Gtk.Label(_("Transparency Type"));
 		lblBackgroundType.margin_left = 6;
 		lblBackgroundType.xalign = (float) 0.0;
 		lblBackgroundType.set_tooltip_text(tt);
 		lblBackgroundType.set_use_markup(true);
 		gridWidgetTransparency.attach(lblBackgroundType,0,row,1,1);
 		
-        //cmbBackgroundType
-		cmbBackgroundType = new ComboBox();
+        //cmbTransparencyType
+		cmbTransparencyType = new ComboBox();
 		textCell = new CellRendererText();
-        cmbBackgroundType.pack_start( textCell, false );
-        cmbBackgroundType.set_attributes( textCell, "text", 0 );
-        cmbBackgroundType.changed.connect (() => {
-			spinOpacity.sensitive = (cmbBackgroundType.active == 2);
-			});
-		cmbBackgroundType.set_tooltip_text(tt);
-        gridWidgetTransparency.attach(cmbBackgroundType,1,row,2,1);
+        cmbTransparencyType.pack_start( textCell, false );
+        cmbTransparencyType.set_attributes( textCell, "text", 0 );
+        cmbTransparencyType.changed.connect(cmbTransparencyType_changed);
+		cmbTransparencyType.set_tooltip_text(tt);
+        gridWidgetTransparency.attach(cmbTransparencyType,1,row,2,1);
 		
 		//populate
 		model = new Gtk.ListStore (2, typeof (string), typeof (string));
@@ -418,8 +413,10 @@ public class MainWindow : Window
 		model.append (out iter);
 		model.set (iter,0,_("Transparent"),1,"trans");
 		model.append (out iter);
-		model.set (iter,0,_("Semi-Transparent"),1,"argb");
-		cmbBackgroundType.set_model(model);
+		model.set (iter,0,_("Pseudo-Transparent"),1,"pseudo");
+		model.append (out iter);
+		model.set (iter,0,_("Semi-Transparent"),1,"semi");
+		cmbTransparencyType.set_model(model);
 
 		tt = _("Window Opacity\n\n0 = Fully Transparent, 100 = Fully Opaque");
 		
@@ -455,7 +452,7 @@ public class MainWindow : Window
 		lblTransparencyExpander.set_tooltip_text(tt);
 		gridWidgetTransparency.attach(lblTransparencyExpander,0,++row,3,1);
 		
-		tt = _("Ø Setting Type to \"Transparent\" will make the window transparent but the window will have a shadow. To avoid the shadow set Type to \"Semi-Transparent\" and set Opacity to 0");
+		tt = _("Ø Setting Type to \"Transparent\" will make the whole window transparent (including any images). Use \"Pseudo-Transparent\" if you want the images to be opaque.");
 		
 		//lblSize1
 		Label lblTrans1 = new Gtk.Label(tt);
@@ -465,6 +462,17 @@ public class MainWindow : Window
 		lblTrans1.set_size_request(100,-1);
 		lblTrans1.set_line_wrap(true);
 		gridWidgetTransparency.attach(lblTrans1,0,++row,3,1);
+		
+		tt = _("Ø Setting Type to \"Pseudo-Transparent\" will make the window transparent but the window will have a shadow. The shadow can be disabled by configuring your window manager.");
+		
+		//lblSize1
+		Label lblTrans2 = new Gtk.Label(tt);
+		lblTrans2.margin_left = 6;
+		lblTrans2.margin_bottom = 6;
+		lblTrans2.xalign = (float) 0.0;
+		lblTrans2.set_size_request(100,-1);
+		lblTrans2.set_line_wrap(true);
+		gridWidgetTransparency.attach(lblTrans2,0,++row,3,1);
 		
 		//lblWidgetSize
 		Label lblWidgetSize = new Label (_("Size"));
@@ -771,16 +779,41 @@ public class MainWindow : Window
 		string own_window_argb_value = conf.own_window_argb_value;
 		
 		//transparency
-		if (own_window_transparent == "yes"){
-			Utility.gtk_combobox_set_value(cmbBackgroundType,1,"trans");
+		if(own_window_transparent == "yes"){
+			if(own_window_argb_visual == "yes"){
+				//own_window_argb_value, if present, will be ignored by Conky
+				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"trans");
+			}
+			else if (own_window_argb_visual == "no"){
+				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
+			}
+			else{
+				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
+			}
 		}
-		else if (own_window_argb_visual == "yes"){
-			Utility.gtk_combobox_set_value(cmbBackgroundType,1,"argb");
+		else if (own_window_transparent == "no"){
+			if(own_window_argb_visual == "yes"){
+				if (own_window_argb_value == "0"){
+					Utility.gtk_combobox_set_value(cmbTransparencyType,1,"trans");
+				}
+				else if (own_window_argb_value == "255"){
+					Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+				}
+				else{
+					Utility.gtk_combobox_set_value(cmbTransparencyType,1,"semi");
+				}
+			}
+			else if (own_window_argb_visual == "no"){
+				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+			}
+			else{
+				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+			}
 		}
-		else {
-			Utility.gtk_combobox_set_value(cmbBackgroundType,1,"opaque");
+		else{
+			Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
 		}
-		
+
 		if (own_window_argb_value == ""){
 			spinOpacity.value = 0;
 		}
@@ -811,23 +844,28 @@ public class MainWindow : Window
 		conf.gap_y = spinGapY.value.to_string();
 		
 		//transparency
-		switch (Utility.gtk_combobox_get_value(cmbBackgroundType,1,"argb")){
+		switch (Utility.gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
 			case "opaque":
 				conf.own_window_transparent = "no";
 				conf.own_window_argb_visual = "no";
 				break;
 			case "trans":
 				conf.own_window_transparent = "yes";
+				conf.own_window_argb_visual = "yes";
+				conf.own_window_argb_value = "0";
+				break;
+			case "pseudo":
+				conf.own_window_transparent = "yes";
 				conf.own_window_argb_visual = "no";
 				break;
-			case "argb":
+			case "semi":
 			default:
 				conf.own_window_transparent = "no";
 				conf.own_window_argb_visual = "yes";
+				conf.own_window_argb_value = "%.0f".printf((spinOpacity.value / 100.0) * 255.0);
 				break;
 		}
-		
-		conf.own_window_argb_value = "%.0f".printf((spinOpacity.value / 100.0) * 255.0);
+
 		conf.own_window_colour = Utility.rgba_to_hex(cbtnBackgroundColor.rgba, false, false); 
 		
 		//window size 
@@ -867,18 +905,22 @@ public class MainWindow : Window
 		btnReloadWidget.sensitive = enable;
 		btnStopWidget.sensitive = enable;
 		lblEditWidgetStatus.label = "";
-		cmbAlignment.sensitive = enable;
-		spinGapX.sensitive = enable;
-		spinGapY.sensitive = enable;
-		spinOpacity.sensitive = enable;
-		cbtnBackgroundColor.sensitive = enable;
-		spinMinWidth.sensitive = enable;
-		spinMinHeight.sensitive = enable;
+		tabWidgetProperties.sensitive = enable;
 		btnEditApplyChanges.sensitive = enable;
 		btnEditDiscardChanges.sensitive = enable;
-		chkBackgroundTransparent.sensitive = enable;
 	}
 
+	private void cmbTransparencyType_changed(){
+		switch (Utility.gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
+			case "semi":
+				spinOpacity.sensitive = true;
+				break;
+			default:
+				spinOpacity.sensitive = false;
+				break;
+		}
+	}
+	
 	//tvTheme Handlers -----------
 	
 	private void tvTheme_cellEnabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
