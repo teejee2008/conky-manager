@@ -98,7 +98,7 @@ public class MainWindow : Window
 		//tabMain
         tabMain = new Notebook ();
 		tabMain.margin = 6;
-		tabMain.tab_pos = PositionType.LEFT;
+		//tabMain.tab_pos = PositionType.LEFT;
 		add(tabMain);
 		
 		//vboxTheme
