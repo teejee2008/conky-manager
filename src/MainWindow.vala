@@ -26,7 +26,8 @@ using Gtk;
 public class MainWindow : Window 
 {
 	private Notebook tabMain;
-
+	private Notebook tabWidgetProperties;
+	
 	private Label lblThemeTab;
 	private Box vboxTheme;
 	private Box hboxThemeButtons;
@@ -52,23 +53,22 @@ public class MainWindow : Window
 	
 	private Label lblHeaderWidget;
 	private Label lblBackgroundColor;
-	private Label lblHeaderLocation;
 	private Label lblAlignment;
 	private Label lblGapX;
 	private Label lblGapY;
 	private Label lblEditWidgetStatus;
-	private Label lblHeaderBackground;
 	private Label lblTransparency;
-	private Label lblHeaderSize;
 	private Label lblMinWidth;
 	private Label lblMinHeight;
 	private ComboBox cmbAlignment;
 	private ComboBox cmbWidget;
+	private ComboBox cmbBackgroundType;
 	private SpinButton spinGapX;
 	private SpinButton spinGapY;
-	private SpinButton spinTransparency;
+	private SpinButton spinOpacity;
 	private SpinButton spinMinWidth;
 	private SpinButton spinMinHeight;
+	private SpinButton spinHeightPadding;
 	private ColorButton cbtnBackgroundColor;
 	private CheckButton chkBackgroundTransparent;
 	
@@ -226,7 +226,7 @@ public class MainWindow : Window
 		hboxThemeButtons.add(btnReloadThemes);
 
         //Edit tab ---------------------------
-		
+
         //lblEditTab
 		lblEditTab = new Label (_("Edit"));
 
@@ -238,10 +238,8 @@ public class MainWindow : Window
         gridEdit.visible = false;
         gridEdit.margin = 12;
         tabMain.append_page (gridEdit, lblEditTab);
-        
-        int row=-1;
-        int grid_col_count = 7;
-        
+
+		
         CellRendererText textCell;
         
         //lblHeaderWidget
@@ -249,7 +247,7 @@ public class MainWindow : Window
 		lblHeaderWidget.set_use_markup(true);
 		lblHeaderWidget.xalign = (float) 0.0;
 		lblHeaderWidget.margin_bottom = 6;
-		gridEdit.attach(lblHeaderWidget,0,++row,grid_col_count,1);
+		gridEdit.attach(lblHeaderWidget,0,0,4,1);
 		
         //cmbWidget
 		cmbWidget = new ComboBox();
@@ -258,7 +256,7 @@ public class MainWindow : Window
         cmbWidget.set_attributes( textCell, "text", 0 );
         cmbWidget.changed.connect(cmbWidget_changed);
         cmbWidget.margin_left = 6;
-        gridEdit.attach(cmbWidget,0,++row,4,1);
+        gridEdit.attach(cmbWidget,0,1,1,1);
 		
         //btnReloadWidget
 		btnReloadWidget = new Button.with_label("");
@@ -266,7 +264,7 @@ public class MainWindow : Window
         btnReloadWidget.clicked.connect (btnReloadWidget_clicked);
         btnReloadWidget.set_tooltip_text (_("Start / Restart Widget"));
         btnReloadWidget.set_size_request(30,30);
-		gridEdit.attach(btnReloadWidget,4,row,1,1);
+		gridEdit.attach(btnReloadWidget,1,1,1,1);
 		
 		//btnStopWidget
 		btnStopWidget = new Button.with_label("");
@@ -274,34 +272,56 @@ public class MainWindow : Window
         btnStopWidget.clicked.connect (btnStopWidget_clicked);
         btnStopWidget.set_tooltip_text (_("Stop Widget"));
         btnStopWidget.set_size_request(30,30);
-		gridEdit.attach(btnStopWidget,5,row,1,1);
+		gridEdit.attach(btnStopWidget,2,1,1,1);
 		
 		//lblEditWidgetStatus
 		lblEditWidgetStatus = new Gtk.Label("");
 		lblEditWidgetStatus.xalign = (float) 0.5;
 		lblEditWidgetStatus.set_use_markup(true);
-		gridEdit.attach(lblEditWidgetStatus,6,row,1,1);
+		gridEdit.attach(lblEditWidgetStatus,3,1,1,1);
 
-		//lblHeaderLocation
-		lblHeaderLocation = new Gtk.Label("<b>" + _("Location") + "</b>");
-		lblHeaderLocation.set_use_markup(true);
-		lblHeaderLocation.xalign = (float) 0.0;
-		lblHeaderLocation.margin_top = 12;
-		lblHeaderLocation.margin_bottom = 6;
-		gridEdit.attach(lblHeaderLocation,0,++row,grid_col_count,1);
+		//lblHeaderWidgetProperties
+		Label lblHeaderWidgetProperties = new Gtk.Label("<b>" + _("Properties") + "</b>");
+		lblHeaderWidgetProperties.set_use_markup(true);
+		lblHeaderWidgetProperties.xalign = (float) 0.0;
+		lblHeaderWidgetProperties.margin_top = 6;
+		lblHeaderWidgetProperties.margin_bottom = 6;
+		gridEdit.attach(lblHeaderWidgetProperties,0,2,1,1);
+		
+        //tabWidgetProperties ---------------------------------------
+        tabWidgetProperties = new Notebook ();
+		tabWidgetProperties.margin = 6;
+		tabWidgetProperties.tab_pos = PositionType.LEFT;
+		tabWidgetProperties.set_size_request (300, 300);
+		gridEdit.attach(tabWidgetProperties,0,3,4,1);
+		
+		//lblWidgetLocation
+		Label lblWidgetLocation = new Label (_("Location"));
+
+		//gridWidgetLocation -----------------------------------------------
+		
+        Grid gridWidgetLocation = new Grid ();
+        gridWidgetLocation.set_column_spacing (12);
+        gridWidgetLocation.set_row_spacing (6);
+        gridWidgetLocation.column_homogeneous = false;
+        gridWidgetLocation.visible = false;
+        gridWidgetLocation.margin = 12;
+        tabWidgetProperties.append_page (gridWidgetLocation, lblWidgetLocation);
+        
+		int row = -1;
 		
 		//lblAlignment
 		lblAlignment = new Gtk.Label(_("Alignment"));
 		lblAlignment.margin_left = 6;
 		lblAlignment.xalign = (float) 0.0;
-		gridEdit.attach(lblAlignment,0,++row,2,1);
+		gridWidgetLocation.attach(lblAlignment,0,++row,1,1);
 		
 		//cmbAlignment
 		cmbAlignment = new ComboBox();
 		textCell = new CellRendererText();
         cmbAlignment.pack_start( textCell, false );
         cmbAlignment.set_attributes( textCell, "text", 0 );
-        gridEdit.attach(cmbAlignment,2,row,2,1);
+        gridWidgetLocation.attach(cmbAlignment,1,row,1,1);
 		
 		//populate
 		TreeIter iter;
@@ -328,113 +348,226 @@ public class MainWindow : Window
 		
 		//lblGapX
 		lblGapX = new Gtk.Label(_("Horizontal Gap"));
-		lblGapX.set_tooltip_text("[GAP_X] Horizontal distance from window border");
+		lblGapX.set_tooltip_text("[GAP_X] Horizontal distance from window border (in pixels)");
 		lblGapX.margin_left = 6;
 		lblGapX.xalign = (float) 0.0;
-		gridEdit.attach(lblGapX,0,++row,2,1);
+		gridWidgetLocation.attach(lblGapX,0,++row,1,1);
 		
 		//spinGapX
 		spinGapX = new SpinButton.with_range(-10000,10000,10);
 		spinGapX.xalign = (float) 0.5;
 		spinGapX.value = 0.0;
-		gridEdit.attach(spinGapX,2,row,1,1);
+		gridWidgetLocation.attach(spinGapX,1,row,1,1);
 		
 		//lblGapY
 		lblGapY = new Gtk.Label(_("Vertical Gap"));
-		lblGapY.set_tooltip_text("[GAP_Y] Vertical distance from window border");
+		lblGapY.set_tooltip_text("[GAP_Y] Vertical distance from window border (in pixels)");
 		lblGapY.margin_left = 6;
 		lblGapY.xalign = (float) 0.0;
-		gridEdit.attach(lblGapY,0,++row,2,1);
+		gridWidgetLocation.attach(lblGapY,0,++row,1,1);
 		
 		//spinGapY
 		spinGapY = new SpinButton.with_range(-10000,10000,10);
 		spinGapY.xalign = (float) 0.5;
 		spinGapY.value = 0.0;
-		gridEdit.attach(spinGapY,2,row,1,1);
+		spinGapY.set_size_request(120,-1);
+		gridWidgetLocation.attach(spinGapY,1,row,1,1);
+		
+		//lblWidgetTransparency
+		Label lblWidgetTransparency = new Label (_("Transparency"));
 
-		//lblHeaderBackground
-		lblHeaderBackground = new Gtk.Label("<b>" + _("Transparency") + "</b>");
-		lblHeaderBackground.set_use_markup(true);
-		lblHeaderBackground.xalign = (float) 0.0;
-		lblHeaderBackground.margin_top = 12;
-		lblHeaderBackground.margin_bottom = 6;
-		gridEdit.attach(lblHeaderBackground,0,++row,grid_col_count,1);
+		//gridWidgetTransparency  -----------------------------------------------------------
 		
-		//chkBackgroundTransparent
-		chkBackgroundTransparent = new CheckButton.with_label (_("Transparent Background"));
-		chkBackgroundTransparent.active = App.check_startup();
-		chkBackgroundTransparent.clicked.connect (chkBackgroundTransparent_clicked);
-		chkBackgroundTransparent.set_tooltip_text(_("Background Transparency\n\nMakes the background transparent.\nText and images in the foreground will remain opaque.\nTo get a semi-transparent window, uncheck this option\nand set the window transparency."));
-		chkBackgroundTransparent.margin_left = 6;
-		gridEdit.attach(chkBackgroundTransparent,0,++row,grid_col_count,1);
+        Grid gridWidgetTransparency = new Grid ();
+        gridWidgetTransparency.set_column_spacing (12);
+        gridWidgetTransparency.set_row_spacing (6);
+        gridWidgetTransparency.column_homogeneous = false;
+        gridWidgetTransparency.visible = false;
+        gridWidgetTransparency.margin = 12;
+        tabWidgetProperties.append_page (gridWidgetTransparency, lblWidgetTransparency);
+        
+        row = -1;
+        
+        string tt = _("Opaque - Solid window background") + "\n\n" 
+        + _("Transparent - Transparent window background") + "\n\n" 
+        + _("Semi-Transparent - Enables ARGB Visual. Transparency of window can be adjusted. Requires a composite window manager.");
 		
-		string tt = _("Window Transparency\n\n0 = Fully Opaque, 100 = Fully Transparent\n\nThis options sets the transparency of the whole window.\nTo make only the background transparent,\nuse the 'Transparent Background' checkbox");
+        //lblBackgroundType
+		Label lblBackgroundType = new Gtk.Label(_("Type"));
+		lblBackgroundType.margin_left = 6;
+		lblBackgroundType.xalign = (float) 0.0;
+		lblBackgroundType.set_tooltip_text(tt);
+		lblBackgroundType.set_use_markup(true);
+		gridWidgetTransparency.attach(lblBackgroundType,0,row,1,1);
+		
+        //cmbBackgroundType
+		cmbBackgroundType = new ComboBox();
+		textCell = new CellRendererText();
+        cmbBackgroundType.pack_start( textCell, false );
+        cmbBackgroundType.set_attributes( textCell, "text", 0 );
+        cmbBackgroundType.changed.connect (() => {
+			spinOpacity.sensitive = (cmbBackgroundType.active == 2);
+			});
+		cmbBackgroundType.set_tooltip_text(tt);
+        gridWidgetTransparency.attach(cmbBackgroundType,1,row,2,1);
+		
+		//populate
+		model = new Gtk.ListStore (2, typeof (string), typeof (string));
+		model.append (out iter);
+		model.set (iter,0,_("Opaque"),1,"opaque");
+		model.append (out iter);
+		model.set (iter,0,_("Transparent"),1,"trans");
+		model.append (out iter);
+		model.set (iter,0,_("Semi-Transparent"),1,"argb");
+		cmbBackgroundType.set_model(model);
+
+		tt = _("Window Opacity\n\n0 = Fully Transparent, 100 = Fully Opaque");
 		
 		//lblTransparency
-		lblTransparency = new Gtk.Label(_("Transparency (%)"));
+		lblTransparency = new Gtk.Label(_("Opacity (%)"));
 		lblTransparency.set_tooltip_text(tt);
 		lblTransparency.margin_left = 6;
 		lblTransparency.xalign = (float) 0.0;
-		gridEdit.attach(lblTransparency,0,++row,2,1);
+		gridWidgetTransparency.attach(lblTransparency,0,++row,1,1);
 		
-		//spinTransparency
-		spinTransparency = new SpinButton.with_range(0,100,10);
-		spinTransparency.set_tooltip_text(tt);
-		spinTransparency.xalign = (float) 0.5;
-		spinTransparency.value = 100.0;
-		gridEdit.attach(spinTransparency,2,row,1,1);
+		//spinOpacity
+		spinOpacity = new SpinButton.with_range(0,100,10);
+		spinOpacity.set_tooltip_text(tt);
+		spinOpacity.xalign = (float) 0.5;
+		spinOpacity.value = 100.0;
+		//spinOpacity.set_size_request(120,-1);
+		gridWidgetTransparency.attach(spinOpacity,1,row,1,1);
 		
-		//lblTransparency
+		//lblBackgroundColor
 		lblBackgroundColor = new Gtk.Label(_("Background Color"));
 		lblBackgroundColor.margin_left = 6;
 		lblBackgroundColor.xalign = (float) 0.0;
-		gridEdit.attach(lblBackgroundColor,0,++row,2,1);
+		gridWidgetTransparency.attach(lblBackgroundColor,0,++row,1,1);
 		
 		//cbtnBackgroundColor
 		cbtnBackgroundColor = new ColorButton();
-		gridEdit.attach(cbtnBackgroundColor,2,row,1,1);
+		gridWidgetTransparency.attach(cbtnBackgroundColor,1,row,1,1);
 		
-		//lblHeaderBackground
-		lblHeaderSize = new Gtk.Label("<b>" + _("Window Size") + "</b>");
-		lblHeaderSize.set_use_markup(true);
-		lblHeaderSize.xalign = (float) 0.0;
-		lblHeaderSize.margin_top = 12;
-		lblHeaderSize.margin_bottom = 6;
-		gridEdit.attach(lblHeaderSize,0,++row,grid_col_count,1);
+		//lblTransparencyExpander
+		Label lblTransparencyExpander = new Gtk.Label("");
+		lblTransparencyExpander.margin_left = 6;
+		lblTransparencyExpander.vexpand = true;
+		lblTransparencyExpander.set_tooltip_text(tt);
+		gridWidgetTransparency.attach(lblTransparencyExpander,0,++row,3,1);
+		
+		tt = _("Ø Setting Type to \"Transparent\" will make the window transparent but the window will have a shadow. To avoid the shadow set Type to \"Semi-Transparent\" and set Opacity to 0");
+		
+		//lblSize1
+		Label lblTrans1 = new Gtk.Label(tt);
+		lblTrans1.margin_left = 6;
+		lblTrans1.margin_bottom = 6;
+		lblTrans1.xalign = (float) 0.0;
+		lblTrans1.set_size_request(100,-1);
+		lblTrans1.set_line_wrap(true);
+		gridWidgetTransparency.attach(lblTrans1,0,++row,3,1);
+		
+		//lblWidgetSize
+		Label lblWidgetSize = new Label (_("Size"));
+
+		//gridWidgetSize  -----------------------------------------------------------
+		
+        Grid gridWidgetSize = new Grid ();
+        gridWidgetSize.set_column_spacing (12);
+        gridWidgetSize.set_row_spacing (6);
+        gridWidgetSize.column_homogeneous = false;
+        gridWidgetSize.visible = false;
+        gridWidgetSize.margin = 12;
+        gridWidgetSize.border_width = 1;
+        tabWidgetProperties.append_page (gridWidgetSize, lblWidgetSize);
+        
+        row = -1;
+        
+        tt = _("Width should be larger than the size of window contents,\notherwise this setting will not have any effect");
 		
 		//lblMinWidth
 		lblMinWidth = new Gtk.Label(_("Minimum Width"));
 		lblMinWidth.margin_left = 6;
 		lblMinWidth.xalign = (float) 0.0;
-		gridEdit.attach(lblMinWidth,0,++row,2,1);
+		lblMinWidth.set_tooltip_text(tt);
+		gridWidgetSize.attach(lblMinWidth,0,++row,1,1);
 		
 		//spinMinWidth
 		spinMinWidth = new SpinButton.with_range(0,9999,10);
 		spinMinWidth.xalign = (float) 0.5;
 		spinMinWidth.value = 100.0;
-		spinMinWidth.set_tooltip_text(_("Minimum Width"));
-		gridEdit.attach(spinMinWidth,2,row,1,1);
+		spinMinWidth.set_size_request(120,-1);
+		spinMinWidth.set_tooltip_text(tt);
+		gridWidgetSize.attach(spinMinWidth,1,row,1,1);
+		
+		tt = _("Height should be larger than the size of window contents,\notherwise this setting will not have any effect");
 		
 		//lblMinHeight
 		lblMinHeight = new Gtk.Label(_("Minimum Height"));
 		lblMinHeight.margin_left = 6;
 		lblMinHeight.xalign = (float) 0.0;
-		gridEdit.attach(lblMinHeight,0,++row,2,1);
+		lblMinHeight.set_tooltip_text(tt);
+		gridWidgetSize.attach(lblMinHeight,0,++row,1,1);
 		
 		//spinMinHeight
 		spinMinHeight = new SpinButton.with_range(0,9999,10);
 		spinMinHeight.xalign = (float) 0.5;
 		spinMinHeight.value = 100.0;
-		spinMinHeight.set_tooltip_text(_("Minimum Height"));
-		gridEdit.attach(spinMinHeight,2,row,1,1);
+		spinMinHeight.set_tooltip_text(tt);
+		gridWidgetSize.attach(spinMinHeight,1,row,1,1);
 		
-		//hboxCommands
+		tt = _("Increases the window height by adding empty lines at the end of the Conky config file");
+		
+		//lblTrailingLines
+		Label lblTrailingLines = new Gtk.Label(_("Height Padding"));
+		lblTrailingLines.margin_left = 6;
+		lblTrailingLines.xalign = (float) 0.0;
+		lblTrailingLines.set_tooltip_text(tt);
+		gridWidgetSize.attach(lblTrailingLines,0,++row,1,1);
+		
+		//spinHeightPadding
+		spinHeightPadding = new SpinButton.with_range(0,100,1);
+		spinHeightPadding.xalign = (float) 0.5;
+		spinHeightPadding.value = 0.0;
+		spinHeightPadding.set_tooltip_text(tt);
+		gridWidgetSize.attach(spinHeightPadding,1,row,1,1);
+		
+		//lblSizeExpander
+		Label lblSizeExpander = new Gtk.Label("");
+		lblSizeExpander.margin_left = 6;
+		lblSizeExpander.vexpand = true;
+		lblSizeExpander.set_tooltip_text(tt);
+		gridWidgetSize.attach(lblSizeExpander,0,++row,3,1);
+		
+		tt = _("Ø The minimum width & height must be more than the size of the window contents, otherwise the setting will not have any effect.");
+		
+		//lblSize1
+		Label lblSize1 = new Gtk.Label(tt);
+		lblSize1.margin_left = 6;
+		lblSize1.margin_bottom = 6;
+		lblSize1.xalign = (float) 0.0;
+		lblSize1.set_size_request(100,-1);
+		lblSize1.set_line_wrap(true);
+		gridWidgetSize.attach(lblSize1,0,++row,3,1);
+		
+		tt = _("Ø Setting Type to \"Opaque\" (from the transparency tab) will make it easier to see the changes");
+		
+		//lblSize2
+		Label lblSize2 = new Gtk.Label(tt);
+		lblSize2.margin_left = 6;
+		lblSize2.margin_bottom = 6;
+		lblSize2.xalign = (float) 0.0;
+		lblSize2.set_size_request(100,-1);
+		lblSize2.set_line_wrap(true);
+		gridWidgetSize.attach(lblSize2,0,++row,3,1);
+		
+		//hboxCommands --------------------------------------------------
+		
         Box hboxEditButtons = new Box (Orientation.HORIZONTAL, 6);
         hboxEditButtons.homogeneous = true;
         hboxEditButtons.margin_top = 12;
         hboxEditButtons.vexpand = true;
         hboxEditButtons.valign = Align.END;
-        gridEdit.attach(hboxEditButtons,0,++row,4,1);
+        gridEdit.attach(hboxEditButtons,0,5,4,1);
         
 		//btnEditApplyChanges
 		btnEditApplyChanges = new Button.with_label("  " + _("Apply Changes"));
@@ -633,13 +766,26 @@ public class MainWindow : Window
 		spinGapX.value = double.parse(conf.gap_x);
 		spinGapY.value = double.parse(conf.gap_y);
 		
+		string own_window_transparent = conf.own_window_transparent;
+		string own_window_argb_visual = conf.own_window_argb_visual;
+		string own_window_argb_value = conf.own_window_argb_value;
+		
 		//transparency
-		chkBackgroundTransparent.active = (conf.own_window_transparent == "yes");
-		if (conf.own_window_argb_value == ""){
-			spinTransparency.value = 100;
+		if (own_window_transparent == "yes"){
+			Utility.gtk_combobox_set_value(cmbBackgroundType,1,"trans");
+		}
+		else if (own_window_argb_visual == "yes"){
+			Utility.gtk_combobox_set_value(cmbBackgroundType,1,"argb");
+		}
+		else {
+			Utility.gtk_combobox_set_value(cmbBackgroundType,1,"opaque");
+		}
+		
+		if (own_window_argb_value == ""){
+			spinOpacity.value = 0;
 		}
 		else{
-			spinTransparency.value = ((255.0 - int.parse(conf.own_window_argb_value)) / 255.0) * 100;
+			spinOpacity.value = (int.parse(own_window_argb_value) / 255.0) * 100;
 		}
 		cbtnBackgroundColor.rgba = Utility.hex_to_rgba(conf.own_window_colour);
 		
@@ -647,6 +793,7 @@ public class MainWindow : Window
 		string size = conf.minimum_size;
 		spinMinWidth.value = int.parse(size.split(" ")[0]);
 		spinMinHeight.value = int.parse(size.split(" ")[1]);
+		spinHeightPadding.value = conf.height_padding;
 	}
 	
 	private void btnEditApplyChanges_clicked () {
@@ -664,17 +811,28 @@ public class MainWindow : Window
 		conf.gap_y = spinGapY.value.to_string();
 		
 		//transparency
-		if (chkBackgroundTransparent.active){
-			conf.own_window_transparent = "yes";
+		switch (Utility.gtk_combobox_get_value(cmbBackgroundType,1,"argb")){
+			case "opaque":
+				conf.own_window_transparent = "no";
+				conf.own_window_argb_visual = "no";
+				break;
+			case "trans":
+				conf.own_window_transparent = "yes";
+				conf.own_window_argb_visual = "no";
+				break;
+			case "argb":
+			default:
+				conf.own_window_transparent = "no";
+				conf.own_window_argb_visual = "yes";
+				break;
 		}
-		else{
-			conf.own_window_transparent = "no";
-			conf.own_window_argb_value = "%.0f".printf(((100.0 - spinTransparency.value) / 100.0) * 255.0);
-		}
+		
+		conf.own_window_argb_value = "%.0f".printf((spinOpacity.value / 100.0) * 255.0);
 		conf.own_window_colour = Utility.rgba_to_hex(cbtnBackgroundColor.rgba, false, false); 
 		
 		//window size 
 		conf.minimum_size = spinMinWidth.value.to_string() + " " + spinMinHeight.value.to_string();
+		conf.height_padding = (int) spinHeightPadding.value;
 		
 		conf.start_conky();
 	}
@@ -712,7 +870,7 @@ public class MainWindow : Window
 		cmbAlignment.sensitive = enable;
 		spinGapX.sensitive = enable;
 		spinGapY.sensitive = enable;
-		spinTransparency.sensitive = enable;
+		spinOpacity.sensitive = enable;
 		cbtnBackgroundColor.sensitive = enable;
 		spinMinWidth.sensitive = enable;
 		spinMinHeight.sensitive = enable;
@@ -720,20 +878,7 @@ public class MainWindow : Window
 		btnEditDiscardChanges.sensitive = enable;
 		chkBackgroundTransparent.sensitive = enable;
 	}
-	
-		
-	private void chkBackgroundTransparent_clicked ()
-	{
-		TreeIter iter;
-		ConkyConfig conf;
-		
-		cmbWidget.get_active_iter(out iter);
-		(cmbWidget.model).get(iter, 1, out conf);
-		
-		spinTransparency.sensitive = !chkBackgroundTransparent.active;
-	}
-	
-	
+
 	//tvTheme Handlers -----------
 	
 	private void tvTheme_cellEnabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)

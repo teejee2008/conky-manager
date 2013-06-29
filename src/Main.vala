@@ -608,13 +608,6 @@ public class ConkyConfig : GLib.Object {
 		}
 		set
 		{
-			if(value == "yes") { 
-				own_window_argb_visual = "no";
-			}
-			else{
-				own_window_argb_visual = "yes";
-			}
-		
 			string newLine = "own_window_transparent " + value;
 			set_value("own_window_transparent", newLine);
 			debug("Set: own_window_transparent " + value);
@@ -678,6 +671,65 @@ public class ConkyConfig : GLib.Object {
 			string newLine = "minimum_size " + value;
 			set_value("minimum_size", newLine);
 			debug("Set: minimum_size " + value);
+		}
+	}
+	
+	public int height_padding{
+		get{
+			
+			string text = Utility.read_file(this.Path);
+			string[] arr = text.split("\n");
+			int count = 0;
+			
+			//count empty lines at end of the file
+			for(int k = arr.length - 1; k >= 0; k--){
+				if (arr[k].strip() == ""){
+					count++;
+				}
+				else{
+					break;
+				}
+			}
+			
+			count--;
+			
+			debug("Set: height_padding " + count.to_string());
+			
+			return count;
+		}
+		set
+		{
+			string text = Utility.read_file(this.Path);
+			string newText = "";
+			string[] arr = text.split("\n");
+			int count = 0;
+			
+			//count empty lines at end of the file
+			for(int k = arr.length - 1; k >= 0; k--){
+				if (arr[k].strip() == ""){
+					count++;
+				}
+				else{
+					break;
+				}
+			}
+			
+			int lastLineNumber = arr.length - count;
+			
+			//remove all empty lines from end of text
+			for(int k = 0; k < lastLineNumber; k++){
+				newText += arr[k] + "\n";
+			}
+			//remove extra newline from end of text
+			//newText = newText[0:newText.length-1];
+			
+			//add empty lines at end of text
+			for(int k = 1; k <= value; k++){
+				newText += "\n";
+			}
+			
+			debug("Set: height_padding " + value.to_string());
+			Utility.write_file(this.Path, newText);
 		}
 	}
 	
