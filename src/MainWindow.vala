@@ -542,7 +542,6 @@ public class MainWindow : Window
 		Label lblSizeExpander = new Gtk.Label("");
 		lblSizeExpander.margin_left = 6;
 		lblSizeExpander.vexpand = true;
-		lblSizeExpander.set_tooltip_text(tt);
 		gridWidgetSize.attach(lblSizeExpander,0,++row,3,1);
 		
 		tt = _("Ø The minimum width & height must be more than the size of the window contents, otherwise the setting will not have any effect.");
