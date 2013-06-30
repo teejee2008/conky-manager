@@ -56,7 +56,6 @@ public class MainWindow : Window
 	private Label lblAlignment;
 	private Label lblGapX;
 	private Label lblGapY;
-	private Label lblWidgetStatus;
 	private Label lblTransparency;
 	private Label lblMinWidth;
 	private Label lblMinHeight;
@@ -82,9 +81,7 @@ public class MainWindow : Window
 	private Button btnReloadThemes;
 	private Button btnApplyChanges;
 	private Button btnDiscardChanges;
-	private Button btnReloadWidget;
-	private Button btnStopWidget;
-	
+
 	private Label lblHeaderKillConky;
 	private Button btnKillConky;
 
@@ -97,7 +94,7 @@ public class MainWindow : Window
 		//tabMain
         tabMain = new Notebook ();
 		tabMain.margin = 6;
-		//tabMain.tab_pos = PositionType.LEFT;
+		tabMain.switch_page.connect(tabMain_switch_page);
 		add(tabMain);
 		
 		//vboxTheme
@@ -238,7 +235,6 @@ public class MainWindow : Window
         gridEdit.margin = 12;
         tabMain.append_page (gridEdit, lblEditTab);
 
-		
         CellRendererText textCell;
         
         //lblHeaderWidget
@@ -255,30 +251,9 @@ public class MainWindow : Window
         cmbWidget.set_attributes( textCell, "text", 0 );
         cmbWidget.changed.connect(cmbWidget_changed);
         cmbWidget.margin_left = 6;
-        gridEdit.attach(cmbWidget,0,1,1,1);
+        cmbWidget.margin_right = 6;
+        gridEdit.attach(cmbWidget,0,1,4,1);
 		
-        //btnReloadWidget
-		btnReloadWidget = new Button.with_label("");
-		btnReloadWidget.set_image (new Image.from_stock (Stock.REFRESH, IconSize.MENU));
-        btnReloadWidget.clicked.connect (btnReloadWidget_clicked);
-        btnReloadWidget.set_tooltip_text (_("Start / Restart Widget"));
-        btnReloadWidget.set_size_request(30,30);
-		gridEdit.attach(btnReloadWidget,1,1,1,1);
-		
-		//btnStopWidget
-		btnStopWidget = new Button.with_label("");
-		btnStopWidget.set_image (new Image.from_stock (Stock.STOP, IconSize.MENU));
-        btnStopWidget.clicked.connect (btnStopWidget_clicked);
-        btnStopWidget.set_tooltip_text (_("Stop Widget"));
-        btnStopWidget.set_size_request(30,30);
-		gridEdit.attach(btnStopWidget,2,1,1,1);
-		
-		//lblWidgetStatus
-		lblWidgetStatus = new Gtk.Label("");
-		lblWidgetStatus.xalign = (float) 0.5;
-		lblWidgetStatus.set_use_markup(true);
-		gridEdit.attach(lblWidgetStatus,3,1,1,1);
-
 		//lblHeaderWidgetProperties
 		Label lblHeaderWidgetProperties = new Gtk.Label("<b>" + _("Properties") + "</b>");
 		lblHeaderWidgetProperties.set_use_markup(true);
@@ -748,9 +723,80 @@ public class MainWindow : Window
 		tvConfig.model = store;
 	}
 	
+	//tabMain handlers ---------------------------
+	
+	private void tabMain_switch_page (Widget page, uint new_page) {
+		uint old_page = tabMain.page;
+		
+		if ((cmbWidget == null) || (cmbWidget.model == null)){
+			return;
+		}
+		
+		if (new_page == 1){
+			set_busy(true, this);
+			
+			App.EditMode = true;
+			
+			//save active widgets
+			App.update_startup_script();
+			
+			//kill all widgets
+			App.kill_all_conky();
+
+			//run selected widget
+			TreeIter iter;
+			ConkyConfig conf;
+			cmbWidget.get_active_iter(out iter);
+			(cmbWidget.model).get(iter, 1, out conf);
+			conf.start_conky();
+			
+			set_busy(false, this);
+		}
+		else if(old_page == 1){
+			set_busy(true, this);
+			
+			App.EditMode = false;
+			
+			//kill all widgets
+			App.kill_all_conky();
+
+			//restart saved widgets
+			App.run_startup_script();
+
+			set_busy(false, this);
+		}
+	}
+	
 	//Edit tab handlers ----------
 
 	private void cmbWidget_changed () {
+		TreeIter iter;
+		ConkyConfig conf;
+		
+		if (cmbWidget.active == -1){
+			set_editing_options_enabled(false);
+			return;
+		}
+		else{
+			set_editing_options_enabled(true);
+		}
+
+		cmbWidget.get_active_iter(out iter);
+		(cmbWidget.model).get(iter, 1, out conf);
+
+		reload_widget_properties();
+		
+		if (tabMain.page == 1){
+			set_busy(true, this);
+			
+			App.kill_all_conky();
+			conf.start_conky();
+			
+			set_busy(false, this);
+		}
+	}
+	
+	private void reload_widget_properties(){
 		TreeIter iter;
 		ConkyConfig conf;
 
@@ -765,13 +811,9 @@ public class MainWindow : Window
 		cmbWidget.get_active_iter(out iter);
 		(cmbWidget.model).get(iter, 1, out conf);
 		
-		if (conf.Enabled){
-			lblWidgetStatus.label = "<span foreground=\"green\">[" + _("Running") + "]</span>";
-		}
-		else{
-			lblWidgetStatus.label = "<span foreground=\"brown\">[" + _("Stopped") + "]</span>";
-		}
-		
+		debug("-----------------------------------------------------");
+		debug("Load theme" + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
+
 		//location
 		Utility.gtk_combobox_set_value(cmbAlignment, 1, conf.alignment);
 		spinGapX.value = double.parse(conf.gap_x);
@@ -830,14 +872,22 @@ public class MainWindow : Window
 		spinMinWidth.value = int.parse(size.split(" ")[0]);
 		spinMinHeight.value = int.parse(size.split(" ")[1]);
 		spinHeightPadding.value = conf.height_padding;
+		
+		debug("-----------------------------------------------------");
 	}
 	
 	private void btnApplyChanges_clicked () {
+		set_busy(true, this);
+
 		TreeIter iter;
 		ConkyConfig conf;
 		
 		cmbWidget.get_active_iter(out iter);
 		(cmbWidget.model).get(iter, 1, out conf);
+		
+		debug("-----------------------------------------------------");
+		debug("Save theme" + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
+		
 		
 		conf.stop_conky();
 		
@@ -875,39 +925,18 @@ public class MainWindow : Window
 		conf.minimum_size = spinMinWidth.value.to_string() + " " + spinMinHeight.value.to_string();
 		conf.height_padding = (int) spinHeightPadding.value;
 		
+		debug("-----------------------------------------------------");
+		
 		conf.start_conky();
+		
+		set_busy(false, this);
 	}
 	
 	private void btnDiscardChanges_clicked () {
-		cmbWidget_changed();
-	}
-	
-	private void btnReloadWidget_clicked () {
-		TreeIter iter;
-		ConkyConfig conf;
-		
-		cmbWidget.get_active_iter(out iter);
-		(cmbWidget.model).get(iter, 1, out conf);
-		
-		conf.restart_conky();
-	}
-
-	private void btnStopWidget_clicked () {
-		TreeIter iter;
-		ConkyConfig conf;
-		
-		cmbWidget.get_active_iter(out iter);
-		(cmbWidget.model).get(iter, 1, out conf);
-		
-		if (conf.Enabled) {
-			conf.stop_conky();
-		}
+		reload_widget_properties();
 	}
 	
 	private void set_editing_options_enabled (bool enable){
-		btnReloadWidget.sensitive = enable;
-		btnStopWidget.sensitive = enable;
-		lblWidgetStatus.label = "";
 		tabWidgetProperties.sensitive = enable;
 		btnApplyChanges.sensitive = enable;
 		btnDiscardChanges.sensitive = enable;
@@ -980,7 +1009,6 @@ public class MainWindow : Window
 			foreach(ConkyConfig conf in theme.ConfigList){
 				store.append(out iter);
 				store.set(iter, 0, conf);
-				//debug("add: %s\n".printf(conf.Path));
 			}
 			tvConfig.model = store;
 		}

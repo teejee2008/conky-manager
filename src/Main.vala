@@ -27,7 +27,7 @@ using Gee;
 
 public Main App;
 public const string AppName = "Conky Manager";
-public const string AppVersion = "1.1";
+public const string AppVersion = "1.2";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 public const bool LogTimestamp = false;
@@ -41,7 +41,8 @@ public class Main : GLib.Object {
 	
 	public string ThemeDir = "";
 	public Gee.ArrayList<ConkyTheme> ThemeList;
-
+	public bool EditMode = false;
+	
     public static int main(string[] args) {
 		
 		// set locale
@@ -167,10 +168,10 @@ public class Main : GLib.Object {
 		temp_dir = temp_dir + "/" + Utility.timestamp2();
 		Utility.create_dir(temp_dir);
 		
-		debug(_("Found ThemePack") + ": " + pkgPath);
+		debug(_("Found theme pack") + ": " + pkgPath);
 		
 		string cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "unzip  \"" + pkgPath + "\"\n";
+		cmd += "unzip  \"" + pkgPath + "\">log.txt\n";
 		Utility.execute_command_sync_batch (cmd); 
 		
 		int count = 0;
@@ -193,7 +194,7 @@ public class Main : GLib.Object {
 					
 					if (!checkOnly){
 						//install
-						debug(_("Theme Copied") + ": " + target_dir);
+						debug(_("Theme copied") + ": " + target_dir);
 						Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
 					}
 				}
@@ -275,14 +276,29 @@ public class Main : GLib.Object {
 	}
 	
 	private void exit_app(){
-		update_startup_script();
+		if (EditMode){
+			run_startup_script();
+		}
+		else{
+			update_startup_script();
+		}
 		
 		if (check_startup()){
 			autostart(true); //overwrite the startup entry
 		}
 	}
 	
+	public void run_startup_script(){
+		string home = Environment.get_home_dir ();
+		Utility.execute_command_async_batch("sh \"" + home + "/conky-manager/conky-startup.sh\"");
+	}
+	
 	public void update_startup_script(){
+		if (EditMode){ 
+			debug("WARNING: update_startup_script() invoked in edit mode");
+			return;
+		}
+		
 		string home = Environment.get_home_dir ();
 		string startupScript = home + "/conky-manager/conky-startup.sh";
 		
@@ -402,7 +418,9 @@ public class ConkyTheme : GLib.Object {
 					var conf = new ConkyConfig(filePath, this);
 					ConfigList.add(conf);
 					
-					debug(_("Found Config") + ": " + filePath);
+					string theme_dir = Environment.get_home_dir() + "/conky-manager/themes";
+		
+					debug(_("Found config") + ": " + filePath.replace(theme_dir + "/",""));
 				} 
 			}
 		}
@@ -503,9 +521,28 @@ public class ConkyConfig : GLib.Object {
 		Name = f.get_basename();
 	}
 	
+	private void update_status(){
+		//status for all config is updated periodically by a timer
+		//this function updates the status immediately
+		
+		string cmd = "conky -c " + Path; //without double-quotes
+		string txt = Utility.execute_command_sync_get_output ("ps w -C conky"); 
+		//use 'ps ew -C conky' for all users
+		
+		bool active = false;
+		foreach(string line in txt.split("\n")){
+			if (line.index_of(cmd) != -1){
+				active = true;
+				break;
+			}
+		}
+		Enabled = active;
+	}
+	
 	public void start_conky(){
-		if (Enabled) {
-			return;
+		update_status();
+		if (Enabled){
+			stop_conky();
 		}
 		
 		Theme.Install();
@@ -522,10 +559,6 @@ public class ConkyConfig : GLib.Object {
 	}
 	
 	public void stop_conky(){
-		if (!Enabled) {
-			return;
-		}
-		
 		//Note: There may be more than one running instance of the same config
 		//We need to kill all instances
 		
@@ -546,14 +579,7 @@ public class ConkyConfig : GLib.Object {
 		//will be updated by the refresh_status() timer
 		Enabled = false; 
 	}
-	
-	public void restart_conky(){
-		if (Enabled) {
-			stop_conky();
-		}
-		start_conky();
-	}
-	
+
 	public string alignment{
 		owned get{
 			string s = get_value("alignment");
@@ -693,7 +719,7 @@ public class ConkyConfig : GLib.Object {
 			
 			count--;
 			
-			debug("Set: height_padding " + count.to_string());
+			debug("Get: height_padding " + count.to_string());
 			
 			return count;
 		}
