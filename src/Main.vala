@@ -290,7 +290,9 @@ public class Main : GLib.Object {
 	
 	public void run_startup_script(){
 		string home = Environment.get_home_dir ();
-		Utility.execute_command_async_batch("sh \"" + home + "/conky-manager/conky-startup.sh\"");
+		Utility.execute_command_sync("sh \"" + home + "/conky-manager/conky-startup.sh\"");
+		Posix.usleep(500000);//microseconds
+		refresh_status();
 	}
 	
 	public void update_startup_script(){
@@ -349,6 +351,7 @@ Comment=
 	
 	public void kill_all_conky(){
 		Posix.system("killall conky");
+		refresh_status();
 	}
 }
 

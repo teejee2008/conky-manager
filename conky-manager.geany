@@ -24,9 +24,9 @@ long_line_column=72
 
 [files]
 current_page=1
-FILE_NAME_0=1442;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_1=19113;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
-FILE_NAME_2=17610;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
+FILE_NAME_0=17703;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_1=14857;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+FILE_NAME_2=40;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
 FILE_NAME_3=1071;Make;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
 FILE_NAME_4=601;Conf;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fcontrol;0;4
 FILE_NAME_5=270;None;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
