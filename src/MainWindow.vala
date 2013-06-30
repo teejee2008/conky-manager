@@ -734,12 +734,10 @@ public class MainWindow : Window
 		
 		if (new_page == 1){
 			set_busy(true, this);
-			
-			App.EditMode = true;
-			
+
 			//save active widgets
 			App.update_startup_script();
-			
+
 			//kill all widgets
 			App.kill_all_conky();
 
@@ -750,19 +748,21 @@ public class MainWindow : Window
 			(cmbWidget.model).get(iter, 1, out conf);
 			conf.start_conky();
 			
+			App.EditMode = true;
+			
 			set_busy(false, this);
 		}
 		else if(old_page == 1){
 			set_busy(true, this);
-			
-			App.EditMode = false;
-			
+
 			//kill all widgets
 			App.kill_all_conky();
 
 			//restart saved widgets
 			App.run_startup_script();
-
+			
+			App.EditMode = false;
+			
 			set_busy(false, this);
 		}
 	}
