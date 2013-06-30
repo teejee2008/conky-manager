@@ -423,7 +423,6 @@ public class MainWindow : Window
 		Label lblTransparencyExpander = new Gtk.Label("");
 		lblTransparencyExpander.margin_left = 6;
 		lblTransparencyExpander.vexpand = true;
-		lblTransparencyExpander.set_tooltip_text(tt);
 		gridWidgetTransparency.attach(lblTransparencyExpander,0,++row,3,1);
 		
 		tt = _("Ø Setting Type to \"Transparent\" will make the whole window transparent (including any images). Use \"Pseudo-Transparent\" if you want the images to be opaque.");
