@@ -750,7 +750,9 @@ public class MainWindow : Window
 			cmbWidget.get_active_iter(out iter);
 			(cmbWidget.model).get(iter, 1, out conf);
 			conf.start_conky();
-
+			
+			App.minimize_all_other_windows();
+			
 			set_busy(false, this);
 		}
 		else if(old_page == 1){

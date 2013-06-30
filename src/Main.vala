@@ -353,6 +353,36 @@ Comment=
 		Posix.system("killall conky");
 		refresh_status();
 	}
+	
+	public void minimize_all_other_windows(){
+		string txt =
+"""#!/usr/bin/env python
+import wnck
+import gtk
+
+screen = wnck.screen_get_default()
+
+while gtk.events_pending():
+    gtk.main_iteration()
+
+windows = screen.get_windows()
+active = screen.get_active_window()
+
+for w in windows:
+    if w != active and w.get_name().find("Conky") == -1:
+        w.minimize()
+""";
+        
+        string temp_dir = Environment.get_tmp_dir();
+		temp_dir = temp_dir + "/" + Utility.timestamp2();
+		Utility.create_dir(temp_dir);
+		string py_file = temp_dir + "/minimize.py";
+		
+        Utility.write_file(py_file, txt);
+	    Utility.chmod (py_file, "u+x");
+
+        Posix.system(py_file);
+	}
 }
 
 public class ConkyTheme : GLib.Object {
