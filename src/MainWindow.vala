@@ -60,6 +60,7 @@ public class MainWindow : Window
 	private Label lblMinWidth;
 	private Label lblMinHeight;
 	private Label lblWidgetTimeNotFound;
+	private Label lblWidgetNetworkNotFound;
 	private ComboBox cmbAlignment;
 	private ComboBox cmbWidget;
 	private ComboBox cmbTransparencyType;
@@ -71,7 +72,10 @@ public class MainWindow : Window
 	private SpinButton spinMinHeight;
 	private SpinButton spinHeightPadding;
 	private ColorButton cbtnBackgroundColor;
-
+	private Entry txtNetworkDevice;
+	private Button btnWiFi;
+	private Button btnLAN;
+	
 	private TreeView tvTheme;
 	private ScrolledWindow swTheme;
 	
@@ -154,7 +158,6 @@ public class MainWindow : Window
 		//tvConfig
 		tvConfig = new TreeView();
 		tvConfig.get_selection().mode = SelectionMode.MULTIPLE;
-		tvConfig.set_tooltip_text ("");
 		tvConfig.set_rules_hint (true);
 		//tvConfig.headers_visible = false;
 		
@@ -555,22 +558,22 @@ public class MainWindow : Window
         gridWidgetTime.margin = 12;
         gridWidgetTime.border_width = 1;
         tabWidgetProperties.append_page (gridWidgetTime, lblWidgetTime);
-
+		
+		row = -1;
+		
         //lblTimeFormat
 		Label lblTimeFormat = new Gtk.Label(_("Time Format"));
 		lblTimeFormat.margin_left = 6;
 		lblTimeFormat.xalign = (float) 0.0;
-		lblTimeFormat.set_tooltip_text(tt);
 		lblTimeFormat.set_use_markup(true);
-		gridWidgetTime.attach(lblTimeFormat,0,row,1,1);
+		gridWidgetTime.attach(lblTimeFormat,0,++row,1,1);
 		
         //cmbTimeFormat
 		cmbTimeFormat = new ComboBox();
 		textCell = new CellRendererText();
         cmbTimeFormat.pack_start( textCell, false );
         cmbTimeFormat.set_attributes( textCell, "text", 0 );
-		cmbTimeFormat.set_tooltip_text(tt);
-        gridWidgetTime.attach(cmbTimeFormat,1,row,2,1);
+        gridWidgetTime.attach(cmbTimeFormat,1,row,1,1);
 		
 		//lblWidgetTimeNotFound
 		lblWidgetTimeNotFound = new Gtk.Label("");
@@ -586,7 +589,59 @@ public class MainWindow : Window
 		model.append (out iter);
 		model.set (iter,0,_("24 Hour"),1,"24");
 		cmbTimeFormat.set_model(model);
+		
+		//lblWidgetNetwork
+		Label lblWidgetNetwork = new Label (_("Network"));
 
+		//gridWidgetNetwork  -----------------------------------------------------------
+		
+        Grid gridWidgetNetwork = new Grid ();
+        gridWidgetNetwork.set_column_spacing (12);
+        gridWidgetNetwork.set_row_spacing (6);
+        gridWidgetNetwork.column_homogeneous = false;
+        gridWidgetNetwork.visible = false;
+        gridWidgetNetwork.margin = 12;
+        gridWidgetNetwork.border_width = 1;
+        tabWidgetProperties.append_page (gridWidgetNetwork, lblWidgetNetwork);
+		
+		row = -1;
+
+        //lblNetworkDevice
+		Label lblNetworkDevice = new Gtk.Label(_("Interface"));
+		lblNetworkDevice.margin_left = 6;
+		lblNetworkDevice.xalign = (float) 0.0;
+		lblNetworkDevice.set_use_markup(true);
+		gridWidgetNetwork.attach(lblNetworkDevice,0,++row,1,1);
+		
+		//txtNetworkDevice
+        txtNetworkDevice =  new Gtk.Entry();
+        gridWidgetNetwork.attach(txtNetworkDevice,1,row,1,1);
+        
+        //btnWiFi
+        btnWiFi = new Button.with_label(_("WiFi"));
+        btnWiFi.clicked.connect (() => {
+			txtNetworkDevice.text = "wlan0";
+			});
+		btnWiFi.set_size_request(50,-1);
+        btnWiFi.set_tooltip_text (_("WiFi Network") + " (wlan0)");
+		gridWidgetNetwork.attach(btnWiFi,2,row,1,1);
+		
+        //btnLAN
+        btnLAN = new Button.with_label(_("LAN"));
+        btnLAN.clicked.connect (() => {
+			txtNetworkDevice.text = "eth0";
+			});
+		btnLAN.set_size_request(50,-1);
+        btnLAN.set_tooltip_text (_("Wired LAN Network") + " (eth0)");
+		gridWidgetNetwork.attach(btnLAN,3,row,1,1);
+
+		//lblWidgetNetworkNotFound
+		lblWidgetNetworkNotFound = new Gtk.Label("");
+		lblWidgetNetworkNotFound.set_use_markup(true);
+		lblWidgetNetworkNotFound.xalign = (float) 0.0;
+		lblWidgetNetworkNotFound.margin = 6;
+		gridWidgetNetwork.attach(lblWidgetNetworkNotFound,0,++row,4,1);
+		
 		//hboxCommands --------------------------------------------------
 		
         Box hboxEditButtons = new Box (Orientation.HORIZONTAL, 6);
@@ -939,6 +994,23 @@ public class MainWindow : Window
 		
 		if (time_format == "") { time_format = "12"; }
 		Utility.gtk_combobox_set_value(cmbTimeFormat,1,time_format);
+		
+		//network
+		string net = conf.network_device;
+		if (net == ""){
+			txtNetworkDevice.sensitive = false;
+			btnWiFi.sensitive = false;
+			btnLAN.sensitive = false;
+			lblWidgetNetworkNotFound.label = "<i>Ø " + _("Network interface cannot be changed for selected widget") + "</i>";
+			txtNetworkDevice.text = "";
+		}
+		else{
+			txtNetworkDevice.sensitive = true;
+			btnWiFi.sensitive = true;
+			btnLAN.sensitive = true;
+			lblWidgetNetworkNotFound.label = "";
+			txtNetworkDevice.text = net.strip();
+		}
 
 		debug("-----------------------------------------------------");
 	}
@@ -996,6 +1068,11 @@ public class MainWindow : Window
 		//time
 		if(conf.time_format != ""){
 			conf.time_format = Utility.gtk_combobox_get_value(cmbTimeFormat,1,"");
+		}
+		
+		//network
+		if(conf.network_device != ""){
+			conf.network_device = txtNetworkDevice.text;
 		}
 		
 		//save changes to file

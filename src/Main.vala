@@ -627,8 +627,42 @@ public class ConkyConfig : GLib.Object {
 	public string alignment{
 		owned get{
 			string s = get_value("alignment");
-			if (s == "") { s = "top_left"; }
+			
+			switch(s){
+				case "tl":
+					s = "top_left";
+					break;
+				case "tr":
+					s = "top_right";
+					break;
+				case "tm":
+					s = "top_middle";
+					break;
+				case "bl":
+					s = "bottom_left";
+					break;
+				case "br":
+					s = "bottom_right";
+					break;
+				case "bm":
+					s = "bottom_middle";
+					break;
+				case "ml":
+					s = "middle_left";
+					break;
+				case "mr":
+					s = "middle_right";
+					break;
+				case "mm":
+					s = "middle_middle";
+					break;
+				case "":
+					s = "top_left";
+					break;
+			}
+
 			debug("Get: alignment " + s);
+
 			return s;
 		}
 		set
@@ -805,11 +839,11 @@ public class ConkyConfig : GLib.Object {
 		owned get{
 			string val = "";
 			
-			if (search("""\${time|TIME [^}]*H[^}]*}""") != ""){
+			if (search("""\${(time|TIME) [^}]*H[^}]*}""") != ""){
 				val = "24";
 				debug("Get: time format = 24-hour");
 			}
-			else if (search("""\${time|TIME [^}]*I[^}]*}""") != ""){
+			else if (search("""\${(time|TIME) [^}]*I[^}]*}""") != ""){
 				val = "12";
 				debug("Get: time format = 12-hour");
 			}
@@ -831,6 +865,79 @@ public class ConkyConfig : GLib.Object {
 						debug("Set: time format = 24-hour");
 					}
 					break;	
+			}
+		}
+	}
+	
+	public string network_device{
+		owned get{
+			string var1 = "totaldown|totalup|upspeed|upspeedf|downspeed|downspeedf|wireless_ap|wireless_bitrate|wireless_essid|wireless_link_qual|wireless_link_qual_max|wireless_link_qual_perc|wireless_mode";
+			var1 = """\${(""" + var1 + "|" + var1.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*}""";
+			
+			string var2 = "upspeedgraph|downspeedgraph";
+			var2 = """\${(""" + var2 + "|" + var2.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*.*}""";
+			
+			string var3 = "wireless_link_bar";
+			var3 = """\${(""" + var3 + "|" + var3.up() + """)[ \t]*[0-9]+[ \t]*,[0-9+][ \t]*([A-Za-z0-9]+)[ \t]*}""";
+
+			string net = search(var1, 2);
+			
+			if (net != ""){
+				debug("Get: network interface = " + net);
+				return net;
+			}
+			
+			net = search(var2, 2);
+			
+			if (net != ""){
+				debug("Get: network interface = " + net);
+				return net;
+			}
+			
+			net = search(var3, 2);
+			
+			if (net != ""){
+				debug("Get: network interface = " + net);
+				return net;
+			}
+			
+			return "";
+		}
+		set
+		{
+			if (value == "") { return; }
+			
+			string var1 = "totaldown|totalup|upspeed|upspeedf|downspeed|downspeedf|wireless_ap|wireless_bitrate|wireless_essid|wireless_link_qual|wireless_link_qual_max|wireless_link_qual_perc|wireless_mode";
+			var1 = """\${(""" + var1 + "|" + var1.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*}""";
+			
+			string var2 = "upspeedgraph|downspeedgraph";
+			var2 = """\${(""" + var2 + "|" + var2.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*.*}""";
+			
+			string var3 = "wireless_link_bar";
+			var3 = """\${(""" + var3 + "|" + var3.up() + """)[ \t]*[0-9]+[ \t]*,[0-9+][ \t]*([A-Za-z0-9]+)[ \t]*}""";
+
+			string net = search(var1, 2);
+			
+			if (net != ""){
+				if (replace(var1, 2, value)){
+					debug("Set: network interface = " + value);
+				}
+			}
+			
+			net = search(var2, 2);
+			
+			if (net != ""){
+				if (replace(var2, 2, value)){
+					debug("Set: network interface = " + value);
+				}
+			}
+			
+			net = search(var3, 2);
+			
+			if (net != ""){
+				if (replace(var3, 2, value)){
+					debug("Set: network interface = " + value);
+				}
 			}
 		}
 	}
@@ -884,7 +991,7 @@ public class ConkyConfig : GLib.Object {
 		this.Text = newText;
 	}
 	
-	public string search(string search_string){
+	public string search(string search_string, int bracket_num = 0){
 		foreach(string line in this.Text.split("\n")){
 			string s = line.strip();
 
@@ -892,7 +999,7 @@ public class ConkyConfig : GLib.Object {
 				Regex regx = new Regex(search_string);
 				MatchInfo match;
 				if (regx.match(s, 0, out match)){
-					return match.fetch(0);
+					return match.fetch(bracket_num);
 				}
 			} catch (Error e) {
 				log_error (e.message);
@@ -902,21 +1009,31 @@ public class ConkyConfig : GLib.Object {
 		return "";
 	}
 	
-	public bool replace(string search_string, int find_num, string replace_string){
+	public bool replace(string search_string, int bracket_num, string replace_string){
 		bool found = false;
 		string new_text = "";
 		string old_match = "";
 		string new_match = "";
+		string new_line = "";
 		
 		foreach(string line in this.Text.split("\n")){
 			try{
 				Regex regx = new Regex(search_string);
 				MatchInfo match;
 				if (regx.match(line, 0, out match)){
-					old_match = match.fetch(0);
-					new_match = old_match.replace(match.fetch(find_num),replace_string);
-					//debug("old_match=%s\nnew_match=%s\n".printf(old_match,new_match));
-					new_text += line.replace(old_match, new_match) + "\n";
+					
+					bool matchExists = true;
+					new_line = line;
+					
+					while (matchExists){
+						old_match = match.fetch(0);
+						new_match = old_match.replace(match.fetch(bracket_num),replace_string);
+						//debug("old_match=%s\nnew_match=%s\n".printf(old_match,new_match));
+						new_line = new_line.replace(old_match, new_match);
+						matchExists = match.next();
+					}
+					
+					new_text += new_line + "\n";
 					found = true;
 				}
 				else{
