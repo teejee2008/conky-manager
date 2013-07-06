@@ -75,6 +75,7 @@ public class MainWindow : Window
 	private Entry txtNetworkDevice;
 	private Button btnWiFi;
 	private Button btnLAN;
+	private Button btnShowDesktop;
 	
 	private TreeView tvTheme;
 	private ScrolledWindow swTheme;
@@ -247,7 +248,7 @@ public class MainWindow : Window
 		lblHeaderWidget.set_use_markup(true);
 		lblHeaderWidget.xalign = (float) 0.0;
 		lblHeaderWidget.margin_bottom = 6;
-		gridEdit.attach(lblHeaderWidget,0,0,4,1);
+		gridEdit.attach(lblHeaderWidget,0,0,2,1);
 		
         //cmbWidget
 		cmbWidget = new ComboBox();
@@ -257,21 +258,32 @@ public class MainWindow : Window
         cmbWidget.changed.connect(cmbWidget_changed);
         cmbWidget.margin_left = 6;
         cmbWidget.margin_right = 6;
-        gridEdit.attach(cmbWidget,0,1,4,1);
+        cmbWidget.hexpand = true;
+        gridEdit.attach(cmbWidget,0,1,1,1);
+		
+		//btnShowDesktop
+        btnShowDesktop = new Button.with_label(_("Show Desktop"));
+        btnShowDesktop.clicked.connect (() => {
+			//show desktop
+			App.minimize_all_other_windows();
+			});
+		btnShowDesktop.set_size_request(130,-1);
+        btnShowDesktop.set_tooltip_text (_("Minimize all windows and show the widget on the desktop"));
+		gridEdit.attach(btnShowDesktop,1,1,1,1);
 		
 		//lblHeaderWidgetProperties
 		Label lblHeaderWidgetProperties = new Gtk.Label("<b>" + _("Properties") + "</b>");
 		lblHeaderWidgetProperties.set_use_markup(true);
 		lblHeaderWidgetProperties.xalign = (float) 0.0;
 		lblHeaderWidgetProperties.margin_top = 6;
-		gridEdit.attach(lblHeaderWidgetProperties,0,2,1,1);
+		gridEdit.attach(lblHeaderWidgetProperties,0,2,2,1);
 		
         //tabWidgetProperties ---------------------------------------
         tabWidgetProperties = new Notebook ();
 		tabWidgetProperties.margin = 6;
 		tabWidgetProperties.tab_pos = PositionType.LEFT;
 		tabWidgetProperties.expand = true;
-		gridEdit.attach(tabWidgetProperties,0,3,4,1);
+		gridEdit.attach(tabWidgetProperties,0,3,2,1);
 		
 		//lblWidgetLocation
 		Label lblWidgetLocation = new Label (_("Location"));
@@ -646,7 +658,7 @@ public class MainWindow : Window
 		
         Box hboxEditButtons = new Box (Orientation.HORIZONTAL, 6);
         hboxEditButtons.homogeneous = true;
-        gridEdit.attach(hboxEditButtons,0,5,4,1);
+        gridEdit.attach(hboxEditButtons,0,5,2,1);
         
 		//btnApplyChanges
 		btnApplyChanges = new Button.with_label("  " + _("Apply Changes"));
@@ -818,7 +830,8 @@ public class MainWindow : Window
 			}
 		}
 		cmbWidget.set_model(model);
-		cmbWidget.set_active (0);
+		cmbWidget.set_active (-1);
+		set_editing_options_enabled(false);
 		
 		ListStore store = new ListStore(1,typeof(ConkyConfig));
 		tvConfig.model = store;
@@ -843,31 +856,23 @@ public class MainWindow : Window
 			
 			App.EditMode = true;
 			
-			//kill all widgets
-			App.kill_all_conky();
-
-			//run selected widget
-			TreeIter iter;
-			ConkyConfig conf;
-			cmbWidget.get_active_iter(out iter);
-			(cmbWidget.model).get(iter, 1, out conf);
-			conf.start_conky();
-			
-			App.minimize_all_other_windows();
-			
 			set_busy(false, this);
 		}
 		else if(old_page == 1){
 			set_busy(true, this);
-			
+
 			App.EditMode = false;
 			
-			//kill all widgets
-			App.kill_all_conky();
+			if (cmbWidget.active != -1){
+				//kill all widgets
+				App.kill_all_conky();
 
-			//restart saved widgets
-			App.run_startup_script();
-
+				//restart saved widgets
+				App.run_startup_script();
+				
+				cmbWidget.set_active (-1);
+			}
+		
 			set_busy(false, this);
 		}
 	}
@@ -893,10 +898,16 @@ public class MainWindow : Window
 		
 		if (tabMain.page == 1){
 			set_busy(true, this);
-			
+
+			//kill all widgets
 			App.kill_all_conky();
+
+			//run selected widget
 			conf.start_conky();
 			
+			//show desktop
+			//App.minimize_all_other_windows();
+
 			set_busy(false, this);
 		}
 	}
