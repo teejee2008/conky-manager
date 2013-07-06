@@ -59,6 +59,7 @@ public class MainWindow : Window
 	private Label lblTransparency;
 	private Label lblMinWidth;
 	private Label lblMinHeight;
+	private Label lblWidgetTimeNotFound;
 	private ComboBox cmbAlignment;
 	private ComboBox cmbWidget;
 	private ComboBox cmbTransparencyType;
@@ -426,7 +427,7 @@ public class MainWindow : Window
 		lblTransparencyExpander.vexpand = true;
 		gridWidgetTransparency.attach(lblTransparencyExpander,0,++row,3,1);
 		
-		tt = _("Ø Setting Type to \"Transparent\" will make the whole window transparent (including any images). Use \"Pseudo-Transparent\" if you want the images to be opaque.");
+		tt = "Ø " + _("Setting Type to \"Transparent\" will make the whole window transparent (including any images). Use \"Pseudo-Transparent\" if you want the images to be opaque.");
 		
 		//lblSize1
 		Label lblTrans1 = new Gtk.Label(tt);
@@ -437,7 +438,7 @@ public class MainWindow : Window
 		lblTrans1.set_line_wrap(true);
 		gridWidgetTransparency.attach(lblTrans1,0,++row,3,1);
 		
-		tt = _("Ø Setting Type to \"Pseudo-Transparent\" will make the window transparent but the window will have a shadow. The shadow can be disabled by configuring your window manager.");
+		tt = "Ø " + _("Setting Type to \"Pseudo-Transparent\" will make the window transparent but the window will have a shadow. The shadow can be disabled by configuring your window manager.");
 		
 		//lblSize1
 		Label lblTrans2 = new Gtk.Label(tt);
@@ -519,7 +520,7 @@ public class MainWindow : Window
 		lblSizeExpander.vexpand = true;
 		gridWidgetSize.attach(lblSizeExpander,0,++row,3,1);
 		
-		tt = _("Ø The minimum width & height must be more than the size of the window contents, otherwise the setting will not have any effect.");
+		tt = "Ø " + _("The minimum width & height must be more than the size of the window contents, otherwise the setting will not have any effect.");
 		
 		//lblSize1
 		Label lblSize1 = new Gtk.Label(tt);
@@ -530,7 +531,7 @@ public class MainWindow : Window
 		lblSize1.set_line_wrap(true);
 		gridWidgetSize.attach(lblSize1,0,++row,3,1);
 		
-		tt = _("Ø Setting Type to \"Opaque\" (from the transparency tab) will make it easier to see the changes");
+		tt = "Ø " + _("Setting Type to \"Opaque\" (from the transparency tab) will make it easier to see the changes");
 		
 		//lblSize2
 		Label lblSize2 = new Gtk.Label(tt);
@@ -570,6 +571,13 @@ public class MainWindow : Window
         cmbTimeFormat.set_attributes( textCell, "text", 0 );
 		cmbTimeFormat.set_tooltip_text(tt);
         gridWidgetTime.attach(cmbTimeFormat,1,row,2,1);
+		
+		//lblWidgetTimeNotFound
+		lblWidgetTimeNotFound = new Gtk.Label("");
+		lblWidgetTimeNotFound.set_use_markup(true);
+		lblWidgetTimeNotFound.xalign = (float) 0.0;
+		lblWidgetTimeNotFound.margin = 6;
+		gridWidgetTime.attach(lblWidgetTimeNotFound,0,++row,2,1);
 		
 		//populate
 		model = new Gtk.ListStore (2, typeof (string), typeof (string));
@@ -919,9 +927,19 @@ public class MainWindow : Window
 		
 		//time
 		string time_format = conf.time_format;
+		
+		if (time_format == "") {
+			cmbTimeFormat.sensitive = false;
+			lblWidgetTimeNotFound.label = "<i>Ø " + _("Time format cannot be changed for selected widget") + "</i>";
+		}
+		else{
+			cmbTimeFormat.sensitive = true;
+			lblWidgetTimeNotFound.label = "";
+		}
+		
 		if (time_format == "") { time_format = "12"; }
 		Utility.gtk_combobox_set_value(cmbTimeFormat,1,time_format);
-		
+
 		debug("-----------------------------------------------------");
 	}
 	
@@ -980,6 +998,7 @@ public class MainWindow : Window
 			conf.time_format = Utility.gtk_combobox_get_value(cmbTimeFormat,1,"");
 		}
 		
+		//save changes to file
 		conf.write_changes_to_file();
 		
 		debug("-----------------------------------------------------");
