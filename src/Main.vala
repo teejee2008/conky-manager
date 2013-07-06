@@ -545,6 +545,7 @@ public class ConkyConfig : GLib.Object {
 	public string Name;
 	public string Path;
 	public bool Enabled = false;
+	public string Text = "";
 	
 	public ConkyConfig(string configPath, ConkyTheme theme) {
 		Theme = theme;
@@ -612,7 +613,11 @@ public class ConkyConfig : GLib.Object {
 		//will be updated by the refresh_status() timer
 		Enabled = false; 
 	}
-
+	
+	public void read(){
+		
+	}
+	
 	public string alignment{
 		owned get{
 			string s = get_value("alignment");
@@ -792,6 +797,40 @@ public class ConkyConfig : GLib.Object {
 		}
 	}
 	
+	public string time_format{
+		owned get{
+			string val = "";
+			
+			if (search("""\${time|TIME [^}]*H[^}]*}""") != ""){
+				val = "24";
+				debug("Get: Time format = 24-Hour");
+			}
+			else if (search("""\${time|TIME [^}]*I[^}]*}""") != ""){
+				val = "12";
+				debug("Get: Time format = 12-Hour");
+			}
+
+			return val;
+		}
+		set
+		{
+			if (value == "") { return; }
+			
+			switch(value){
+				case "12":
+					if (replace("""\${(time|TIME) [^}]*(H)[^}]*}""", 2, "I")){
+						debug("Set: Time format = 12-Hour");
+					}
+					break;
+				case "24":
+					if (replace("""\${(time|TIME) [^}]*(I)[^}]*}""", 2, "H")){
+						debug("Set: Time format = 12-Hour");
+					}
+					break;	
+			}
+		}
+	}
+	
 	public string get_value(string param){
 		foreach(string line in Utility.read_file(Path).split("\n")){
 			string s = line.down().strip();
@@ -840,5 +879,57 @@ public class ConkyConfig : GLib.Object {
 		newText = newText[0:newText.length-1];
 		
 		Utility.write_file(this.Path, newText);
+	}
+	
+	public string search(string search_string){
+		foreach(string line in Utility.read_file(Path).split("\n")){
+			string s = line.strip();
+
+			try{
+				Regex regx = new Regex(search_string);
+				MatchInfo match;
+				if (regx.match(s, 0, out match)){
+					return match.fetch(0);
+				}
+			} catch (Error e) {
+				log_error (e.message);
+			}
+		}
+		
+		return "";
+	}
+	
+	public bool replace(string search_string, int find_num, string replace_string){
+		bool found = false;
+		string new_text = "";
+		string old_match = "";
+		string new_match = "";
+		
+		foreach(string line in Utility.read_file(Path).split("\n")){
+			try{
+				Regex regx = new Regex(search_string);
+				MatchInfo match;
+				if (regx.match(line, 0, out match)){
+					old_match = match.fetch(0);
+					new_match = old_match.replace(match.fetch(find_num),replace_string);
+					//debug("old_match=%s\nnew_match=%s\n".printf(old_match,new_match));
+					new_text += line.replace(old_match, new_match) + "\n";
+					found = true;
+				}
+				else{
+					new_text += line + "\n";
+				}
+			} catch (Error e) {
+				log_error (e.message);
+				return false;
+			}
+		}
+		
+		//remove extra newline from end of text
+		new_text = new_text[0:new_text.length-1];
+		
+		Utility.write_file(this.Path, new_text);
+		
+		return found;
 	}
 }

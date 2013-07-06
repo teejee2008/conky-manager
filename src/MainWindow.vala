@@ -62,6 +62,7 @@ public class MainWindow : Window
 	private ComboBox cmbAlignment;
 	private ComboBox cmbWidget;
 	private ComboBox cmbTransparencyType;
+	private ComboBox cmbTimeFormat;
 	private SpinButton spinGapX;
 	private SpinButton spinGapY;
 	private SpinButton spinOpacity;
@@ -540,6 +541,44 @@ public class MainWindow : Window
 		lblSize2.set_line_wrap(true);
 		gridWidgetSize.attach(lblSize2,0,++row,3,1);
 		
+		//lblWidgetTime
+		Label lblWidgetTime = new Label (_("Time"));
+
+		//gridWidgetTime  -----------------------------------------------------------
+		
+        Grid gridWidgetTime = new Grid ();
+        gridWidgetTime.set_column_spacing (12);
+        gridWidgetTime.set_row_spacing (6);
+        gridWidgetTime.column_homogeneous = false;
+        gridWidgetTime.visible = false;
+        gridWidgetTime.margin = 12;
+        gridWidgetTime.border_width = 1;
+        tabWidgetProperties.append_page (gridWidgetTime, lblWidgetTime);
+
+        //lblTimeFormat
+		Label lblTimeFormat = new Gtk.Label(_("Time Format"));
+		lblTimeFormat.margin_left = 6;
+		lblTimeFormat.xalign = (float) 0.0;
+		lblTimeFormat.set_tooltip_text(tt);
+		lblTimeFormat.set_use_markup(true);
+		gridWidgetTime.attach(lblTimeFormat,0,row,1,1);
+		
+        //cmbTimeFormat
+		cmbTimeFormat = new ComboBox();
+		textCell = new CellRendererText();
+        cmbTimeFormat.pack_start( textCell, false );
+        cmbTimeFormat.set_attributes( textCell, "text", 0 );
+		cmbTimeFormat.set_tooltip_text(tt);
+        gridWidgetTime.attach(cmbTimeFormat,1,row,2,1);
+		
+		//populate
+		model = new Gtk.ListStore (2, typeof (string), typeof (string));
+		model.append (out iter);
+		model.set (iter,0,_("12 Hour"),1,"12");
+		model.append (out iter);
+		model.set (iter,0,_("24 Hour"),1,"24");
+		cmbTimeFormat.set_model(model);
+
 		//hboxCommands --------------------------------------------------
 		
         Box hboxEditButtons = new Box (Orientation.HORIZONTAL, 6);
@@ -876,6 +915,11 @@ public class MainWindow : Window
 		spinMinHeight.value = int.parse(size.split(" ")[1]);
 		spinHeightPadding.value = conf.height_padding;
 		
+		//time
+		string time_format = conf.time_format;
+		if (time_format == "") { time_format = "12"; }
+		Utility.gtk_combobox_set_value(cmbTimeFormat,1,time_format);
+		
 		debug("-----------------------------------------------------");
 	}
 	
@@ -928,6 +972,11 @@ public class MainWindow : Window
 		conf.minimum_size = spinMinWidth.value.to_string() + " " + spinMinHeight.value.to_string();
 		conf.height_padding = (int) spinHeightPadding.value;
 		
+		//time
+		if(conf.time_format != ""){
+			conf.time_format = Utility.gtk_combobox_get_value(cmbTimeFormat,1,"");
+		}
+
 		debug("-----------------------------------------------------");
 		
 		conf.start_conky();
