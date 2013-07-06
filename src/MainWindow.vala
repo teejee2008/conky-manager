@@ -856,6 +856,8 @@ public class MainWindow : Window
 		debug("-----------------------------------------------------");
 		debug("Load theme" + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
 
+		conf.read_file();
+		
 		//location
 		Utility.gtk_combobox_set_value(cmbAlignment, 1, conf.alignment);
 		spinGapX.value = double.parse(conf.gap_x);
@@ -932,12 +934,13 @@ public class MainWindow : Window
 		cmbWidget.get_active_iter(out iter);
 		(cmbWidget.model).get(iter, 1, out conf);
 		
-		debug("-----------------------------------------------------");
-		debug("Save theme" + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
-		
-		
 		conf.stop_conky();
 		
+		conf.read_file();
+		
+		debug("-----------------------------------------------------");
+		debug("Updating theme" + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
+
 		//location
 		conf.alignment = Utility.gtk_combobox_get_value(cmbAlignment,1,"top_left");
 		conf.gap_x = spinGapX.value.to_string();
@@ -976,7 +979,9 @@ public class MainWindow : Window
 		if(conf.time_format != ""){
 			conf.time_format = Utility.gtk_combobox_get_value(cmbTimeFormat,1,"");
 		}
-
+		
+		conf.write_changes_to_file();
+		
 		debug("-----------------------------------------------------");
 		
 		conf.start_conky();

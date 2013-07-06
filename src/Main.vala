@@ -546,7 +546,7 @@ public class ConkyConfig : GLib.Object {
 	public string Path;
 	public bool Enabled = false;
 	public string Text = "";
-	
+
 	public ConkyConfig(string configPath, ConkyTheme theme) {
 		Theme = theme;
 		Path = configPath;
@@ -614,8 +614,14 @@ public class ConkyConfig : GLib.Object {
 		Enabled = false; 
 	}
 	
-	public void read(){
-		
+	public void read_file(){
+		debug("Read config file from disk");
+		Text = Utility.read_file(Path);
+	}
+	
+	public void write_changes_to_file(){
+		debug("Saved config file changes to disk");
+		Utility.write_file(this.Path, Text);
 	}
 	
 	public string alignment{
@@ -740,9 +746,7 @@ public class ConkyConfig : GLib.Object {
 	
 	public int height_padding{
 		get{
-			
-			string text = Utility.read_file(this.Path);
-			string[] arr = text.split("\n");
+			string[] arr = this.Text.split("\n");
 			int count = 0;
 			
 			//count empty lines at end of the file
@@ -763,9 +767,8 @@ public class ConkyConfig : GLib.Object {
 		}
 		set
 		{
-			string text = Utility.read_file(this.Path);
 			string newText = "";
-			string[] arr = text.split("\n");
+			string[] arr = this.Text.split("\n");
 			int count = 0;
 			
 			//count empty lines at end of the file
@@ -793,7 +796,8 @@ public class ConkyConfig : GLib.Object {
 			}
 			
 			debug("Set: height_padding " + value.to_string());
-			Utility.write_file(this.Path, newText);
+			
+			this.Text = newText;
 		}
 	}
 	
@@ -803,11 +807,11 @@ public class ConkyConfig : GLib.Object {
 			
 			if (search("""\${time|TIME [^}]*H[^}]*}""") != ""){
 				val = "24";
-				debug("Get: Time format = 24-Hour");
+				debug("Get: time format = 24-hour");
 			}
 			else if (search("""\${time|TIME [^}]*I[^}]*}""") != ""){
 				val = "12";
-				debug("Get: Time format = 12-Hour");
+				debug("Get: time format = 12-hour");
 			}
 
 			return val;
@@ -819,12 +823,12 @@ public class ConkyConfig : GLib.Object {
 			switch(value){
 				case "12":
 					if (replace("""\${(time|TIME) [^}]*(H)[^}]*}""", 2, "I")){
-						debug("Set: Time format = 12-Hour");
+						debug("Set: time format = 12-hour");
 					}
 					break;
 				case "24":
 					if (replace("""\${(time|TIME) [^}]*(I)[^}]*}""", 2, "H")){
-						debug("Set: Time format = 12-Hour");
+						debug("Set: time format = 24-hour");
 					}
 					break;	
 			}
@@ -832,7 +836,7 @@ public class ConkyConfig : GLib.Object {
 	}
 	
 	public string get_value(string param){
-		foreach(string line in Utility.read_file(Path).split("\n")){
+		foreach(string line in this.Text.split("\n")){
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
 				if (s.index_of(" ") != -1){
@@ -848,12 +852,11 @@ public class ConkyConfig : GLib.Object {
 	}
 	
 	public void set_value(string param, string newLine){
-		string oldText = Utility.read_file(this.Path);
 		string newText = "";
 		bool found = false;
 		bool remove = (newLine.strip() == param);
 		
-		foreach(string line in oldText.split("\n")){
+		foreach(string line in this.Text.split("\n")){
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
 				if (!remove){
@@ -878,11 +881,11 @@ public class ConkyConfig : GLib.Object {
 		//remove extra newline from end of text
 		newText = newText[0:newText.length-1];
 		
-		Utility.write_file(this.Path, newText);
+		this.Text = newText;
 	}
 	
 	public string search(string search_string){
-		foreach(string line in Utility.read_file(Path).split("\n")){
+		foreach(string line in this.Text.split("\n")){
 			string s = line.strip();
 
 			try{
@@ -905,7 +908,7 @@ public class ConkyConfig : GLib.Object {
 		string old_match = "";
 		string new_match = "";
 		
-		foreach(string line in Utility.read_file(Path).split("\n")){
+		foreach(string line in this.Text.split("\n")){
 			try{
 				Regex regx = new Regex(search_string);
 				MatchInfo match;
@@ -928,7 +931,7 @@ public class ConkyConfig : GLib.Object {
 		//remove extra newline from end of text
 		new_text = new_text[0:new_text.length-1];
 		
-		Utility.write_file(this.Path, new_text);
+		this.Text = new_text;
 		
 		return found;
 	}
