@@ -48,7 +48,6 @@ public class MainWindow : Window
 	private Label lblHeaderStartup;
 	private CheckButton chkStartup;
 	private Label lblHeaderThemePack;
-	private Button btnInstallNewThemes;
 	private Button btnInstallThemePack;
 	
 	private Label lblHeaderWidget;
@@ -713,34 +712,11 @@ public class MainWindow : Window
 		//btnInstallThemePack
 		btnInstallThemePack = new Button.with_label("  " + _("Import Themes from ZIP package"));
 		btnInstallThemePack.set_image (new Image.from_stock (Stock.ADD, IconSize.MENU));
-        //btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
+        btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
         btnInstallThemePack.expand = false;
         btnInstallThemePack.set_size_request(500,30);
         btnInstallThemePack.margin_left = 6;
-		//vboxOptions.add(btnInstallThemePack);
-		
-		bool newThemesAvailable = (App.check_for_new_themes() > 0);
-		
-		//btnInstallNewThemes
-		btnInstallNewThemes = new Button.with_label("");
-		btnInstallNewThemes.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
-        btnInstallNewThemes.clicked.connect (()=> {
-			btnInstallNewThemes.label = "  " + App.install_new_themes().to_string() + " new themes installed";
-			btnInstallNewThemes.sensitive = false;
-			App.reload_themes();
-			load_themes();
-			});
-        btnInstallNewThemes.expand = false;
-        btnInstallNewThemes.set_size_request(500,30);
-        btnInstallNewThemes.margin_left = 6;
-        btnInstallNewThemes.sensitive = newThemesAvailable;
-        if (newThemesAvailable){
-			btnInstallNewThemes.label = "  " + _("New Themes Available! Click here to Import.");
-		}
-		else{
-			btnInstallNewThemes.label = "  " + _("All available themes are already installed");
-		}
-		vboxOptions.add(btnInstallNewThemes);
+		vboxOptions.add(btnInstallThemePack);
 
 		//lblHeaderKillConky
 		lblHeaderKillConky = new Gtk.Label("<b>" + _("Commands") + "</b>");
@@ -1330,5 +1306,40 @@ public class MainWindow : Window
 	{
 		App.autostart(chkStartup.active);
 	}
+	
+	private void btnInstallThemePack_clicked ()
+	{
+		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Conky Theme Pack (*.ctp.zip)"), this, Gtk.FileChooserAction.OPEN,
+							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
+							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
+		dlgAddFiles.local_only = true;
+ 		dlgAddFiles.set_modal (true);
+ 		dlgAddFiles.set_select_multiple (true);
+ 		
+		Gtk.FileFilter filter = new Gtk.FileFilter ();
+		dlgAddFiles.set_filter (filter);
+		filter.add_pattern ("*.ctp.zip");
+		
+		int count = 0;
+		
+ 		if (dlgAddFiles.run() == Gtk.ResponseType.ACCEPT){
+			
+			set_busy(true,dlgAddFiles);
+			
+			
+	 		foreach (string file in dlgAddFiles.get_filenames()){
+				if (file.has_suffix(".ctp.zip")){
+					count += App.install_theme_pack(file);
+				}
+			}
+	 	}
 
+	 	dlgAddFiles.destroy (); //resets cursor
+		
+		//refresh theme list
+	 	App.reload_themes();
+	 	load_themes();
+	 	
+	 	Utility.messagebox_show(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."));
+	}
 }

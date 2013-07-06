@@ -99,22 +99,22 @@ public class Main : GLib.Object {
 			debug(_("Directory Created") + ": " + path);
 		}
 		
-		if (get_installed_theme_count() == 0){
-			// install shared theme pack ---------------
-			string sharePath = "/usr/share/conky-manager";
-			string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
-			if (Utility.file_exists(pkgPath)){
-				install_theme_pack(pkgPath);
-			}
-
-			//install theme packs -----------
-			string appPath = (File.new_for_path (arg0)).get_parent().get_path ();
-			pkgPath = appPath + "/conky-manager-theme-pack.zip";
-			if (Utility.file_exists(pkgPath)){
-				install_theme_pack(pkgPath);
-			} 
-		}
+		//unpack shared theme pack and install new themes if present ---------------
 		
+		string sharePath = "/usr/share/conky-manager";
+		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
+		if (Utility.file_exists(pkgPath)){
+			install_theme_pack(pkgPath);
+		}
+			
+		//install local theme pack if present -----------
+		
+		string appPath = (File.new_for_path (arg0)).get_parent().get_path ();
+		pkgPath = appPath + "/conky-manager-theme-pack.zip";
+		if (Utility.file_exists(pkgPath)){
+			install_theme_pack(pkgPath);
+		} 
+			
 		//load themes --------
 		
 		reload_themes();
