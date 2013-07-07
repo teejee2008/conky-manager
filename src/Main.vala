@@ -39,7 +39,7 @@ const string LOCALE_DIR = "/usr/share/locale";
 
 public class Main : GLib.Object {
 	
-	public string ThemeDir = "";
+	public string UserPath = "";
 	public Gee.ArrayList<ConkyTheme> ThemeList;
 	public bool EditMode = false;
 	
@@ -68,14 +68,19 @@ public class Main : GLib.Object {
     
     public Main(string arg0) {
 		string home = Environment.get_home_dir ();
-
-		ThemeDir = home + "/conky-manager/themes";
+		UserPath = home + "/conky-manager";
 		
 		//create missing directories --------
 		
 		string path = "";
 
 		path = home + "/conky-manager";
+		if (Utility.dir_exists(path) == false){
+			Utility.create_dir(path);
+			debug(_("Directory Created") + ": " + path);
+		}
+		
+		path = home + "/conky-manager/fonts";
 		if (Utility.dir_exists(path) == false){
 			Utility.create_dir(path);
 			debug(_("Directory Created") + ": " + path);
@@ -99,26 +104,73 @@ public class Main : GLib.Object {
 			debug(_("Directory Created") + ": " + path);
 		}
 		
-		//unpack shared theme pack and install new themes if present ---------------
+		//unpack shared theme packs and install new themes ---------------
 		
-		string sharePath = "/usr/share/conky-manager";
-		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
-		if (Utility.file_exists(pkgPath)){
-			install_theme_pack(pkgPath);
-		}
-			
-		//install local theme pack if present -----------
-		
-		string appPath = (File.new_for_path (arg0)).get_parent().get_path ();
-		pkgPath = appPath + "/conky-manager-theme-pack.zip";
-		if (Utility.file_exists(pkgPath)){
-			install_theme_pack(pkgPath);
-		} 
+		check_shared_theme_packs();
 			
 		//load themes --------
 		
 		reload_themes();
 		start_status_thread();
+	}
+	
+	public void check_shared_theme_packs(){
+		string sharePath = "/usr/share/conky-manager";
+		string home = Environment.get_home_dir ();
+		string config_file = home + "/conky-manager/.themepacks";
+		
+		//create empty config file if missing
+		if (Utility.file_exists(config_file) == false) { 
+			Posix.system("touch \"" + config_file + "\""); 
+		}
+		
+		//read config file
+		string txt = Utility.read_file(config_file);
+		string[] filenames = txt.split("\n");
+			
+		try
+		{
+			FileEnumerator enumerator;
+			FileInfo file;
+			File fShare = File.parse_name (sharePath);
+				
+			if (Utility.dir_exists(sharePath)){
+				enumerator = fShare.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+		
+				while ((file = enumerator.next_file ()) != null) {
+					
+					string filePath = sharePath + "/" + file.get_name();
+					if (Utility.file_exists(filePath) == false) { continue; }
+					if (filePath.has_suffix(".cmtp.zip") == false) { continue; }
+					
+					bool is_installed = false;
+					foreach(string filename in filenames){
+						if (file.get_name() == filename){
+							debug(_("Found theme pack [installed]") + ": " + filePath);
+							is_installed = true;
+							break;
+						}
+					}
+					
+					if (!is_installed){
+						debug("-----------------------------------------------------");
+						debug(_("Found theme pack [new]") + ": " + filePath);
+						install_theme_pack(filePath);
+						debug("-----------------------------------------------------");
+						
+						string list = "";
+						foreach(string filename in filenames){
+							list += filename + "\n";
+						}
+						list += file.get_name() + "\n";
+						Utility.write_file(config_file,list);
+					}
+				} 
+			}
+		}
+        catch(Error e){
+	        log_error (e.message);
+	    }
 	}
 	
 	public int get_installed_theme_count(){
@@ -143,62 +195,80 @@ public class Main : GLib.Object {
         return count;
 	}
 	
-	public int check_for_new_themes(){
-		string sharePath = "/usr/share/conky-manager";
-		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
-		if (Utility.file_exists(pkgPath)){
-			return install_theme_pack(pkgPath, true);
-		}
-			
-		return 0;
-	}
-	
-	public int install_new_themes(){
-		string sharePath = "/usr/share/conky-manager";
-		string pkgPath = sharePath + "/conky-manager-theme-pack.zip";
-		if (Utility.file_exists(pkgPath)){
-			return install_theme_pack(pkgPath, false);
-		}
-			
-		return 0;
-	}
-	
 	public int install_theme_pack(string pkgPath, bool checkOnly = false){
 		string temp_dir = Environment.get_tmp_dir();
 		temp_dir = temp_dir + "/" + Utility.timestamp2();
 		Utility.create_dir(temp_dir);
 		
-		debug(_("Found theme pack") + ": " + pkgPath);
+		debug(_("Installing") + ": " + pkgPath);
 		
 		string cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "unzip  \"" + pkgPath + "\">log.txt\n";
+		cmd += "unzip  \"" + pkgPath + "\">nul\n";
 		Utility.execute_command_sync_batch (cmd); 
+		
+		string themes_dir = temp_dir + "/themes";
+		string fonts_dir = temp_dir + "/fonts";
 		
 		int count = 0;
 		
+		//check and copy themes
+		
 		try
-		{
-			File f_temp_dir = File.parse_name (temp_dir);
-	        FileEnumerator enumerator = f_temp_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-	
-	        FileInfo file;
-	        while ((file = enumerator.next_file ()) != null) {
-				string source_dir = temp_dir + "/" + file.get_name();
-				string target_dir = ThemeDir + "/" + file.get_name();
-				
-				if (Utility.dir_exists(target_dir)) { 
-					continue; 
-				}
-				else{
-					count++;
+		{	
+			if (Utility.dir_exists(themes_dir)){
+				File f_themes_dir = File.parse_name (themes_dir);
+				FileEnumerator enumerator = f_themes_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+		
+				FileInfo file;
+				while ((file = enumerator.next_file ()) != null) {
+					string source_dir = themes_dir + "/" + file.get_name();
+					string target_dir = UserPath + "/themes/" + file.get_name();
 					
-					if (!checkOnly){
-						//install
-						debug(_("Theme copied") + ": " + target_dir);
-						Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
+					if (Utility.dir_exists(target_dir)) { 
+						continue; 
 					}
-				}
-	        } 
+					else{
+						count++;
+						
+						if (!checkOnly){
+							//install
+							debug(_("Theme copied") + ": " + target_dir);
+							Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
+						}
+					}
+				} 
+			}
+        }
+        catch(Error e){
+	        log_error (e.message);
+	    }
+	    
+	    //check and copy fonts
+	     
+	    try{
+			if (Utility.dir_exists(fonts_dir)){
+				File f_fonts_dir = File.parse_name (fonts_dir);
+				FileEnumerator enumerator = f_fonts_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+				
+				FileInfo file;
+				while ((file = enumerator.next_file ()) != null) {
+					string source_dir = fonts_dir + "/" + file.get_name();
+					string target_dir = UserPath + "/fonts/" + file.get_name();
+					
+					if (Utility.dir_exists(target_dir)) { 
+						continue; 
+					}
+					else{
+						count++;
+						
+						if (!checkOnly){
+							//install
+							debug(_("Font copied") + ": " + target_dir);
+							Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
+						}
+					}
+				} 
+			}
         }
         catch(Error e){
 	        log_error (e.message);
@@ -211,20 +281,27 @@ public class Main : GLib.Object {
 	
 	public void reload_themes() {
 		ThemeList = new Gee.ArrayList<ConkyTheme>();
-
+		
+		string theme_dir = UserPath + "/themes";
+		
 		try
 		{
-			File fileThemeDir = File.parse_name (ThemeDir);
+			debug("-----------------------------------------------------");
+			debug("Loading themes: " + theme_dir );
+		
+			File fileThemeDir = File.parse_name (theme_dir);
 	        FileEnumerator enumerator = fileThemeDir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 	
 	        FileInfo file;
 	        while ((file = enumerator.next_file ()) != null) {
-				string item = ThemeDir + "/" + file.get_name();
+				string item = theme_dir + "/" + file.get_name();
 				if (Utility.dir_exists(item) == false) { continue; }
 
 		        ConkyTheme theme = new ConkyTheme(item);
 		        ThemeList.add(theme);
 	        } 
+	        
+	        debug("-----------------------------------------------------");
         }
         catch(Error e){
 	        log_error (e.message);
@@ -438,7 +515,7 @@ public class ConkyTheme : GLib.Object {
 			FileEnumerator enumerator;
 			FileInfo file;
 			File fileDir = File.parse_name (dirPath);
-				
+			
 			if (Utility.dir_exists(dirPath)){
 				enumerator = fileDir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 		

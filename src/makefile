@@ -21,12 +21,12 @@ install:
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/conky-manager
 	install -m 0755 conky-manager $(DESTDIR)$(bindir)
-	install -m 0644 conky-manager-theme-pack.zip $(DESTDIR)$(sharedir)/conky-manager
+	install -m 0644 default-themes-1.1.cmtp.zip $(DESTDIR)$(sharedir)/conky-manager
 	install -m 0755 conky-manager.desktop $(DESTDIR)$(launcherdir)
 	
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/conky-manager
-	rm -f $(DESTDIR)$(sharedir)/conky-manager/conky-manager-theme-pack.zip
+	rm -f $(DESTDIR)$(sharedir)/conky-manager/default-themes-1.1.cmtp.zip
 	rm -f $(DESTDIR)$(launcherdir)/conky-manager.desktop
 	rm -rfd $(DESTDIR)$(sharedir)/conky-manager
     

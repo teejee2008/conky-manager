@@ -23,14 +23,14 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=24293;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_1=33612;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+current_page=6
+FILE_NAME_0=4438;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_1=26086;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
 FILE_NAME_2=8983;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
 FILE_NAME_3=235;Make;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
 FILE_NAME_4=201;Conf;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fcontrol;0;4
-FILE_NAME_5=270;None;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
-FILE_NAME_6=66298;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fselene%2Fsrc%2FConfigWindow.vala;0;4
+FILE_NAME_5=18;None;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
+FILE_NAME_6=40324;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fselene%2Fsrc%2FMainWindow.vala;0;4
 
 [VTE]
 last_dir=/home/teejee

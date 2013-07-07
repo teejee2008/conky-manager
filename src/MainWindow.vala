@@ -710,7 +710,7 @@ public class MainWindow : Window
 		vboxOptions.add(lblHeaderThemePack);
 		
 		//btnInstallThemePack
-		btnInstallThemePack = new Button.with_label("  " + _("Import Themes from ZIP package"));
+		btnInstallThemePack = new Button.with_label("  " + _("Import Conky Manager Theme Pack (*.cmtp.zip)"));
 		btnInstallThemePack.set_image (new Image.from_stock (Stock.ADD, IconSize.MENU));
         btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
         btnInstallThemePack.expand = false;
