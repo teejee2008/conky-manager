@@ -147,7 +147,7 @@ public class Main : GLib.Object {
 					
 					string filePath = sharePath + "/" + file.get_name();
 					if (Utility.file_exists(filePath) == false) { continue; }
-					if (filePath.has_suffix(".cmtp.zip") == false) { continue; }
+					if (filePath.has_suffix(".cmtp.7z") == false) { continue; }
 					
 					bool is_installed = false;
 					foreach(string filename in filenames){
@@ -209,12 +209,12 @@ public class Main : GLib.Object {
 		debug(_("Installing") + ": " + pkgPath);
 		
 		string cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "unzip  \"" + pkgPath + "\">nul\n";
+		cmd += "7z x o-\"" + temp_dir + "\" \"" + pkgPath + "\">nul\n";
 		Utility.execute_command_sync_batch (cmd); 
 		
 		string themes_dir = temp_dir + "/themes";
 		string fonts_dir = temp_dir + "/fonts";
-		
+
 		int count = 0;
 		
 		//check and copy themes
@@ -279,7 +279,8 @@ public class Main : GLib.Object {
         catch(Error e){
 	        log_error (e.message);
 	    }
-
+		
+		//delete temp files
 		Posix.system("rm -rf \"" + temp_dir + "\"");
 		
 		return count;

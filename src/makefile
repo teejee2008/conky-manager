@@ -29,7 +29,7 @@ install:
 	install -m 0755 ./images/conky-manager.png $(DESTDIR)$(sharedir)/pixmaps
 	
 	cp -dpr --no-preserve=ownership -t $(DESTDIR)$(sharedir)/conky-manager/images images/*
-	cp -dpr --no-preserve=ownership -t $(DESTDIR)$(sharedir)/conky-manager/themepacks themepacks/*.cmtp.zip
+	cp -dpr --no-preserve=ownership -t $(DESTDIR)$(sharedir)/conky-manager/themepacks themepacks/*.cmtp.7z
 	
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/conky-manager

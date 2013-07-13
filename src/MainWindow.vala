@@ -718,7 +718,7 @@ public class MainWindow : Window
 		vboxOptions.add(lblHeaderThemePack);
 		
 		//btnInstallThemePack
-		btnInstallThemePack = new Button.with_label("  " + _("Import Conky Manager Theme Pack (*.cmtp.zip)"));
+		btnInstallThemePack = new Button.with_label("  " + _("Import Conky Manager Theme Pack (*.cmtp.7z)"));
 		btnInstallThemePack.set_image (new Image.from_stock (Stock.ADD, IconSize.MENU));
         btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
         btnInstallThemePack.expand = false;
@@ -1317,7 +1317,7 @@ public class MainWindow : Window
 	
 	private void btnInstallThemePack_clicked ()
 	{
-		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack (*.cmtp.zip)"), this, Gtk.FileChooserAction.OPEN,
+		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack (*.cmtp.7z)"), this, Gtk.FileChooserAction.OPEN,
 							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
 							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
 		dlgAddFiles.local_only = true;
@@ -1326,7 +1326,7 @@ public class MainWindow : Window
  		
 		Gtk.FileFilter filter = new Gtk.FileFilter ();
 		dlgAddFiles.set_filter (filter);
-		filter.add_pattern ("*.cmtp.zip");
+		filter.add_pattern ("*.cmtp.7z");
 		
 		int count = 0;
 		
@@ -1336,7 +1336,7 @@ public class MainWindow : Window
 			
 			
 	 		foreach (string file in dlgAddFiles.get_filenames()){
-				if (file.has_suffix(".cmtp.zip")){
+				if (file.has_suffix(".cmtp.7z")){
 					count += App.install_theme_pack(file);
 				}
 			}
