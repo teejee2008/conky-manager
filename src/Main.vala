@@ -107,8 +107,7 @@ public class Main : GLib.Object {
 		//install new theme packs and fonts ---------------
 		
 		check_shared_theme_packs();
-		install_common_fonts();
-		
+
 		//load themes --------
 		
 		reload_themes();
@@ -326,42 +325,7 @@ public class Main : GLib.Object {
 	        log_error (e.message);
 	    }
 	}
-	
-	public void install_common_fonts(){
-		try
-		{
-			string home = Environment.get_home_dir ();
-			string common_font_dir = home + "/conky-manager/fonts";
-			string local_font_dir = home + "/.fonts";
-			
-			FileEnumerator enumerator;
-			FileInfo file;
-			File directory = File.parse_name (common_font_dir);
-				
-			if (Utility.dir_exists(common_font_dir)){
-				enumerator = directory.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-		
-				while ((file = enumerator.next_file ()) != null) {
-					string name = file.get_name();
-					string source_file = common_font_dir + "/" + name;
-					string target_file = local_font_dir + "/" + name;
-					
-					if (Utility.file_exists(target_file)) { continue; }
-					if (Utility.file_exists(source_file) == false) { continue; }
-					
-					string ext = name[name.last_index_of(".",0):name.length].down();
-					if ((ext != ".ttf") && (ext != ".odt")) { continue; }
 
-					Utility.copy_file(source_file, target_file);
-					debug(_("Font Installed: ") + target_file);
-				} 
-			}
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	}
-	
 	public void refresh_status() {
 		Gee.ArrayList<string> ActiveConfigList = new Gee.ArrayList<string>();
 
