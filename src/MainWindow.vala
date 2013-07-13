@@ -1333,8 +1333,7 @@ public class MainWindow : Window
  		if (dlgAddFiles.run() == Gtk.ResponseType.ACCEPT){
 			
 			set_busy(true,dlgAddFiles);
-			
-			
+
 	 		foreach (string file in dlgAddFiles.get_filenames()){
 				if (file.has_suffix(".cmtp.7z")){
 					count += App.install_theme_pack(file);

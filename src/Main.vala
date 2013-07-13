@@ -202,32 +202,35 @@ public class Main : GLib.Object {
 	}
 	
 	public int install_theme_pack(string pkgPath, bool checkOnly = false){
+		string cmd = "";
+		string home = Environment.get_home_dir ();
 		string temp_dir = Environment.get_tmp_dir();
 		temp_dir = temp_dir + "/" + Utility.timestamp2();
 		Utility.create_dir(temp_dir);
 		
 		debug(_("Installing") + ": " + pkgPath);
 		
-		string cmd = "cd \"" + temp_dir + "\"\n";
+		cmd = "cd \"" + temp_dir + "\"\n";
 		cmd += "7z x o-\"" + temp_dir + "\" \"" + pkgPath + "\">nul\n";
 		Utility.execute_command_sync_batch (cmd); 
 		
-		string themes_dir = temp_dir + "/themes";
-		string fonts_dir = temp_dir + "/fonts";
-
-		int count = 0;
+		string temp_dir_themes = temp_dir + "/themes";
+		string temp_dir_fonts = temp_dir + "/fonts";
+		string temp_dir_home = temp_dir + "/home";
 		
-		//check and copy themes
+		int count = 0;
+	
+		//copy themes to ~/conky-manager/themes
 		
 		try
 		{	
-			if (Utility.dir_exists(themes_dir)){
-				File f_themes_dir = File.parse_name (themes_dir);
+			if (Utility.dir_exists(temp_dir_themes)){
+				File f_themes_dir = File.parse_name (temp_dir_themes);
 				FileEnumerator enumerator = f_themes_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 		
 				FileInfo file;
 				while ((file = enumerator.next_file ()) != null) {
-					string source_dir = themes_dir + "/" + file.get_name();
+					string source_dir = temp_dir_themes + "/" + file.get_name();
 					string target_dir = UserPath + "/themes/" + file.get_name();
 					
 					if (Utility.dir_exists(target_dir)) { 
@@ -249,37 +252,40 @@ public class Main : GLib.Object {
 	        log_error (e.message);
 	    }
 	    
-	    //check and copy fonts
-	     
-	    try{
-			if (Utility.dir_exists(fonts_dir)){
-				File f_fonts_dir = File.parse_name (fonts_dir);
-				FileEnumerator enumerator = f_fonts_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+	    //copy fonts to ~/.fonts
+	    
+	    if (Utility.dir_exists(temp_dir_fonts)){
+			cmd = "rsync --recursive \"" + temp_dir_fonts + "/\" \"" + home + "/.fonts\"";
+			Posix.system(cmd);
+		}
+		
+		//copy files to ~
+		
+		try{
+			 
+			if (Utility.dir_exists(temp_dir_home)){
 				
+				File f_home_dir = File.parse_name (temp_dir_home);
+				FileEnumerator enumerator = f_home_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 				FileInfo file;
+				
 				while ((file = enumerator.next_file ()) != null) {
-					string source_dir = fonts_dir + "/" + file.get_name();
-					string target_dir = UserPath + "/fonts/" + file.get_name();
+					string dir_name = file.get_name();
+					string dir_path = temp_dir_home + "/" + file.get_name();
 					
-					if (Utility.dir_exists(target_dir)) { 
-						continue; 
-					}
-					else{
-						count++;
-						
-						if (!checkOnly){
-							//install
-							debug(_("Font copied") + ": " + target_dir);
-							Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
+					if ((dir_name.down() == "conky")||(dir_name.down() == ".conky")||(dir_name == ".fonts")){
+						if (Utility.dir_exists(dir_path)) { 
+							cmd = "rsync --recursive --perms --chmod=a=rwx \"" + dir_path + "\" \"" + home + "\"";
+							Posix.system(cmd);
 						}
-					}
+					} 
 				} 
 			}
         }
         catch(Error e){
 	        log_error (e.message);
 	    }
-		
+	    
 		//delete temp files
 		Posix.system("rm -rf \"" + temp_dir + "\"");
 		
