@@ -1309,7 +1309,7 @@ public class MainWindow : Window
 	
 	private void btnInstallThemePack_clicked ()
 	{
-		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Conky Theme Pack (*.ctp.zip)"), this, Gtk.FileChooserAction.OPEN,
+		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack (*.cmtp.zip)"), this, Gtk.FileChooserAction.OPEN,
 							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
 							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
 		dlgAddFiles.local_only = true;
@@ -1318,7 +1318,7 @@ public class MainWindow : Window
  		
 		Gtk.FileFilter filter = new Gtk.FileFilter ();
 		dlgAddFiles.set_filter (filter);
-		filter.add_pattern ("*.ctp.zip");
+		filter.add_pattern ("*.cmtp.zip");
 		
 		int count = 0;
 		
@@ -1328,7 +1328,7 @@ public class MainWindow : Window
 			
 			
 	 		foreach (string file in dlgAddFiles.get_filenames()){
-				if (file.has_suffix(".ctp.zip")){
+				if (file.has_suffix(".cmtp.zip")){
 					count += App.install_theme_pack(file);
 				}
 			}
