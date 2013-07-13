@@ -116,7 +116,7 @@ public class Main : GLib.Object {
 	}
 	
 	public void check_shared_theme_packs(){
-		string sharePath = "/usr/share/conky-manager";
+		string sharePath = "/usr/share/conky-manager/themepacks";
 		string home = Environment.get_home_dir ();
 		string config_file = home + "/conky-manager/.themepacks";
 		

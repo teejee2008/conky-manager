@@ -97,6 +97,14 @@ public class MainWindow : Window
         this.destroy.connect (Gtk.main_quit);
         set_default_size (600, 20);	
 
+		//set app icon
+		try{
+			this.icon = new Gdk.Pixbuf.from_file ("""/usr/share/pixmaps/conky-manager.png""");
+		}
+        catch(Error e){
+	        log_error (e.message);
+	    }
+	    
 		//tabMain
         tabMain = new Notebook ();
 		tabMain.margin = 6;

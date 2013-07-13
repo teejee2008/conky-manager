@@ -20,13 +20,20 @@ install:
 	mkdir -p $(DESTDIR)$(man1dir)
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/conky-manager
+	mkdir -p $(DESTDIR)$(sharedir)/conky-manager/images
+	mkdir -p $(DESTDIR)$(sharedir)/conky-manager/themepacks
+	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
+	
 	install -m 0755 conky-manager $(DESTDIR)$(bindir)
-	install -m 0644 default-themes-1.1.cmtp.zip $(DESTDIR)$(sharedir)/conky-manager
 	install -m 0755 conky-manager.desktop $(DESTDIR)$(launcherdir)
+	install -m 0755 ./images/conky-manager.png $(DESTDIR)$(sharedir)/pixmaps
+	
+	cp -dpr --no-preserve=ownership -t $(DESTDIR)$(sharedir)/conky-manager/images images/*
+	cp -dpr --no-preserve=ownership -t $(DESTDIR)$(sharedir)/conky-manager/themepacks themepacks/*.cmtp.zip
 	
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/conky-manager
-	rm -f $(DESTDIR)$(sharedir)/conky-manager/default-themes-1.1.cmtp.zip
 	rm -f $(DESTDIR)$(launcherdir)/conky-manager.desktop
+	rm -f $(DESTDIR)$(sharedir)/pixmaps/conky-manager.png
 	rm -rfd $(DESTDIR)$(sharedir)/conky-manager
     
