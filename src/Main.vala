@@ -211,28 +211,28 @@ public class Main : GLib.Object {
 		debug(_("Installing") + ": " + pkgPath);
 		
 		cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "7z x o-\"" + temp_dir + "\" \"" + pkgPath + "\">nul\n";
+		cmd += "7z x \"" + pkgPath + "\">nul\n";
 		Utility.execute_command_sync_batch (cmd); 
 		
 		string temp_dir_themes = temp_dir + "/themes";
 		string temp_dir_fonts = temp_dir + "/fonts";
 		string temp_dir_home = temp_dir + "/home";
-		
 		int count = 0;
 	
 		//copy themes to ~/conky-manager/themes
-		
+
 		try
 		{	
 			if (Utility.dir_exists(temp_dir_themes)){
+
 				File f_themes_dir = File.parse_name (temp_dir_themes);
 				FileEnumerator enumerator = f_themes_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-		
 				FileInfo file;
+				
 				while ((file = enumerator.next_file ()) != null) {
 					string source_dir = temp_dir_themes + "/" + file.get_name();
 					string target_dir = UserPath + "/themes/" + file.get_name();
-					
+
 					if (Utility.dir_exists(target_dir)) { 
 						continue; 
 					}
