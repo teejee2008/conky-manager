@@ -121,7 +121,8 @@ public class Main : GLib.Object {
 		string config_file = home + "/conky-manager/.themepacks";
 		
 		//create empty config file if missing
-		if (Utility.file_exists(config_file) == false) { 
+		//create empty config file if no themes found
+		if ((Utility.file_exists(config_file) == false)||(get_installed_theme_count() == 0)) { 
 			Posix.system("touch \"" + config_file + "\""); 
 		}
 		
