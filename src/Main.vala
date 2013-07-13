@@ -120,12 +120,16 @@ public class Main : GLib.Object {
 		string home = Environment.get_home_dir ();
 		string config_file = home + "/conky-manager/.themepacks";
 		
-		//create empty config file if missing
-		//create empty config file if no themes found
-		if ((Utility.file_exists(config_file) == false)||(get_installed_theme_count() == 0)) { 
-			Posix.system("touch \"" + config_file + "\""); 
+		//delete config file if no themes found
+		if (get_installed_theme_count() == 0) { 
+			Posix.system("rm -f \"" + config_file + "\""); 
 		}
 		
+		//create empty config file if missing
+		if (Utility.file_exists(config_file) == false) { 
+			Posix.system("touch \"" + config_file + "\""); 
+		}
+
 		//read config file
 		string txt = Utility.read_file(config_file);
 		string[] filenames = txt.split("\n");
