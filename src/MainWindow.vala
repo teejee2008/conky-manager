@@ -1328,25 +1328,36 @@ public class MainWindow : Window
 		dlgAddFiles.set_filter (filter);
 		filter.add_pattern ("*.cmtp.7z");
 		
-		int count = 0;
+		//show the dialog and get list of files
 		
+		SList<string> files = null;
  		if (dlgAddFiles.run() == Gtk.ResponseType.ACCEPT){
-			
-			set_busy(true,dlgAddFiles);
+			files = dlgAddFiles.get_filenames();
+	 	}
 
-	 		foreach (string file in dlgAddFiles.get_filenames()){
+		//install theme packs
+		
+		set_busy(true, dlgAddFiles);
+
+		int count = 0;
+		if (files != null){
+	 		foreach (string file in files){
 				if (file.has_suffix(".cmtp.7z")){
 					count += App.install_theme_pack(file);
 				}
 			}
-	 	}
-
-	 	dlgAddFiles.destroy (); //resets cursor
+		}
 		
 		//refresh theme list
+		
 	 	App.reload_themes();
 	 	load_themes();
+	 	dlgAddFiles.destroy ();
 	 	
-	 	Utility.messagebox_show(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."));
+	 	//show message
+	 	
+	 	if (files != null){
+			Utility.messagebox_show(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."));
+		}
 	}
 }
