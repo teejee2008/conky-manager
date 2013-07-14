@@ -1,9 +1,15 @@
-conky-manager (1.2) quantal; urgency=low
+conky-manager (1.2.0.1) quantal; urgency=low
 
-  * Rev:56, 2013-07-14
+  * Rev:57, 2013-07-14
   
-  * Added options for changing widget location, transparency and size
+  * Updated editing options
+  
+  * Added options for changing time format and network interface
 
-  * Added option to kill Conky and import themes
+  * Sort themes and widgets by name
+    
+  * Added application icon and new themes
 
+  * Bug-fixes
+  
  -- Tony George <tony.george.kol@gmail.com>  Sun, 14 Jul 2013 10:00:00 +0530

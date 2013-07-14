@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager 1.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2013-06-16 16:34+0530\n"
+"POT-Creation-Date: 2013-07-14 21:37+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,74 +17,353 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/MainWindow.vala:137
-msgid "Config"
+#: src/MainWindow.vala:607
+msgid "12 Hour"
+msgstr ""
+
+#: src/MainWindow.vala:609
+msgid "24 Hour"
+msgstr ""
+
+#: src/MainWindow.vala:760
+msgid "About"
+msgstr ""
+
+#: src/MainWindow.vala:311
+msgid "Alignment"
+msgstr ""
+
+#: src/MainWindow.vala:671 src/MainWindow.vala:674 src/MainWindow.vala:682
+msgid "Apply Changes"
+msgstr ""
+
+#: src/MainWindow.vala:437
+msgid "Background Color"
+msgstr ""
+
+#: src/MainWindow.vala:333
+msgid "Bottom Left"
+msgstr ""
+
+#: src/MainWindow.vala:337
+msgid "Bottom Middle"
+msgstr ""
+
+#: src/MainWindow.vala:335
+msgid "Bottom Right"
+msgstr ""
+
+#: src/MainWindow.vala:730
+msgid "Commands"
 msgstr ""
 
 #: src/Main.vala:80 src/Main.vala:86 src/Main.vala:92 src/Main.vala:98
 msgid "Directory Created"
 msgstr ""
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:679
+msgid "Discard"
+msgstr ""
+
+#: src/MainWindow.vala:240
 msgid "Edit"
 msgstr ""
 
-#: src/MainWindow.vala:108 src/MainWindow.vala:150
+#: src/MainWindow.vala:152 src/MainWindow.vala:193
 msgid "Enable"
 msgstr ""
 
-#: src/Main.vala:395
+#: src/Main.vala:623
 msgid "Font Installed: "
 msgstr ""
 
-#: src/Main.vala:346
-msgid "Found Config"
+#: src/Main.vala:266
+msgid "Font copied"
 msgstr ""
 
-#: src/Main.vala:128
-msgid "Found ThemePack"
-msgstr ""
-
-#: src/MainWindow.vala:169 src/MainWindow.vala:422
-msgid "Info"
-msgstr ""
-
-#: src/MainWindow.vala:191
-msgid "Options"
-msgstr ""
-
-#: src/MainWindow.vala:177 src/MainWindow.vala:442
-msgid "Preview"
-msgstr ""
-
-#: src/MainWindow.vala:180
-msgid "Preview Theme"
-msgstr ""
-
-#: src/MainWindow.vala:208
-msgid "Run Conky at system startup"
-msgstr ""
-
-#: src/Main.vala:450
-msgid "Started"
-msgstr ""
-
-#: src/MainWindow.vala:200
-msgid "Startup"
-msgstr ""
-
-#: src/Main.vala:471
-msgid "Stopped"
-msgstr ""
-
-#: src/MainWindow.vala:71 src/MainWindow.vala:95
-msgid "Theme"
+#: src/Main.vala:568
+msgid "Found config"
 msgstr ""
 
 #: src/Main.vala:148
-msgid "Theme Copied"
+msgid "Found theme pack [installed]"
 msgstr ""
 
-#: src/MainWindow.vala:172
+#: src/Main.vala:156
+msgid "Found theme pack [new]"
+msgstr ""
+
+#: src/MainWindow.vala:526
+msgid "Height Padding"
+msgstr ""
+
+#: src/MainWindow.vala:507
+msgid ""
+"Height should be larger than the size of window contents,\n"
+"otherwise this setting will not have any effect"
+msgstr ""
+
+#: src/MainWindow.vala:347
+msgid "Horizontal Gap"
+msgstr ""
+
+#: src/MainWindow.vala:721
+msgid "Import Conky Manager Theme Pack (*.cmtp.7z)"
+msgstr ""
+
+#: src/MainWindow.vala:1341
+msgid "Import Theme Pack (*.cmtp.7z)"
+msgstr ""
+
+#: src/MainWindow.vala:523
+msgid ""
+"Increases the window height by adding empty lines at the end of the Conky "
+"config file"
+msgstr ""
+
+#: src/MainWindow.vala:212 src/MainWindow.vala:1292
+msgid "Info"
+msgstr ""
+
+#: src/Main.vala:204
+msgid "Installing"
+msgstr ""
+
+#: src/MainWindow.vala:629
+msgid "Interface"
+msgstr ""
+
+#: src/MainWindow.vala:742
+msgid "Kill Conky"
+msgstr ""
+
+#: src/MainWindow.vala:747
+msgid "Kill all running Conky instances"
+msgstr ""
+
+#: src/MainWindow.vala:649
+msgid "LAN"
+msgstr ""
+
+#: src/MainWindow.vala:296
+msgid "Location"
+msgstr ""
+
+#: src/MainWindow.vala:339
+msgid "Middle Left"
+msgstr ""
+
+#: src/MainWindow.vala:343
+msgid "Middle Middle"
+msgstr ""
+
+#: src/MainWindow.vala:341
+msgid "Middle Right"
+msgstr ""
+
+#: src/MainWindow.vala:278
+msgid "Minimize all windows and show the widget on the desktop"
+msgstr ""
+
+#: src/MainWindow.vala:510
+msgid "Minimum Height"
+msgstr ""
+
+#: src/MainWindow.vala:493
+msgid "Minimum Width"
+msgstr ""
+
+#: src/MainWindow.vala:613
+msgid "Network"
+msgstr ""
+
+#: src/MainWindow.vala:1020
+msgid "Network interface cannot be changed for selected widget"
+msgstr ""
+
+#: src/MainWindow.vala:422
+msgid "Opacity (%)"
+msgstr ""
+
+#: src/MainWindow.vala:410
+msgid "Opaque"
+msgstr ""
+
+#: src/MainWindow.vala:693
+msgid "Options"
+msgstr ""
+
+#: src/MainWindow.vala:220 src/MainWindow.vala:1312
+msgid "Preview"
+msgstr ""
+
+#: src/MainWindow.vala:223
+msgid "Preview Theme"
+msgstr ""
+
+#: src/MainWindow.vala:282
+msgid "Properties"
+msgstr ""
+
+#: src/MainWindow.vala:414
+msgid "Pseudo-Transparent"
+msgstr ""
+
+#: src/MainWindow.vala:228
+msgid "Refresh List"
+msgstr ""
+
+#: src/MainWindow.vala:234
+msgid "Reload list of themes"
+msgstr ""
+
+#: src/MainWindow.vala:706
+msgid "Run Conky at system startup"
+msgstr ""
+
+#: src/MainWindow.vala:416
+msgid "Semi-Transparent"
+msgstr ""
+
+#: src/MainWindow.vala:556
+msgid ""
+"Setting Type to \"Opaque\" (from the transparency tab) will make it easier "
+"to see the changes"
+msgstr ""
+
+#: src/MainWindow.vala:463
+msgid ""
+"Setting Type to \"Pseudo-Transparent\" will make the window transparent but "
+"the window will have a shadow. The shadow can be disabled by configuring "
+"your window manager."
+msgstr ""
+
+#: src/MainWindow.vala:452
+msgid ""
+"Setting Type to \"Transparent\" will make the whole window transparent "
+"(including any images). Use \"Pseudo-Transparent\" if you want the images to "
+"be opaque."
+msgstr ""
+
+#: src/MainWindow.vala:272
+msgid "Show Desktop"
+msgstr ""
+
+#: src/MainWindow.vala:475
+msgid "Size"
+msgstr ""
+
+#: src/Main.vala:706
+msgid "Started"
+msgstr ""
+
+#: src/MainWindow.vala:698
+msgid "Startup"
+msgstr ""
+
+#: src/Main.vala:726
+msgid "Stopped"
+msgstr ""
+
+#: src/MainWindow.vala:545
+msgid ""
+"The minimum width & height must be more than the size of the window "
+"contents, otherwise the setting will not have any effect."
+msgstr ""
+
+#: src/MainWindow.vala:119 src/MainWindow.vala:139
+msgid "Theme"
+msgstr ""
+
+#: src/MainWindow.vala:215
 msgid "Theme Info"
+msgstr ""
+
+#: src/MainWindow.vala:714
+msgid "Theme Packs"
+msgstr ""
+
+#: src/Main.vala:237
+msgid "Theme copied"
+msgstr ""
+
+#: src/MainWindow.vala:1381
+msgid "Themes Imported"
+msgstr ""
+
+#: src/MainWindow.vala:568
+msgid "Time"
+msgstr ""
+
+#: src/MainWindow.vala:584
+msgid "Time Format"
+msgstr ""
+
+#: src/MainWindow.vala:1004
+msgid "Time format cannot be changed for selected widget"
+msgstr ""
+
+#: src/MainWindow.vala:327
+msgid "Top Left"
+msgstr ""
+
+#: src/MainWindow.vala:331
+msgid "Top Middle"
+msgstr ""
+
+#: src/MainWindow.vala:329
+msgid "Top Right"
+msgstr ""
+
+#: src/MainWindow.vala:374
+msgid "Transparency"
+msgstr ""
+
+#: src/MainWindow.vala:391
+msgid "Transparency Type"
+msgstr ""
+
+#: src/MainWindow.vala:412
+msgid "Transparent"
+msgstr ""
+
+#: src/MainWindow.vala:772
+msgid "Version"
+msgstr ""
+
+#: src/MainWindow.vala:360
+msgid "Vertical Gap"
+msgstr ""
+
+#: src/MainWindow.vala:640
+msgid "WiFi"
+msgstr ""
+
+#: src/MainWindow.vala:645
+msgid "WiFi Network"
+msgstr ""
+
+#: src/MainWindow.vala:180 src/MainWindow.vala:254
+msgid "Widget"
+msgstr ""
+
+#: src/MainWindow.vala:490
+msgid ""
+"Width should be larger than the size of window contents,\n"
+"otherwise this setting will not have any effect"
+msgstr ""
+
+#: src/MainWindow.vala:419
+msgid ""
+"Window Opacity\n"
+"\n"
+"0 = Fully Transparent, 100 = Fully Opaque"
+msgstr ""
+
+#: src/MainWindow.vala:654
+msgid "Wired LAN Network"
+msgstr ""
+
+#: src/MainWindow.vala:1381
+msgid "new themes were imported."
 msgstr ""

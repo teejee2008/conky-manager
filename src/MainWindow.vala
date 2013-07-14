@@ -933,7 +933,7 @@ public class MainWindow : Window
 		(cmbWidget.model).get(iter, 1, out conf);
 		
 		debug("-----------------------------------------------------");
-		debug("Load theme" + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
+		debug(_("Load theme") + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
 
 		conf.read_file();
 		
@@ -1045,7 +1045,7 @@ public class MainWindow : Window
 		conf.read_file();
 		
 		debug("-----------------------------------------------------");
-		debug("Updating theme" + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
+		debug(_("Updating theme") + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
 
 		//location
 		conf.alignment = Utility.gtk_combobox_get_value(cmbAlignment,1,"top_left");
@@ -1338,7 +1338,7 @@ public class MainWindow : Window
 	
 	private void btnInstallThemePack_clicked ()
 	{
-		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack (*.cmtp.7z)"), this, Gtk.FileChooserAction.OPEN,
+		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack") + " (*.cmtp.7z)", this, Gtk.FileChooserAction.OPEN,
 							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
 							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
 		dlgAddFiles.local_only = true;

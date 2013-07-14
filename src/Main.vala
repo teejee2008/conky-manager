@@ -290,7 +290,7 @@ public class Main : GLib.Object {
 					
 					if ((dir_name.down() == "conky")||(dir_name.down() == ".conky")||(dir_name == ".fonts")){
 						if (Utility.dir_exists(dir_path)) { 
-							debug("Copy files: " + home + "/" + dir_name);
+							debug(_("Copy files: ") + home + "/" + dir_name);
 							cmd = "rsync --recursive --perms --chmod=a=rwx \"" + dir_path + "\" \"" + home + "\"";
 							Posix.system(cmd);
 						}
@@ -316,7 +316,7 @@ public class Main : GLib.Object {
 		try
 		{
 			debug("-----------------------------------------------------");
-			debug("Loading themes: " + theme_dir );
+			debug(_("Loading themes") + ": " + theme_dir );
 		
 			File fileThemeDir = File.parse_name (theme_dir);
 	        FileEnumerator enumerator = fileThemeDir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
