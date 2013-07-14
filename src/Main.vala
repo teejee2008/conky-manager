@@ -567,6 +567,12 @@ public class ConkyTheme : GLib.Object {
 		
 					debug(_("Found config") + ": " + filePath.replace(theme_dir + "/",""));
 				} 
+				
+				//sort the widget list
+				CompareFunc<ConkyConfig> rc_compare = (a, b) => {
+					return strcmp(a.Name,b.Name);
+				};
+				ConfigList.sort(rc_compare);
 			}
 		}
         catch(Error e){
