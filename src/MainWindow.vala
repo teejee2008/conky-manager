@@ -794,31 +794,52 @@ public class MainWindow : Window
 
 	public void load_themes() {
 
-		ListStore model;
+		TreeModel model;
 		TreeIter iter;
+		ListStore store;
+		ConkyTheme th;
 		
-		//populate tvTheme
-		model = new ListStore(1,typeof(ConkyTheme));
-		foreach(ConkyTheme theme in App.ThemeList) {
-			model.append(out iter);
-			model.set(iter, 0, theme);
+		//get selected theme
+		th = null;
+		string name = "";
+		if (tvTheme.get_selection().get_selected(out model, out iter)){
+			model.get (iter, 0, out th, -1); //get theme
+			name = th.Name;
 		}
-		tvTheme.model = model;
-		
-		//populate cmbWidget
-		model = new Gtk.ListStore (2, typeof (string), typeof (ConkyConfig));
+
+		//populate tvTheme
+		TreeIter selected_iter = TreeIter();
+		bool found = false;
+		store = new ListStore(1,typeof(ConkyTheme));
 		foreach(ConkyTheme theme in App.ThemeList) {
-			foreach(ConkyConfig conf in theme.ConfigList) {
-				model.append(out iter);
-				model.set(iter, 0, theme.Name + " - " + conf.Name, 1, conf);
+			store.append(out iter);
+			store.set(iter, 0, theme);
+			if (theme.Name == name){ 
+				found = true; 
+				selected_iter = iter;
 			}
 		}
-		cmbWidget.set_model(model);
+		tvTheme.model = store;
+		
+		//re-select theme
+		if(found){
+			tvTheme.get_selection().select_iter(selected_iter);
+		}
+
+		//populate cmbWidget
+		store = new Gtk.ListStore (2, typeof (string), typeof (ConkyConfig));
+		foreach(ConkyTheme theme in App.ThemeList) {
+			foreach(ConkyConfig conf in theme.ConfigList) {
+				store.append(out iter);
+				store.set(iter, 0, theme.Name + " - " + conf.Name, 1, conf);
+			}
+		}
+		cmbWidget.set_model(store);
 		cmbWidget.set_active (-1);
 		set_editing_options_enabled(false);
 		
-		ListStore store = new ListStore(1,typeof(ConkyConfig));
-		tvConfig.model = store;
+		//store = new ListStore(1,typeof(ConkyConfig));
+		//tvConfig.model = store;
 	}
 	
 	//tabMain handlers ---------------------------
