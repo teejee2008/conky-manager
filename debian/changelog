@@ -1,9 +1,9 @@
 conky-manager (1.2) quantal; urgency=low
 
-  * Rev:53, 2013-07-12
+  * Rev:56, 2013-07-14
   
   * Added options for changing widget location, transparency and size
 
   * Added option to kill Conky and import themes
 
- -- Tony George <tony.george.kol@gmail.com>  Fri, 12 Jul 2013 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 14 Jul 2013 10:00:00 +0530
