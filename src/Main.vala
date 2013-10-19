@@ -393,8 +393,7 @@ public class Main : GLib.Object {
 		}
 	}	
 	
-	public void start_status_thread ()
-	{
+	public void start_status_thread (){
 		try {
 			Thread.create<void> (status_thread, true);
 		} catch (ThreadError e) {
@@ -402,8 +401,7 @@ public class Main : GLib.Object {
 		}
 	}
 	
-	private void status_thread ()
-	{
+	private void status_thread (){
 		while (true){  // loop runs for entire application lifetime
 			refresh_status();
 			Thread.usleep((ulong)3000000);
@@ -566,8 +564,7 @@ public class ConkyTheme : GLib.Object {
 		}
 	}
 	
-	private void find_conkyrc(string dirPath, bool checkExt)
-	{
+	private void find_conkyrc(string dirPath, bool checkExt){
 		try
 		{
 			FileEnumerator enumerator;
@@ -603,8 +600,7 @@ public class ConkyTheme : GLib.Object {
 	    }
 	}
 	
-	private void find_fonts(string dirPath)
-	{
+	private void find_fonts(string dirPath){
 		try
 		{
 			FileEnumerator enumerator;
@@ -631,8 +627,10 @@ public class ConkyTheme : GLib.Object {
 	    }
 	}
 	
-	//install fonts and install required packages
-	public void Install(){
+	public void install(){
+		
+		/* installs fonts and required packages */
+		
 		string home = Environment.get_home_dir ();
 		
 		// check and install fonts
@@ -680,7 +678,6 @@ public class ConkyTheme : GLib.Object {
 	}
 }
 
-
 public class ConkyConfig : GLib.Object {
 	public ConkyTheme Theme;
 	public string Name;
@@ -722,7 +719,7 @@ public class ConkyConfig : GLib.Object {
 			stop_conky();
 		}
 		
-		Theme.Install();
+		Theme.install();
 		
 		cmd = "cd \"" + Theme.BasePath + "\"\n";
 		cmd += "conky -c \"" + Path + "\"\n";

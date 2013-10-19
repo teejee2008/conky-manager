@@ -35,70 +35,75 @@ using TeeJee.Misc;
 
 public class MainWindow : Window {
 	private Notebook tab_main;
-	private Notebook tabWidgetProperties;
+	private Notebook tab_widget_properties;
+	private Box hbox_commands;
 	
-	private Label lblThemeTab;
-	private Box vboxTheme;
-	private Box hboxThemeButtons;
+	private Label lbl_theme_tab;
+	private Box vbox_theme;
+	private Box hbox_theme_buttons;
 
-	private Label lblOptionsTab;
-	private Box vboxOptions;
+	private Label lbl_options_tab;
+	private Box vbox_options;
 
-	private Label lblEditTab;
+	private Label lbl_edit_tab;
 
-	private Label lblAboutTab;
-	private Box vboxAbout;
+	private Label lbl_about_tab;
+	private Box vbox_about;
 
-	private Label lblAppName;
-	private Label lblAppVersion;
-	private Label lblAuthor;
-	private LinkButton lnkBlog;
+	private Label lbl_app_name;
+	private Label lbl_app_version;
+	private Label lbl_author;
+	private LinkButton lnk_blog;
 	
-	private Label lblHeaderStartup;
+	private Label lbl_header_startup;
 	private CheckButton chkStartup;
-	private Label lblHeaderThemePack;
-	private Button btnInstallThemePack;
+	private Label lbl_header_theme_pack;
+	private Button btn_install_theme_pack;
 	
-	private Label lblHeaderWidget;
-	private Label lblBackgroundColor;
-	private Label lblAlignment;
-	private Label lblGapX;
-	private Label lblGapY;
-	private Label lblTransparency;
-	private Label lblMinWidth;
-	private Label lblMinHeight;
-	private Label lblWidgetTimeNotFound;
-	private Label lblWidgetNetworkNotFound;
-	private ComboBox cmbAlignment;
-	private ComboBox cmbWidget;
-	private ComboBox cmbTransparencyType;
-	private ComboBox cmbTimeFormat;
-	private SpinButton spinGapX;
-	private SpinButton spinGapY;
-	private SpinButton spinOpacity;
-	private SpinButton spinMinWidth;
-	private SpinButton spinMinHeight;
-	private SpinButton spinHeightPadding;
-	private ColorButton cbtnBackgroundColor;
-	private Entry txtNetworkDevice;
-	private Button btnWiFi;
-	private Button btnLAN;
-	private Button btnShowDesktop;
+	private Label lbl_header_widget;
+	private Label lbl_background_color;
+	private Label lbl_alignment;
+	private Label lbl_gap_x;
+	private Label lbl_gap_y;
+	private Label lbl_transparency;
+	private Label lbl_min_width;
+	private Label lbl_min_height;
+	private Label lbl_widget_time_not_found;
+	private Label lbl_widget_network_not_found;
+	private ComboBox cmb_alignment;
+	private ComboBox cmb_widget;
+	private ComboBox cmb_transparency_type;
+	private ComboBox cmb_time_format;
+	private SpinButton spin_gap_x;
+	private SpinButton spin_gap_y;
+	private SpinButton spin_opacity;
+	private SpinButton spin_min_width;
+	private SpinButton spin_min_height;
+	private SpinButton spin_height_padding;
+	private ColorButton cbtn_bg_color;
+	private Entry txt_network_device;
+	private Button btn_wifi;
+	private Button btn_lan;
+	private Button btn_show_desktop;
 	
-	private TreeView tvTheme;
-	private ScrolledWindow swTheme;
+	private TreeView tv_theme;
+	private ScrolledWindow sw_theme;
+	private TreeViewColumn col_theme_name;
+	private TreeViewColumn col_theme_enabled;
 	
-	private TreeView tvConfig;
-	private ScrolledWindow swConfig;
+	private TreeView tv_config;
+	private ScrolledWindow sw_config;
+	private TreeViewColumn col_widget_name;
+	private TreeViewColumn col_widget_enabled;
+	
+	private Button btn_theme_info;
+	private Button btn_theme_preview;
+	private Button btn_reload_themes;
+	private Button btn_apply_changes;
+	private Button btn_discard_changes;
 
-	private Button btnThemeInfo;
-	private Button btnThemePreview;
-	private Button btnReloadThemes;
-	private Button btnApplyChanges;
-	private Button btnDiscardChanges;
-
-	private Label lblHeaderKillConky;
-	private Button btnKillConky;
+	private Label lbl_header_kill_conky;
+	private Button btn_kill_conky;
 
 	public MainWindow() {
 		this.title = AppName + " v" + AppVersion + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
@@ -120,214 +125,214 @@ public class MainWindow : Window {
 		tab_main.switch_page.connect(tab_main_switch_page);
 		add(tab_main);
 		
-		//vboxTheme
-        vboxTheme = new Box (Orientation.VERTICAL, 6);
-		vboxTheme.margin = 6;
+		//vbox_theme
+        vbox_theme = new Box (Orientation.VERTICAL, 6);
+		vbox_theme.margin = 6;
 
-        //lblThemeTab
-		lblThemeTab = new Label (_("Theme"));
+        //lbl_theme_tab
+		lbl_theme_tab = new Label (_("Theme"));
 
-		tab_main.append_page (vboxTheme, lblThemeTab);
+		tab_main.append_page (vbox_theme, lbl_theme_tab);
 
-		//tvTheme
-		tvTheme = new TreeView();
-		tvTheme.get_selection().mode = SelectionMode.SINGLE;
-		tvTheme.get_selection().changed.connect(tvTheme_selection_changed);
-		tvTheme.set_tooltip_text ("");
-		tvTheme.set_rules_hint (true);
-		//tvTheme.headers_visible = false;
+		//tv_theme
+		tv_theme = new TreeView();
+		tv_theme.get_selection().mode = SelectionMode.SINGLE;
+		tv_theme.get_selection().changed.connect(tv_theme_selection_changed);
+		tv_theme.set_tooltip_text ("");
+		tv_theme.set_rules_hint (true);
+		//tv_theme.headers_visible = false;
 		
-		swTheme = new ScrolledWindow(tvTheme.get_hadjustment (), tvTheme.get_vadjustment ());
-		swTheme.set_shadow_type (ShadowType.ETCHED_IN);
-		swTheme.add (tvTheme);
-		swTheme.set_size_request (-1, 250);
-		vboxTheme.pack_start (swTheme, true, true, 0);
+		sw_theme = new ScrolledWindow(tv_theme.get_hadjustment (), tv_theme.get_vadjustment ());
+		sw_theme.set_shadow_type (ShadowType.ETCHED_IN);
+		sw_theme.add (tv_theme);
+		sw_theme.set_size_request (-1, 250);
+		vbox_theme.pack_start (sw_theme, true, true, 0);
 		
 		//Theme Name Column
-		TreeViewColumn colName = new TreeViewColumn();
-		colName.title = _("Theme");
-		colName.resizable = true;
-		colName.expand = true;
+		col_theme_name = new TreeViewColumn();
+		col_theme_name.title = _("Theme");
+		col_theme_name.resizable = true;
+		col_theme_name.expand = true;
 		
-		CellRendererText cellName = new CellRendererText ();
-		cellName.ellipsize = Pango.EllipsizeMode.END;
-		cellName.width = 200;
-		colName.pack_start (cellName, false);
-		colName.set_cell_data_func (cellName, tvTheme_cellName_render);
-		tvTheme.append_column(colName);
+		CellRendererText cell_theme_name = new CellRendererText ();
+		cell_theme_name.ellipsize = Pango.EllipsizeMode.END;
+		cell_theme_name.width = 200;
+		col_theme_name.pack_start (cell_theme_name, false);
+		col_theme_name.set_cell_data_func (cell_theme_name, tv_theme_cell_theme_name_render);
+		tv_theme.append_column(col_theme_name);
 		
 		//'Enabled' Column
-		TreeViewColumn colEnabled = new TreeViewColumn();
-		colEnabled.title = _("Enable");
-		colEnabled.resizable = false;
-		//colEnabled.sizing = TreeViewColumnSizing.AUTOSIZE; 
-		colEnabled.expand = false;
+		col_theme_enabled = new TreeViewColumn();
+		col_theme_enabled.title = _("Enable");
+		col_theme_enabled.resizable = false;
+		//col_theme_enabled.sizing = TreeViewColumnSizing.AUTOSIZE; 
+		col_theme_enabled.expand = false;
 		
-		CellRendererToggle cellEnabled = new CellRendererToggle ();
-		cellEnabled.radio = false;
-		cellEnabled.activatable = true;
-		cellEnabled.width = 50;
-		cellEnabled.toggled.connect (tvTheme_cellEnabled_toggled);
-		colEnabled.pack_start (cellEnabled, false);
-		colEnabled.set_cell_data_func (cellEnabled, tvTheme_cellEnabled_render);
-		tvTheme.append_column(colEnabled);
+		CellRendererToggle cell_theme_enabled = new CellRendererToggle ();
+		cell_theme_enabled.radio = false;
+		cell_theme_enabled.activatable = true;
+		cell_theme_enabled.width = 50;
+		cell_theme_enabled.toggled.connect (tv_theme_cell_theme_enabled_toggled);
+		col_theme_enabled.pack_start (cell_theme_enabled, false);
+		col_theme_enabled.set_cell_data_func (cell_theme_enabled, tv_theme_cell_theme_enabled_render);
+		tv_theme.append_column(col_theme_enabled);
 		
-		//tvConfig
-		tvConfig = new TreeView();
-		tvConfig.get_selection().mode = SelectionMode.MULTIPLE;
-		tvConfig.set_rules_hint (true);
-		//tvConfig.headers_visible = false;
+		//tv_config
+		tv_config = new TreeView();
+		tv_config.get_selection().mode = SelectionMode.MULTIPLE;
+		tv_config.set_rules_hint (true);
+		//tv_config.headers_visible = false;
 		
-		swConfig = new ScrolledWindow(tvConfig.get_hadjustment (), tvConfig.get_vadjustment ());
-		swConfig.set_shadow_type (ShadowType.ETCHED_IN);
-		swConfig.add (tvConfig);
-		swConfig.set_size_request (-1, 180);
-		vboxTheme.pack_start (swConfig, false, true, 0);
+		sw_config = new ScrolledWindow(tv_config.get_hadjustment (), tv_config.get_vadjustment ());
+		sw_config.set_shadow_type (ShadowType.ETCHED_IN);
+		sw_config.add (tv_config);
+		sw_config.set_size_request (-1, 180);
+		vbox_theme.pack_start (sw_config, false, true, 0);
 		
 		//Theme Name Column
-		colName = new TreeViewColumn();
-		colName.title = _("Widget");
-		colName.resizable = true;
-		colName.expand = true;
+		col_widget_name = new TreeViewColumn();
+		col_widget_name.title = _("Widget");
+		col_widget_name.resizable = true;
+		col_widget_name.expand = true;
 		
-		cellName = new CellRendererText ();
-		cellName.ellipsize = Pango.EllipsizeMode.END;
-		cellName.width = 200;
-		colName.pack_start (cellName, false);
-		colName.set_cell_data_func (cellName, tvConfig_cellName_render);
-		tvConfig.append_column(colName);
+		CellRendererText cell_widget_name = new CellRendererText ();
+		cell_widget_name.ellipsize = Pango.EllipsizeMode.END;
+		cell_widget_name.width = 200;
+		col_widget_name.pack_start (cell_widget_name, false);
+		col_widget_name.set_cell_data_func (cell_widget_name, tv_config_cell_widget_name_render);
+		tv_config.append_column(col_widget_name);
 		
 		//'Enabled' Column
-		colEnabled = new TreeViewColumn();
-		colEnabled.title = _("Enable");
-		colEnabled.resizable = false;
-		colEnabled.expand = false;
+		col_widget_enabled = new TreeViewColumn();
+		col_widget_enabled.title = _("Enable");
+		col_widget_enabled.resizable = false;
+		col_widget_enabled.expand = false;
 		
-		cellEnabled = new CellRendererToggle ();
-		cellEnabled.radio = false;
-		cellEnabled.activatable = true;
-		cellEnabled.width = 50;
-		cellEnabled.toggled.connect (tvConfig_cellEnabled_toggled);
-		colEnabled.pack_start (cellEnabled, false);
-		colEnabled.set_cell_data_func (cellEnabled, tvConfig_cellEnabled_render);
-		tvConfig.append_column(colEnabled);
+		CellRendererToggle cell_widget_enabled = new CellRendererToggle ();
+		cell_widget_enabled.radio = false;
+		cell_widget_enabled.activatable = true;
+		cell_widget_enabled.width = 50;
+		cell_widget_enabled.toggled.connect (tv_config_cell_widget_enabled_toggled);
+		col_widget_enabled.pack_start (cell_widget_enabled, false);
+		col_widget_enabled.set_cell_data_func (cell_widget_enabled, tv_config_cell_widget_enabled_render);
+		tv_config.append_column(col_widget_enabled);
 		
-		//hboxThemeButtons
-		hboxThemeButtons = new Box (Orientation.HORIZONTAL, 6); 
-		hboxThemeButtons.set_homogeneous(true);
-		vboxTheme.add(hboxThemeButtons);
+		//hbox_theme_buttons
+		hbox_theme_buttons = new Box (Orientation.HORIZONTAL, 6); 
+		hbox_theme_buttons.set_homogeneous(true);
+		vbox_theme.add(hbox_theme_buttons);
 		
-		//btnThemeInfo
-		btnThemeInfo = new Button.with_label(_("Info"));
-		btnThemeInfo.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
-        btnThemeInfo.clicked.connect (btnThemeInfo_clicked);
-        btnThemeInfo.set_tooltip_text (_("Theme Info"));
-        btnThemeInfo.set_sensitive(false);
-		hboxThemeButtons.add(btnThemeInfo);
+		//btn_theme_info
+		btn_theme_info = new Button.with_label(_("Info"));
+		btn_theme_info.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
+        btn_theme_info.clicked.connect (btn_theme_info_clicked);
+        btn_theme_info.set_tooltip_text (_("Theme Info"));
+        btn_theme_info.set_sensitive(false);
+		hbox_theme_buttons.add(btn_theme_info);
 		
-		//btnThemePreview
-		btnThemePreview = new Button.with_label(_("Preview"));
-		//btnThemePreview.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
-        btnThemePreview.clicked.connect (btnThemePreview_clicked);
-        btnThemePreview.set_tooltip_text (_("Preview Theme"));
-        btnThemePreview.set_sensitive(false);
-		hboxThemeButtons.add(btnThemePreview);
+		//btn_theme_preview
+		btn_theme_preview = new Button.with_label(_("Preview"));
+		//btn_theme_preview.set_image (new Image.from_stock (Stock.INFO, IconSize.MENU));
+        btn_theme_preview.clicked.connect (btn_theme_preview_clicked);
+        btn_theme_preview.set_tooltip_text (_("Preview Theme"));
+        btn_theme_preview.set_sensitive(false);
+		hbox_theme_buttons.add(btn_theme_preview);
 
-		//btnReloadThemes
-		btnReloadThemes = new Button.with_label(_("Refresh List"));
-		btnReloadThemes.set_image (new Image.from_stock (Stock.REFRESH, IconSize.MENU));
-        btnReloadThemes.clicked.connect (() => {
+		//btn_reload_themes
+		btn_reload_themes = new Button.with_label(_("Refresh List"));
+		btn_reload_themes.set_image (new Image.from_stock (Stock.REFRESH, IconSize.MENU));
+        btn_reload_themes.clicked.connect (() => {
 			App.reload_themes();
 			this.load_themes();
 			});
-        btnReloadThemes.set_tooltip_text (_("Reload list of themes"));
-		hboxThemeButtons.add(btnReloadThemes);
+        btn_reload_themes.set_tooltip_text (_("Reload list of themes"));
+		hbox_theme_buttons.add(btn_reload_themes);
 
         //Edit tab ---------------------------
 
-        //lblEditTab
-		lblEditTab = new Label (_("Edit"));
+        //lbl_edit_tab
+		lbl_edit_tab = new Label (_("Edit"));
 
-		//gridEdit
-        Grid gridEdit = new Grid ();
-        gridEdit.set_column_spacing (6);
-        gridEdit.set_row_spacing (6);
-        gridEdit.column_homogeneous = false;
-        gridEdit.visible = false;
-        gridEdit.margin = 12;
-        tab_main.append_page (gridEdit, lblEditTab);
+		//grid_edit
+        Grid grid_edit = new Grid ();
+        grid_edit.set_column_spacing (6);
+        grid_edit.set_row_spacing (6);
+        grid_edit.column_homogeneous = false;
+        grid_edit.visible = false;
+        grid_edit.margin = 12;
+        tab_main.append_page (grid_edit, lbl_edit_tab);
 
         CellRendererText textCell;
         
-        //lblHeaderWidget
-		lblHeaderWidget = new Gtk.Label("<b>" + _("Widget") + "</b>");
-		lblHeaderWidget.set_use_markup(true);
-		lblHeaderWidget.xalign = (float) 0.0;
-		lblHeaderWidget.margin_bottom = 6;
-		gridEdit.attach(lblHeaderWidget,0,0,2,1);
+        //lbl_header_widget
+		lbl_header_widget = new Gtk.Label("<b>" + _("Widget") + "</b>");
+		lbl_header_widget.set_use_markup(true);
+		lbl_header_widget.xalign = (float) 0.0;
+		lbl_header_widget.margin_bottom = 6;
+		grid_edit.attach(lbl_header_widget,0,0,2,1);
 		
-        //cmbWidget
-		cmbWidget = new ComboBox();
+        //cmb_widget
+		cmb_widget = new ComboBox();
 		textCell = new CellRendererText();
-        cmbWidget.pack_start( textCell, false );
-        cmbWidget.set_attributes( textCell, "text", 0 );
-        cmbWidget.changed.connect(cmbWidget_changed);
-        cmbWidget.margin_left = 6;
-        cmbWidget.margin_right = 6;
-        cmbWidget.hexpand = true;
-        gridEdit.attach(cmbWidget,0,1,1,1);
+        cmb_widget.pack_start( textCell, false );
+        cmb_widget.set_attributes( textCell, "text", 0 );
+        cmb_widget.changed.connect(cmb_widget_changed);
+        cmb_widget.margin_left = 6;
+        cmb_widget.margin_right = 6;
+        cmb_widget.hexpand = true;
+        grid_edit.attach(cmb_widget,0,1,1,1);
 		
-		//btnShowDesktop
-        btnShowDesktop = new Button.with_label(_("Show Desktop"));
-        btnShowDesktop.clicked.connect (() => {
+		//btn_show_desktop
+        btn_show_desktop = new Button.with_label(_("Show Desktop"));
+        btn_show_desktop.clicked.connect (() => {
 			//show desktop
 			App.minimize_all_other_windows();
 			});
-		btnShowDesktop.set_size_request(130,-1);
-        btnShowDesktop.set_tooltip_text (_("Minimize all windows and show the widget on the desktop"));
-		gridEdit.attach(btnShowDesktop,1,1,1,1);
+		btn_show_desktop.set_size_request(130,-1);
+        btn_show_desktop.set_tooltip_text (_("Minimize all windows and show the widget on the desktop"));
+		grid_edit.attach(btn_show_desktop,1,1,1,1);
 		
-		//lblHeaderWidgetProperties
-		Label lblHeaderWidgetProperties = new Gtk.Label("<b>" + _("Properties") + "</b>");
-		lblHeaderWidgetProperties.set_use_markup(true);
-		lblHeaderWidgetProperties.xalign = (float) 0.0;
-		lblHeaderWidgetProperties.margin_top = 6;
-		gridEdit.attach(lblHeaderWidgetProperties,0,2,2,1);
+		//lbl_header_widgetProperties
+		Label lbl_header_widgetProperties = new Gtk.Label("<b>" + _("Properties") + "</b>");
+		lbl_header_widgetProperties.set_use_markup(true);
+		lbl_header_widgetProperties.xalign = (float) 0.0;
+		lbl_header_widgetProperties.margin_top = 6;
+		grid_edit.attach(lbl_header_widgetProperties,0,2,2,1);
 		
-        //tabWidgetProperties ---------------------------------------
-        tabWidgetProperties = new Notebook ();
-		tabWidgetProperties.margin = 6;
-		tabWidgetProperties.tab_pos = PositionType.LEFT;
-		tabWidgetProperties.expand = true;
-		gridEdit.attach(tabWidgetProperties,0,3,2,1);
+        //tab_widget_properties ---------------------------------------
+        tab_widget_properties = new Notebook ();
+		tab_widget_properties.margin = 6;
+		tab_widget_properties.tab_pos = PositionType.LEFT;
+		tab_widget_properties.expand = true;
+		grid_edit.attach(tab_widget_properties,0,3,2,1);
 		
 		//lblWidgetLocation
 		Label lblWidgetLocation = new Label (_("Location"));
 
-		//gridWidgetLocation -----------------------------------------------
+		//grid_widget_location -----------------------------------------------
 		
-        Grid gridWidgetLocation = new Grid ();
-        gridWidgetLocation.set_column_spacing (12);
-        gridWidgetLocation.set_row_spacing (6);
-        gridWidgetLocation.column_homogeneous = false;
-        gridWidgetLocation.visible = false;
-        gridWidgetLocation.margin = 12;
-        tabWidgetProperties.append_page (gridWidgetLocation, lblWidgetLocation);
+        Grid grid_widget_location = new Grid ();
+        grid_widget_location.set_column_spacing (12);
+        grid_widget_location.set_row_spacing (6);
+        grid_widget_location.column_homogeneous = false;
+        grid_widget_location.visible = false;
+        grid_widget_location.margin = 12;
+        tab_widget_properties.append_page (grid_widget_location, lblWidgetLocation);
         
 		int row = -1;
 		
-		//lblAlignment
-		lblAlignment = new Gtk.Label(_("Alignment"));
-		lblAlignment.margin_left = 6;
-		lblAlignment.xalign = (float) 0.0;
-		gridWidgetLocation.attach(lblAlignment,0,++row,1,1);
+		//lbl_alignment
+		lbl_alignment = new Gtk.Label(_("Alignment"));
+		lbl_alignment.margin_left = 6;
+		lbl_alignment.xalign = (float) 0.0;
+		grid_widget_location.attach(lbl_alignment,0,++row,1,1);
 		
-		//cmbAlignment
-		cmbAlignment = new ComboBox();
+		//cmb_alignment
+		cmb_alignment = new ComboBox();
 		textCell = new CellRendererText();
-        cmbAlignment.pack_start( textCell, false );
-        cmbAlignment.set_attributes( textCell, "text", 0 );
-        gridWidgetLocation.attach(cmbAlignment,1,row,1,1);
+        cmb_alignment.pack_start( textCell, false );
+        cmb_alignment.set_attributes( textCell, "text", 0 );
+        grid_widget_location.attach(cmb_alignment,1,row,1,1);
 		
 		//populate
 		TreeIter iter;
@@ -350,47 +355,47 @@ public class MainWindow : Window {
 		model.set (iter,0,_("Middle Right"),1,"middle_right");
 		model.append (out iter);
 		model.set (iter,0,_("Middle Middle"),1,"middle_middle");
-		cmbAlignment.set_model(model);
+		cmb_alignment.set_model(model);
 		
-		//lblGapX
-		lblGapX = new Gtk.Label(_("Horizontal Gap"));
-		lblGapX.set_tooltip_text("[GAP_X] Horizontal distance from window border (in pixels)");
-		lblGapX.margin_left = 6;
-		lblGapX.xalign = (float) 0.0;
-		gridWidgetLocation.attach(lblGapX,0,++row,1,1);
+		//lbl_gap_x
+		lbl_gap_x = new Gtk.Label(_("Horizontal Gap"));
+		lbl_gap_x.set_tooltip_text("[GAP_X] Horizontal distance from window border (in pixels)");
+		lbl_gap_x.margin_left = 6;
+		lbl_gap_x.xalign = (float) 0.0;
+		grid_widget_location.attach(lbl_gap_x,0,++row,1,1);
 		
-		//spinGapX
-		spinGapX = new SpinButton.with_range(-10000,10000,10);
-		spinGapX.xalign = (float) 0.5;
-		spinGapX.value = 0.0;
-		gridWidgetLocation.attach(spinGapX,1,row,1,1);
+		//spin_gap_x
+		spin_gap_x = new SpinButton.with_range(-10000,10000,10);
+		spin_gap_x.xalign = (float) 0.5;
+		spin_gap_x.value = 0.0;
+		grid_widget_location.attach(spin_gap_x,1,row,1,1);
 		
-		//lblGapY
-		lblGapY = new Gtk.Label(_("Vertical Gap"));
-		lblGapY.set_tooltip_text("[GAP_Y] Vertical distance from window border (in pixels)");
-		lblGapY.margin_left = 6;
-		lblGapY.xalign = (float) 0.0;
-		gridWidgetLocation.attach(lblGapY,0,++row,1,1);
+		//lbl_gap_y
+		lbl_gap_y = new Gtk.Label(_("Vertical Gap"));
+		lbl_gap_y.set_tooltip_text("[GAP_Y] Vertical distance from window border (in pixels)");
+		lbl_gap_y.margin_left = 6;
+		lbl_gap_y.xalign = (float) 0.0;
+		grid_widget_location.attach(lbl_gap_y,0,++row,1,1);
 		
-		//spinGapY
-		spinGapY = new SpinButton.with_range(-10000,10000,10);
-		spinGapY.xalign = (float) 0.5;
-		spinGapY.value = 0.0;
-		spinGapY.set_size_request(120,-1);
-		gridWidgetLocation.attach(spinGapY,1,row,1,1);
+		//spin_gap_y
+		spin_gap_y = new SpinButton.with_range(-10000,10000,10);
+		spin_gap_y.xalign = (float) 0.5;
+		spin_gap_y.value = 0.0;
+		spin_gap_y.set_size_request(120,-1);
+		grid_widget_location.attach(spin_gap_y,1,row,1,1);
 		
 		//lblWidgetTransparency
 		Label lblWidgetTransparency = new Label (_("Transparency"));
 
-		//gridWidgetTransparency  -----------------------------------------------------------
+		//grid_widget_transparency  -----------------------------------------------------------
 		
-        Grid gridWidgetTransparency = new Grid ();
-        gridWidgetTransparency.set_column_spacing (12);
-        gridWidgetTransparency.set_row_spacing (6);
-        gridWidgetTransparency.column_homogeneous = false;
-        gridWidgetTransparency.visible = false;
-        gridWidgetTransparency.margin = 12;
-        tabWidgetProperties.append_page (gridWidgetTransparency, lblWidgetTransparency);
+        Grid grid_widget_transparency = new Grid ();
+        grid_widget_transparency.set_column_spacing (12);
+        grid_widget_transparency.set_row_spacing (6);
+        grid_widget_transparency.column_homogeneous = false;
+        grid_widget_transparency.visible = false;
+        grid_widget_transparency.margin = 12;
+        tab_widget_properties.append_page (grid_widget_transparency, lblWidgetTransparency);
         
         row = -1;
         
@@ -402,16 +407,16 @@ public class MainWindow : Window {
 		lblBackgroundType.xalign = (float) 0.0;
 		lblBackgroundType.set_tooltip_text(tt);
 		lblBackgroundType.set_use_markup(true);
-		gridWidgetTransparency.attach(lblBackgroundType,0,row,1,1);
+		grid_widget_transparency.attach(lblBackgroundType,0,row,1,1);
 		
-        //cmbTransparencyType
-		cmbTransparencyType = new ComboBox();
+        //cmb_transparency_type
+		cmb_transparency_type = new ComboBox();
 		textCell = new CellRendererText();
-        cmbTransparencyType.pack_start( textCell, false );
-        cmbTransparencyType.set_attributes( textCell, "text", 0 );
-        cmbTransparencyType.changed.connect(cmbTransparencyType_changed);
-		cmbTransparencyType.set_tooltip_text(tt);
-        gridWidgetTransparency.attach(cmbTransparencyType,1,row,2,1);
+        cmb_transparency_type.pack_start( textCell, false );
+        cmb_transparency_type.set_attributes( textCell, "text", 0 );
+        cmb_transparency_type.changed.connect(cmb_transparency_type_changed);
+		cmb_transparency_type.set_tooltip_text(tt);
+        grid_widget_transparency.attach(cmb_transparency_type,1,row,2,1);
 		
 		//populate
 		model = new Gtk.ListStore (2, typeof (string), typeof (string));
@@ -423,40 +428,40 @@ public class MainWindow : Window {
 		model.set (iter,0,_("Pseudo-Transparent"),1,"pseudo");
 		model.append (out iter);
 		model.set (iter,0,_("Semi-Transparent"),1,"semi");
-		cmbTransparencyType.set_model(model);
+		cmb_transparency_type.set_model(model);
 
 		tt = _("Window Opacity\n\n0 = Fully Transparent, 100 = Fully Opaque");
 		
-		//lblTransparency
-		lblTransparency = new Gtk.Label(_("Opacity (%)"));
-		lblTransparency.set_tooltip_text(tt);
-		lblTransparency.margin_left = 6;
-		lblTransparency.xalign = (float) 0.0;
-		gridWidgetTransparency.attach(lblTransparency,0,++row,1,1);
+		//lbl_transparency
+		lbl_transparency = new Gtk.Label(_("Opacity (%)"));
+		lbl_transparency.set_tooltip_text(tt);
+		lbl_transparency.margin_left = 6;
+		lbl_transparency.xalign = (float) 0.0;
+		grid_widget_transparency.attach(lbl_transparency,0,++row,1,1);
 		
-		//spinOpacity
-		spinOpacity = new SpinButton.with_range(0,100,10);
-		spinOpacity.set_tooltip_text(tt);
-		spinOpacity.xalign = (float) 0.5;
-		spinOpacity.value = 100.0;
-		//spinOpacity.set_size_request(120,-1);
-		gridWidgetTransparency.attach(spinOpacity,1,row,1,1);
+		//spin_opacity
+		spin_opacity = new SpinButton.with_range(0,100,10);
+		spin_opacity.set_tooltip_text(tt);
+		spin_opacity.xalign = (float) 0.5;
+		spin_opacity.value = 100.0;
+		//spin_opacity.set_size_request(120,-1);
+		grid_widget_transparency.attach(spin_opacity,1,row,1,1);
 		
-		//lblBackgroundColor
-		lblBackgroundColor = new Gtk.Label(_("Background Color"));
-		lblBackgroundColor.margin_left = 6;
-		lblBackgroundColor.xalign = (float) 0.0;
-		gridWidgetTransparency.attach(lblBackgroundColor,0,++row,1,1);
+		//lbl_background_color
+		lbl_background_color = new Gtk.Label(_("Background Color"));
+		lbl_background_color.margin_left = 6;
+		lbl_background_color.xalign = (float) 0.0;
+		grid_widget_transparency.attach(lbl_background_color,0,++row,1,1);
 		
-		//cbtnBackgroundColor
-		cbtnBackgroundColor = new ColorButton();
-		gridWidgetTransparency.attach(cbtnBackgroundColor,1,row,1,1);
+		//cbtn_bg_color
+		cbtn_bg_color = new ColorButton();
+		grid_widget_transparency.attach(cbtn_bg_color,1,row,1,1);
 		
-		//lblTransparencyExpander
-		Label lblTransparencyExpander = new Gtk.Label("");
-		lblTransparencyExpander.margin_left = 6;
-		lblTransparencyExpander.vexpand = true;
-		gridWidgetTransparency.attach(lblTransparencyExpander,0,++row,3,1);
+		//lbl_transparencyExpander
+		Label lbl_transparencyExpander = new Gtk.Label("");
+		lbl_transparencyExpander.margin_left = 6;
+		lbl_transparencyExpander.vexpand = true;
+		grid_widget_transparency.attach(lbl_transparencyExpander,0,++row,3,1);
 		
 		tt = "Ø " + _("Setting Type to \"Transparent\" will make the whole window transparent (including any images). Use \"Pseudo-Transparent\" if you want the images to be opaque.");
 		
@@ -467,7 +472,7 @@ public class MainWindow : Window {
 		lblTrans1.xalign = (float) 0.0;
 		lblTrans1.set_size_request(100,-1);
 		lblTrans1.set_line_wrap(true);
-		gridWidgetTransparency.attach(lblTrans1,0,++row,3,1);
+		grid_widget_transparency.attach(lblTrans1,0,++row,3,1);
 		
 		tt = "Ø " + _("Setting Type to \"Pseudo-Transparent\" will make the window transparent but the window will have a shadow. The shadow can be disabled by configuring your window manager.");
 		
@@ -478,56 +483,56 @@ public class MainWindow : Window {
 		lblTrans2.xalign = (float) 0.0;
 		lblTrans2.set_size_request(100,-1);
 		lblTrans2.set_line_wrap(true);
-		gridWidgetTransparency.attach(lblTrans2,0,++row,3,1);
+		grid_widget_transparency.attach(lblTrans2,0,++row,3,1);
 		
 		//lblWidgetSize
 		Label lblWidgetSize = new Label (_("Size"));
 
-		//gridWidgetSize  -----------------------------------------------------------
+		//grid_widget_size  -----------------------------------------------------------
 		
-        Grid gridWidgetSize = new Grid ();
-        gridWidgetSize.set_column_spacing (12);
-        gridWidgetSize.set_row_spacing (6);
-        gridWidgetSize.column_homogeneous = false;
-        gridWidgetSize.visible = false;
-        gridWidgetSize.margin = 12;
-        gridWidgetSize.border_width = 1;
-        tabWidgetProperties.append_page (gridWidgetSize, lblWidgetSize);
+        Grid grid_widget_size = new Grid ();
+        grid_widget_size.set_column_spacing (12);
+        grid_widget_size.set_row_spacing (6);
+        grid_widget_size.column_homogeneous = false;
+        grid_widget_size.visible = false;
+        grid_widget_size.margin = 12;
+        grid_widget_size.border_width = 1;
+        tab_widget_properties.append_page (grid_widget_size, lblWidgetSize);
         
         row = -1;
         
         tt = _("Width should be larger than the size of window contents,\notherwise this setting will not have any effect");
 		
-		//lblMinWidth
-		lblMinWidth = new Gtk.Label(_("Minimum Width"));
-		lblMinWidth.margin_left = 6;
-		lblMinWidth.xalign = (float) 0.0;
-		lblMinWidth.set_tooltip_text(tt);
-		gridWidgetSize.attach(lblMinWidth,0,++row,1,1);
+		//lbl_min_width
+		lbl_min_width = new Gtk.Label(_("Minimum Width"));
+		lbl_min_width.margin_left = 6;
+		lbl_min_width.xalign = (float) 0.0;
+		lbl_min_width.set_tooltip_text(tt);
+		grid_widget_size.attach(lbl_min_width,0,++row,1,1);
 		
-		//spinMinWidth
-		spinMinWidth = new SpinButton.with_range(0,9999,10);
-		spinMinWidth.xalign = (float) 0.5;
-		spinMinWidth.value = 100.0;
-		spinMinWidth.set_size_request(120,-1);
-		spinMinWidth.set_tooltip_text(tt);
-		gridWidgetSize.attach(spinMinWidth,1,row,1,1);
+		//spin_min_width
+		spin_min_width = new SpinButton.with_range(0,9999,10);
+		spin_min_width.xalign = (float) 0.5;
+		spin_min_width.value = 100.0;
+		spin_min_width.set_size_request(120,-1);
+		spin_min_width.set_tooltip_text(tt);
+		grid_widget_size.attach(spin_min_width,1,row,1,1);
 		
 		tt = _("Height should be larger than the size of window contents,\notherwise this setting will not have any effect");
 		
-		//lblMinHeight
-		lblMinHeight = new Gtk.Label(_("Minimum Height"));
-		lblMinHeight.margin_left = 6;
-		lblMinHeight.xalign = (float) 0.0;
-		lblMinHeight.set_tooltip_text(tt);
-		gridWidgetSize.attach(lblMinHeight,0,++row,1,1);
+		//lbl_min_height
+		lbl_min_height = new Gtk.Label(_("Minimum Height"));
+		lbl_min_height.margin_left = 6;
+		lbl_min_height.xalign = (float) 0.0;
+		lbl_min_height.set_tooltip_text(tt);
+		grid_widget_size.attach(lbl_min_height,0,++row,1,1);
 		
-		//spinMinHeight
-		spinMinHeight = new SpinButton.with_range(0,9999,10);
-		spinMinHeight.xalign = (float) 0.5;
-		spinMinHeight.value = 100.0;
-		spinMinHeight.set_tooltip_text(tt);
-		gridWidgetSize.attach(spinMinHeight,1,row,1,1);
+		//spin_min_height
+		spin_min_height = new SpinButton.with_range(0,9999,10);
+		spin_min_height.xalign = (float) 0.5;
+		spin_min_height.value = 100.0;
+		spin_min_height.set_tooltip_text(tt);
+		grid_widget_size.attach(spin_min_height,1,row,1,1);
 		
 		tt = _("Increases the window height by adding empty lines at the end of the Conky config file");
 		
@@ -536,20 +541,20 @@ public class MainWindow : Window {
 		lblTrailingLines.margin_left = 6;
 		lblTrailingLines.xalign = (float) 0.0;
 		lblTrailingLines.set_tooltip_text(tt);
-		gridWidgetSize.attach(lblTrailingLines,0,++row,1,1);
+		grid_widget_size.attach(lblTrailingLines,0,++row,1,1);
 		
-		//spinHeightPadding
-		spinHeightPadding = new SpinButton.with_range(0,100,1);
-		spinHeightPadding.xalign = (float) 0.5;
-		spinHeightPadding.value = 0.0;
-		spinHeightPadding.set_tooltip_text(tt);
-		gridWidgetSize.attach(spinHeightPadding,1,row,1,1);
+		//spin_height_padding
+		spin_height_padding = new SpinButton.with_range(0,100,1);
+		spin_height_padding.xalign = (float) 0.5;
+		spin_height_padding.value = 0.0;
+		spin_height_padding.set_tooltip_text(tt);
+		grid_widget_size.attach(spin_height_padding,1,row,1,1);
 		
 		//lblSizeExpander
 		Label lblSizeExpander = new Gtk.Label("");
 		lblSizeExpander.margin_left = 6;
 		lblSizeExpander.vexpand = true;
-		gridWidgetSize.attach(lblSizeExpander,0,++row,3,1);
+		grid_widget_size.attach(lblSizeExpander,0,++row,3,1);
 		
 		tt = "Ø " + _("The minimum width & height must be more than the size of the window contents, otherwise the setting will not have any effect.");
 		
@@ -560,32 +565,32 @@ public class MainWindow : Window {
 		lblSize1.xalign = (float) 0.0;
 		lblSize1.set_size_request(100,-1);
 		lblSize1.set_line_wrap(true);
-		gridWidgetSize.attach(lblSize1,0,++row,3,1);
+		grid_widget_size.attach(lblSize1,0,++row,3,1);
 		
 		tt = "Ø " + _("Setting Type to \"Opaque\" (from the transparency tab) will make it easier to see the changes");
 		
-		//lblSize2
-		Label lblSize2 = new Gtk.Label(tt);
-		lblSize2.margin_left = 6;
-		lblSize2.margin_bottom = 6;
-		lblSize2.xalign = (float) 0.0;
-		lblSize2.set_size_request(100,-1);
-		lblSize2.set_line_wrap(true);
-		gridWidgetSize.attach(lblSize2,0,++row,3,1);
+		//lbl_size2
+		Label lbl_size2 = new Gtk.Label(tt);
+		lbl_size2.margin_left = 6;
+		lbl_size2.margin_bottom = 6;
+		lbl_size2.xalign = (float) 0.0;
+		lbl_size2.set_size_request(100,-1);
+		lbl_size2.set_line_wrap(true);
+		grid_widget_size.attach(lbl_size2,0,++row,3,1);
 		
-		//lblWidgetTime
-		Label lblWidgetTime = new Label (_("Time"));
+		//lbl_widget_time
+		Label lbl_widget_time = new Label (_("Time"));
 
-		//gridWidgetTime  -----------------------------------------------------------
+		//grid_widget_time  -----------------------------------------------------------
 		
-        Grid gridWidgetTime = new Grid ();
-        gridWidgetTime.set_column_spacing (12);
-        gridWidgetTime.set_row_spacing (6);
-        gridWidgetTime.column_homogeneous = false;
-        gridWidgetTime.visible = false;
-        gridWidgetTime.margin = 12;
-        gridWidgetTime.border_width = 1;
-        tabWidgetProperties.append_page (gridWidgetTime, lblWidgetTime);
+        Grid grid_widget_time = new Grid ();
+        grid_widget_time.set_column_spacing (12);
+        grid_widget_time.set_row_spacing (6);
+        grid_widget_time.column_homogeneous = false;
+        grid_widget_time.visible = false;
+        grid_widget_time.margin = 12;
+        grid_widget_time.border_width = 1;
+        tab_widget_properties.append_page (grid_widget_time, lbl_widget_time);
 		
 		row = -1;
 		
@@ -594,21 +599,21 @@ public class MainWindow : Window {
 		lblTimeFormat.margin_left = 6;
 		lblTimeFormat.xalign = (float) 0.0;
 		lblTimeFormat.set_use_markup(true);
-		gridWidgetTime.attach(lblTimeFormat,0,++row,1,1);
+		grid_widget_time.attach(lblTimeFormat,0,++row,1,1);
 		
-        //cmbTimeFormat
-		cmbTimeFormat = new ComboBox();
+        //cmb_time_format
+		cmb_time_format = new ComboBox();
 		textCell = new CellRendererText();
-        cmbTimeFormat.pack_start( textCell, false );
-        cmbTimeFormat.set_attributes( textCell, "text", 0 );
-        gridWidgetTime.attach(cmbTimeFormat,1,row,1,1);
+        cmb_time_format.pack_start( textCell, false );
+        cmb_time_format.set_attributes( textCell, "text", 0 );
+        grid_widget_time.attach(cmb_time_format,1,row,1,1);
 		
-		//lblWidgetTimeNotFound
-		lblWidgetTimeNotFound = new Gtk.Label("");
-		lblWidgetTimeNotFound.set_use_markup(true);
-		lblWidgetTimeNotFound.xalign = (float) 0.0;
-		lblWidgetTimeNotFound.margin = 6;
-		gridWidgetTime.attach(lblWidgetTimeNotFound,0,++row,2,1);
+		//lbl_widget_time_not_found
+		lbl_widget_time_not_found = new Gtk.Label("");
+		lbl_widget_time_not_found.set_use_markup(true);
+		lbl_widget_time_not_found.xalign = (float) 0.0;
+		lbl_widget_time_not_found.margin = 6;
+		grid_widget_time.attach(lbl_widget_time_not_found,0,++row,2,1);
 		
 		//populate
 		model = new Gtk.ListStore (2, typeof (string), typeof (string));
@@ -616,21 +621,21 @@ public class MainWindow : Window {
 		model.set (iter,0,_("12 Hour"),1,"12");
 		model.append (out iter);
 		model.set (iter,0,_("24 Hour"),1,"24");
-		cmbTimeFormat.set_model(model);
+		cmb_time_format.set_model(model);
 		
 		//lblWidgetNetwork
 		Label lblWidgetNetwork = new Label (_("Network"));
 
-		//gridWidgetNetwork  -----------------------------------------------------------
+		//grid_widget_network  -----------------------------------------------------------
 		
-        Grid gridWidgetNetwork = new Grid ();
-        gridWidgetNetwork.set_column_spacing (12);
-        gridWidgetNetwork.set_row_spacing (6);
-        gridWidgetNetwork.column_homogeneous = false;
-        gridWidgetNetwork.visible = false;
-        gridWidgetNetwork.margin = 12;
-        gridWidgetNetwork.border_width = 1;
-        tabWidgetProperties.append_page (gridWidgetNetwork, lblWidgetNetwork);
+        Grid grid_widget_network = new Grid ();
+        grid_widget_network.set_column_spacing (12);
+        grid_widget_network.set_row_spacing (6);
+        grid_widget_network.column_homogeneous = false;
+        grid_widget_network.visible = false;
+        grid_widget_network.margin = 12;
+        grid_widget_network.border_width = 1;
+        tab_widget_properties.append_page (grid_widget_network, lblWidgetNetwork);
 		
 		row = -1;
 
@@ -639,161 +644,161 @@ public class MainWindow : Window {
 		lblNetworkDevice.margin_left = 6;
 		lblNetworkDevice.xalign = (float) 0.0;
 		lblNetworkDevice.set_use_markup(true);
-		gridWidgetNetwork.attach(lblNetworkDevice,0,++row,1,1);
+		grid_widget_network.attach(lblNetworkDevice,0,++row,1,1);
 		
-		//txtNetworkDevice
-        txtNetworkDevice =  new Gtk.Entry();
-        gridWidgetNetwork.attach(txtNetworkDevice,1,row,1,1);
+		//txt_network_device
+        txt_network_device =  new Gtk.Entry();
+        grid_widget_network.attach(txt_network_device,1,row,1,1);
         
-        //btnWiFi
-        btnWiFi = new Button.with_label(_("WiFi"));
-        btnWiFi.clicked.connect (() => {
-			txtNetworkDevice.text = "wlan0";
+        //btn_wifi
+        btn_wifi = new Button.with_label(_("WiFi"));
+        btn_wifi.clicked.connect (() => {
+			txt_network_device.text = "wlan0";
 			});
-		btnWiFi.set_size_request(50,-1);
-        btnWiFi.set_tooltip_text (_("WiFi Network") + " (wlan0)");
-		gridWidgetNetwork.attach(btnWiFi,2,row,1,1);
+		btn_wifi.set_size_request(50,-1);
+        btn_wifi.set_tooltip_text (_("WiFi Network") + " (wlan0)");
+		grid_widget_network.attach(btn_wifi,2,row,1,1);
 		
-        //btnLAN
-        btnLAN = new Button.with_label(_("LAN"));
-        btnLAN.clicked.connect (() => {
-			txtNetworkDevice.text = "eth0";
+        //btn_lan
+        btn_lan = new Button.with_label(_("LAN"));
+        btn_lan.clicked.connect (() => {
+			txt_network_device.text = "eth0";
 			});
-		btnLAN.set_size_request(50,-1);
-        btnLAN.set_tooltip_text (_("Wired LAN Network") + " (eth0)");
-		gridWidgetNetwork.attach(btnLAN,3,row,1,1);
+		btn_lan.set_size_request(50,-1);
+        btn_lan.set_tooltip_text (_("Wired LAN Network") + " (eth0)");
+		grid_widget_network.attach(btn_lan,3,row,1,1);
 
-		//lblWidgetNetworkNotFound
-		lblWidgetNetworkNotFound = new Gtk.Label("");
-		lblWidgetNetworkNotFound.set_use_markup(true);
-		lblWidgetNetworkNotFound.xalign = (float) 0.0;
-		lblWidgetNetworkNotFound.margin = 6;
-		gridWidgetNetwork.attach(lblWidgetNetworkNotFound,0,++row,4,1);
+		//lbl_widget_network_not_found
+		lbl_widget_network_not_found = new Gtk.Label("");
+		lbl_widget_network_not_found.set_use_markup(true);
+		lbl_widget_network_not_found.xalign = (float) 0.0;
+		lbl_widget_network_not_found.margin = 6;
+		grid_widget_network.attach(lbl_widget_network_not_found,0,++row,4,1);
 		
-		//hboxCommands --------------------------------------------------
+		//hbox_commands --------------------------------------------------
 		
-        Box hboxEditButtons = new Box (Orientation.HORIZONTAL, 6);
-        hboxEditButtons.homogeneous = true;
-        gridEdit.attach(hboxEditButtons,0,5,2,1);
+        Box hbox_edit_buttons = new Box (Orientation.HORIZONTAL, 6);
+        hbox_edit_buttons.homogeneous = true;
+        grid_edit.attach(hbox_edit_buttons,0,5,2,1);
         
-		//btnApplyChanges
-		btnApplyChanges = new Button.with_label("  " + _("Apply Changes"));
-		btnApplyChanges.set_image (new Image.from_stock (Stock.APPLY, IconSize.MENU));
-        btnApplyChanges.clicked.connect (btnApplyChanges_clicked);
-        btnApplyChanges.set_tooltip_text (_("Apply Changes"));
-        btnApplyChanges.set_size_request(-1,30);
-		hboxEditButtons.add(btnApplyChanges);
+		//btn_apply_changes
+		btn_apply_changes = new Button.with_label("  " + _("Apply Changes"));
+		btn_apply_changes.set_image (new Image.from_stock (Stock.APPLY, IconSize.MENU));
+        btn_apply_changes.clicked.connect (btn_apply_changes_clicked);
+        btn_apply_changes.set_tooltip_text (_("Apply Changes"));
+        btn_apply_changes.set_size_request(-1,30);
+		hbox_edit_buttons.add(btn_apply_changes);
 		
-		//btnDiscardChanges
-		btnDiscardChanges = new Button.with_label("  " + _("Discard"));
-		btnDiscardChanges.set_image (new Image.from_stock (Stock.CANCEL, IconSize.MENU));
-        btnDiscardChanges.clicked.connect (btnDiscardChanges_clicked);
-        btnDiscardChanges.set_tooltip_text (_("Apply Changes"));
-        btnDiscardChanges.set_size_request(-1,30);
-		hboxEditButtons.add(btnDiscardChanges);
+		//btn_discard_changes
+		btn_discard_changes = new Button.with_label("  " + _("Discard"));
+		btn_discard_changes.set_image (new Image.from_stock (Stock.CANCEL, IconSize.MENU));
+        btn_discard_changes.clicked.connect (btn_discard_changes_clicked);
+        btn_discard_changes.set_tooltip_text (_("Apply Changes"));
+        btn_discard_changes.set_size_request(-1,30);
+		hbox_edit_buttons.add(btn_discard_changes);
 		
 		//Options tab ---------------------------
 		
-		//vboxOptions
-        vboxOptions = new Box (Orientation.VERTICAL, 6);
-		vboxOptions.margin = 12;
+		//vbox_options
+        vbox_options = new Box (Orientation.VERTICAL, 6);
+		vbox_options.margin = 12;
 
-        //lblOptionsTab
-		lblOptionsTab = new Label (_("Options"));
+        //lbl_options_tab
+		lbl_options_tab = new Label (_("Options"));
 
-		tab_main.append_page (vboxOptions, lblOptionsTab);
+		tab_main.append_page (vbox_options, lbl_options_tab);
 
-        //lblHeaderStartup
-		lblHeaderStartup = new Gtk.Label("<b>" + _("Startup") + "</b>");
-		lblHeaderStartup.set_use_markup(true);
-		lblHeaderStartup.xalign = (float) 0.0;
-		//lblHeaderStartup.margin_top = 6;
-		lblHeaderStartup.margin_bottom = 6;
-		vboxOptions.add(lblHeaderStartup);
+        //lbl_header_startup
+		lbl_header_startup = new Gtk.Label("<b>" + _("Startup") + "</b>");
+		lbl_header_startup.set_use_markup(true);
+		lbl_header_startup.xalign = (float) 0.0;
+		//lbl_header_startup.margin_top = 6;
+		lbl_header_startup.margin_bottom = 6;
+		vbox_options.add(lbl_header_startup);
 		
 		//chkStartup
 		chkStartup = new CheckButton.with_label (_("Run Conky at system startup"));
 		chkStartup.active = App.check_startup();
-		chkStartup.clicked.connect (chkStartup_clicked);
+		chkStartup.clicked.connect (chk_startup_clicked);
 		chkStartup.margin_left = 6;
 		chkStartup.margin_bottom = 12;
-		vboxOptions.add(chkStartup);
+		vbox_options.add(chkStartup);
 
-		//lblHeaderThemePack
-		lblHeaderThemePack = new Gtk.Label("<b>" + _("Theme Packs") + "</b>");
-		lblHeaderThemePack.set_use_markup(true);
-		lblHeaderThemePack.xalign = (float) 0.0;
-		lblHeaderThemePack.margin_bottom = 6;
-		vboxOptions.add(lblHeaderThemePack);
+		//lbl_header_theme_pack
+		lbl_header_theme_pack = new Gtk.Label("<b>" + _("Theme Packs") + "</b>");
+		lbl_header_theme_pack.set_use_markup(true);
+		lbl_header_theme_pack.xalign = (float) 0.0;
+		lbl_header_theme_pack.margin_bottom = 6;
+		vbox_options.add(lbl_header_theme_pack);
 		
-		//btnInstallThemePack
-		btnInstallThemePack = new Button.with_label("  " + _("Import Conky Manager Theme Pack (*.cmtp.7z)"));
-		btnInstallThemePack.set_image (new Image.from_stock (Stock.ADD, IconSize.MENU));
-        btnInstallThemePack.clicked.connect (btnInstallThemePack_clicked);
-        btnInstallThemePack.expand = false;
-        btnInstallThemePack.set_size_request(500,30);
-        btnInstallThemePack.margin_left = 6;
-		vboxOptions.add(btnInstallThemePack);
+		//btn_install_theme_pack
+		btn_install_theme_pack = new Button.with_label("  " + _("Import Conky Manager Theme Pack (*.cmtp.7z)"));
+		btn_install_theme_pack.set_image (new Image.from_stock (Stock.ADD, IconSize.MENU));
+        btn_install_theme_pack.clicked.connect (btn_install_theme_pack_clicked);
+        btn_install_theme_pack.expand = false;
+        btn_install_theme_pack.set_size_request(500,30);
+        btn_install_theme_pack.margin_left = 6;
+		vbox_options.add(btn_install_theme_pack);
 
-		//lblHeaderKillConky
-		lblHeaderKillConky = new Gtk.Label("<b>" + _("Commands") + "</b>");
-		lblHeaderKillConky.set_use_markup(true);
-		lblHeaderKillConky.xalign = (float) 0.0;
-		lblHeaderKillConky.margin_top = 6;
-		lblHeaderKillConky.margin_bottom = 6;
-		vboxOptions.add(lblHeaderKillConky);
+		//lbl_header_kill_conky
+		lbl_header_kill_conky = new Gtk.Label("<b>" + _("Commands") + "</b>");
+		lbl_header_kill_conky.set_use_markup(true);
+		lbl_header_kill_conky.xalign = (float) 0.0;
+		lbl_header_kill_conky.margin_top = 6;
+		lbl_header_kill_conky.margin_bottom = 6;
+		vbox_options.add(lbl_header_kill_conky);
 		
-		//hboxCommands
-        Box hboxCommands = new Box (Orientation.HORIZONTAL, 6);
-        vboxOptions.add(hboxCommands);
+		//hbox_commands
+        hbox_commands = new Box (Orientation.HORIZONTAL, 6);
+        vbox_options.add(hbox_commands);
         
-		//btnKillConky
-		btnKillConky = new Button.with_label("  " + _("Kill Conky"));
-		btnKillConky.set_image (new Image.from_stock (Stock.STOP, IconSize.MENU));
-        btnKillConky.clicked.connect (() => {
+		//btn_kill_conky
+		btn_kill_conky = new Button.with_label("  " + _("Kill Conky"));
+		btn_kill_conky.set_image (new Image.from_stock (Stock.STOP, IconSize.MENU));
+        btn_kill_conky.clicked.connect (() => {
 			App.kill_all_conky();
 			});
-        btnKillConky.set_tooltip_text (_("Kill all running Conky instances"));
-        btnKillConky.set_size_request(200,30);
-        btnKillConky.margin_left = 6;
-        btnKillConky.expand = false;
-		hboxCommands.add(btnKillConky);
+        btn_kill_conky.set_tooltip_text (_("Kill all running Conky instances"));
+        btn_kill_conky.set_size_request(200,30);
+        btn_kill_conky.margin_left = 6;
+        btn_kill_conky.expand = false;
+		hbox_commands.add(btn_kill_conky);
 		
 		//About tab ---------------------------
 		
-		//vboxAbout
-        vboxAbout = new Box (Orientation.VERTICAL, 6);
-		vboxAbout.margin = 12;
+		//vbox_about
+        vbox_about = new Box (Orientation.VERTICAL, 6);
+		vbox_about.margin = 12;
 
-        //lblAboutTab
-		lblAboutTab = new Label (_("About"));
+        //lbl_about_tab
+		lbl_about_tab = new Label (_("About"));
 
-		tab_main.append_page (vboxAbout, lblAboutTab);
+		tab_main.append_page (vbox_about, lbl_about_tab);
 		
-        //lblAppName
-		lblAppName = new Gtk.Label("""<span size="x-large" weight="bold">""" + AppName + "</span>");
-		lblAppName.set_use_markup(true);
-		lblAppName.xalign = (float) 0.0;
-		lblAppName.margin_top = 0;
-		lblAppName.margin_bottom = 6;
-		vboxAbout.add(lblAppName);
+        //lbl_app_name
+		lbl_app_name = new Gtk.Label("""<span size="x-large" weight="bold">""" + AppName + "</span>");
+		lbl_app_name.set_use_markup(true);
+		lbl_app_name.xalign = (float) 0.0;
+		lbl_app_name.margin_top = 0;
+		lbl_app_name.margin_bottom = 6;
+		vbox_about.add(lbl_app_name);
 		
-		lblAppVersion = new Gtk.Label(_("Version") + ": " + AppVersion);
-		lblAppVersion.set_use_markup(true);
-		lblAppVersion.xalign = (float) 0.0;
-		vboxAbout.add(lblAppVersion);
+		lbl_app_version = new Gtk.Label(_("Version") + ": " + AppVersion);
+		lbl_app_version.set_use_markup(true);
+		lbl_app_version.xalign = (float) 0.0;
+		vbox_about.add(lbl_app_version);
 		
-		lblAuthor = new Gtk.Label("(c) 2013, " + AppAuthor + " (" + AppAuthorEmail + ")");
-		lblAuthor.set_use_markup(true);
-		lblAuthor.xalign = (float) 0.0;
-		vboxAbout.add(lblAuthor);
+		lbl_author = new Gtk.Label("(c) 2013, " + AppAuthor + " (" + AppAuthorEmail + ")");
+		lbl_author.set_use_markup(true);
+		lbl_author.xalign = (float) 0.0;
+		vbox_about.add(lbl_author);
 		
-		lnkBlog = new Gtk.LinkButton("http://teejeetech.blogspot.in");
-		lnkBlog.xalign = (float) 0.0;
-		lnkBlog.uri = "http://teejeetech.blogspot.in";
-		vboxAbout.add(lnkBlog);
+		lnk_blog = new Gtk.LinkButton("http://teejeetech.blogspot.in");
+		lnk_blog.xalign = (float) 0.0;
+		lnk_blog.uri = "http://teejeetech.blogspot.in";
+		vbox_about.add(lnk_blog);
 		
-		lnkBlog.activate_link.connect(() => { 
+		lnk_blog.activate_link.connect(() => { 
 			Posix.system("xdg-open \"http://teejeetech.blogspot.in\"");
 			return true;
 		});
@@ -811,12 +816,12 @@ public class MainWindow : Window {
 		//get selected theme
 		th = null;
 		string name = "";
-		if (tvTheme.get_selection().get_selected(out model, out iter)){
+		if (tv_theme.get_selection().get_selected(out model, out iter)){
 			model.get (iter, 0, out th, -1); //get theme
 			name = th.Name;
 		}
 
-		//populate tvTheme
+		//populate tv_theme
 		TreeIter selected_iter = TreeIter();
 		bool found = false;
 		store = new ListStore(1,typeof(ConkyTheme));
@@ -828,14 +833,14 @@ public class MainWindow : Window {
 				selected_iter = iter;
 			}
 		}
-		tvTheme.model = store;
+		tv_theme.model = store;
 		
 		//re-select theme
 		if(found){
-			tvTheme.get_selection().select_iter(selected_iter);
+			tv_theme.get_selection().select_iter(selected_iter);
 		}
 
-		//populate cmbWidget
+		//populate cmb_widget
 		store = new Gtk.ListStore (2, typeof (string), typeof (ConkyConfig));
 		foreach(ConkyTheme theme in App.ThemeList) {
 			foreach(ConkyConfig conf in theme.ConfigList) {
@@ -843,12 +848,12 @@ public class MainWindow : Window {
 				store.set(iter, 0, theme.Name + " - " + conf.Name, 1, conf);
 			}
 		}
-		cmbWidget.set_model(store);
-		cmbWidget.set_active (-1);
+		cmb_widget.set_model(store);
+		cmb_widget.set_active (-1);
 		set_editing_options_enabled(false);
 		
 		//store = new ListStore(1,typeof(ConkyConfig));
-		//tvConfig.model = store;
+		//tv_config.model = store;
 	}
 	
 	//tab_main handlers ---------------------------
@@ -856,7 +861,7 @@ public class MainWindow : Window {
 	private void tab_main_switch_page (Widget page, uint new_page) {
 		uint old_page = tab_main.page;
 		
-		if ((cmbWidget == null) || (cmbWidget.model == null)){
+		if ((cmb_widget == null) || (cmb_widget.model == null)){
 			return;
 		}
 		
@@ -877,14 +882,14 @@ public class MainWindow : Window {
 
 			App.EditMode = false;
 			
-			if (cmbWidget.active != -1){
+			if (cmb_widget.active != -1){
 				//kill all widgets
 				App.kill_all_conky();
 
 				//restart saved widgets
 				App.run_startup_script();
 				
-				cmbWidget.set_active (-1);
+				cmb_widget.set_active (-1);
 			}
 		
 			set_busy(false, this);
@@ -893,11 +898,11 @@ public class MainWindow : Window {
 	
 	//Edit tab handlers ----------
 
-	private void cmbWidget_changed () {
+	private void cmb_widget_changed () {
 		TreeIter iter;
 		ConkyConfig conf;
 		
-		if (cmbWidget.active == -1){
+		if (cmb_widget.active == -1){
 			set_editing_options_enabled(false);
 			return;
 		}
@@ -905,8 +910,8 @@ public class MainWindow : Window {
 			set_editing_options_enabled(true);
 		}
 
-		cmbWidget.get_active_iter(out iter);
-		(cmbWidget.model).get(iter, 1, out conf);
+		cmb_widget.get_active_iter(out iter);
+		(cmb_widget.model).get(iter, 1, out conf);
 
 		reload_widget_properties();
 		
@@ -930,7 +935,7 @@ public class MainWindow : Window {
 		TreeIter iter;
 		ConkyConfig conf;
 
-		if (cmbWidget.active == -1){
+		if (cmb_widget.active == -1){
 			set_editing_options_enabled(false);
 			return;
 		}
@@ -938,8 +943,8 @@ public class MainWindow : Window {
 			set_editing_options_enabled(true);
 		}
 		
-		cmbWidget.get_active_iter(out iter);
-		(cmbWidget.model).get(iter, 1, out conf);
+		cmb_widget.get_active_iter(out iter);
+		(cmb_widget.model).get(iter, 1, out conf);
 		
 		debug("-----------------------------------------------------");
 		debug(_("Load theme") + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
@@ -947,9 +952,9 @@ public class MainWindow : Window {
 		conf.read_file();
 		
 		//location
-		gtk_combobox_set_value(cmbAlignment, 1, conf.alignment);
-		spinGapX.value = double.parse(conf.gap_x);
-		spinGapY.value = double.parse(conf.gap_y);
+		gtk_combobox_set_value(cmb_alignment, 1, conf.alignment);
+		spin_gap_x.value = double.parse(conf.gap_x);
+		spin_gap_y.value = double.parse(conf.gap_y);
 		
 		string own_window_transparent = conf.own_window_transparent;
 		string own_window_argb_visual = conf.own_window_argb_visual;
@@ -959,95 +964,95 @@ public class MainWindow : Window {
 		if(own_window_transparent == "yes"){
 			if(own_window_argb_visual == "yes"){
 				//own_window_argb_value, if present, will be ignored by Conky
-				gtk_combobox_set_value(cmbTransparencyType,1,"trans");
+				gtk_combobox_set_value(cmb_transparency_type,1,"trans");
 			}
 			else if (own_window_argb_visual == "no"){
-				gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
+				gtk_combobox_set_value(cmb_transparency_type,1,"pseudo");
 			}
 			else{
-				gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
+				gtk_combobox_set_value(cmb_transparency_type,1,"pseudo");
 			}
 		}
 		else if (own_window_transparent == "no"){
 			if(own_window_argb_visual == "yes"){
 				if (own_window_argb_value == "0"){
-					gtk_combobox_set_value(cmbTransparencyType,1,"trans");
+					gtk_combobox_set_value(cmb_transparency_type,1,"trans");
 				}
 				else if (own_window_argb_value == "255"){
-					gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+					gtk_combobox_set_value(cmb_transparency_type,1,"opaque");
 				}
 				else{
-					gtk_combobox_set_value(cmbTransparencyType,1,"semi");
+					gtk_combobox_set_value(cmb_transparency_type,1,"semi");
 				}
 			}
 			else if (own_window_argb_visual == "no"){
-				gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+				gtk_combobox_set_value(cmb_transparency_type,1,"opaque");
 			}
 			else{
-				gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+				gtk_combobox_set_value(cmb_transparency_type,1,"opaque");
 			}
 		}
 		else{
-			gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+			gtk_combobox_set_value(cmb_transparency_type,1,"opaque");
 		}
 
 		if (own_window_argb_value == ""){
-			spinOpacity.value = 0;
+			spin_opacity.value = 0;
 		}
 		else{
-			spinOpacity.value = (int.parse(own_window_argb_value) / 255.0) * 100;
+			spin_opacity.value = (int.parse(own_window_argb_value) / 255.0) * 100;
 		}
-		cbtnBackgroundColor.rgba = hex_to_rgba(conf.own_window_colour);
+		cbtn_bg_color.rgba = hex_to_rgba(conf.own_window_colour);
 		
 		//window size 
 		string size = conf.minimum_size;
-		spinMinWidth.value = int.parse(size.split(" ")[0]);
-		spinMinHeight.value = int.parse(size.split(" ")[1]);
-		spinHeightPadding.value = conf.height_padding;
+		spin_min_width.value = int.parse(size.split(" ")[0]);
+		spin_min_height.value = int.parse(size.split(" ")[1]);
+		spin_height_padding.value = conf.height_padding;
 		
 		//time
 		string time_format = conf.time_format;
 		
 		if (time_format == "") {
-			cmbTimeFormat.sensitive = false;
-			lblWidgetTimeNotFound.label = "<i>Ø " + _("Time format cannot be changed for selected widget") + "</i>";
+			cmb_time_format.sensitive = false;
+			lbl_widget_time_not_found.label = "<i>Ø " + _("Time format cannot be changed for selected widget") + "</i>";
 		}
 		else{
-			cmbTimeFormat.sensitive = true;
-			lblWidgetTimeNotFound.label = "";
+			cmb_time_format.sensitive = true;
+			lbl_widget_time_not_found.label = "";
 		}
 		
 		if (time_format == "") { time_format = "12"; }
-		gtk_combobox_set_value(cmbTimeFormat,1,time_format);
+		gtk_combobox_set_value(cmb_time_format,1,time_format);
 		
 		//network
 		string net = conf.network_device;
 		if (net == ""){
-			txtNetworkDevice.sensitive = false;
-			btnWiFi.sensitive = false;
-			btnLAN.sensitive = false;
-			lblWidgetNetworkNotFound.label = "<i>Ø " + _("Network interface cannot be changed for selected widget") + "</i>";
-			txtNetworkDevice.text = "";
+			txt_network_device.sensitive = false;
+			btn_wifi.sensitive = false;
+			btn_lan.sensitive = false;
+			lbl_widget_network_not_found.label = "<i>Ø " + _("Network interface cannot be changed for selected widget") + "</i>";
+			txt_network_device.text = "";
 		}
 		else{
-			txtNetworkDevice.sensitive = true;
-			btnWiFi.sensitive = true;
-			btnLAN.sensitive = true;
-			lblWidgetNetworkNotFound.label = "";
-			txtNetworkDevice.text = net.strip();
+			txt_network_device.sensitive = true;
+			btn_wifi.sensitive = true;
+			btn_lan.sensitive = true;
+			lbl_widget_network_not_found.label = "";
+			txt_network_device.text = net.strip();
 		}
 
 		debug("-----------------------------------------------------");
 	}
 	
-	private void btnApplyChanges_clicked () {
+	private void btn_apply_changes_clicked () {
 		set_busy(true, this);
 
 		TreeIter iter;
 		ConkyConfig conf;
 		
-		cmbWidget.get_active_iter(out iter);
-		(cmbWidget.model).get(iter, 1, out conf);
+		cmb_widget.get_active_iter(out iter);
+		(cmb_widget.model).get(iter, 1, out conf);
 		
 		conf.stop_conky();
 		
@@ -1057,12 +1062,12 @@ public class MainWindow : Window {
 		debug(_("Updating theme") + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
 
 		//location
-		conf.alignment = gtk_combobox_get_value(cmbAlignment,1,"top_left");
-		conf.gap_x = spinGapX.value.to_string();
-		conf.gap_y = spinGapY.value.to_string();
+		conf.alignment = gtk_combobox_get_value(cmb_alignment,1,"top_left");
+		conf.gap_x = spin_gap_x.value.to_string();
+		conf.gap_y = spin_gap_y.value.to_string();
 		
 		//transparency
-		switch (gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
+		switch (gtk_combobox_get_value(cmb_transparency_type,1,"semi")){
 			case "opaque":
 				conf.own_window_transparent = "no";
 				conf.own_window_argb_visual = "no";
@@ -1080,24 +1085,24 @@ public class MainWindow : Window {
 			default:
 				conf.own_window_transparent = "no";
 				conf.own_window_argb_visual = "yes";
-				conf.own_window_argb_value = "%.0f".printf((spinOpacity.value / 100.0) * 255.0);
+				conf.own_window_argb_value = "%.0f".printf((spin_opacity.value / 100.0) * 255.0);
 				break;
 		}
 
-		conf.own_window_colour = rgba_to_hex(cbtnBackgroundColor.rgba, false, false); 
+		conf.own_window_colour = rgba_to_hex(cbtn_bg_color.rgba, false, false); 
 		
 		//window size 
-		conf.minimum_size = spinMinWidth.value.to_string() + " " + spinMinHeight.value.to_string();
-		conf.height_padding = (int) spinHeightPadding.value;
+		conf.minimum_size = spin_min_width.value.to_string() + " " + spin_min_height.value.to_string();
+		conf.height_padding = (int) spin_height_padding.value;
 		
 		//time
 		if(conf.time_format != ""){
-			conf.time_format = gtk_combobox_get_value(cmbTimeFormat,1,"");
+			conf.time_format = gtk_combobox_get_value(cmb_time_format,1,"");
 		}
 		
 		//network
 		if(conf.network_device != ""){
-			conf.network_device = txtNetworkDevice.text;
+			conf.network_device = txt_network_device.text;
 		}
 		
 		//save changes to file
@@ -1110,67 +1115,63 @@ public class MainWindow : Window {
 		set_busy(false, this);
 	}
 	
-	private void btnDiscardChanges_clicked () {
+	private void btn_discard_changes_clicked () {
 		reload_widget_properties();
 	}
 	
 	private void set_editing_options_enabled (bool enable){
-		tabWidgetProperties.sensitive = enable;
-		btnApplyChanges.sensitive = enable;
-		btnDiscardChanges.sensitive = enable;
+		tab_widget_properties.sensitive = enable;
+		btn_apply_changes.sensitive = enable;
+		btn_discard_changes.sensitive = enable;
 	}
 
-	private void cmbTransparencyType_changed(){
-		switch (gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
+	private void cmb_transparency_type_changed(){
+		switch (gtk_combobox_get_value(cmb_transparency_type,1,"semi")){
 			case "semi":
-				spinOpacity.sensitive = true;
+				spin_opacity.sensitive = true;
 				break;
 			default:
-				spinOpacity.sensitive = false;
+				spin_opacity.sensitive = false;
 				break;
 		}
 	}
 	
-	//tvTheme Handlers -----------
+	//tv_theme Handlers -----------
 	
-	private void tvTheme_cellEnabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
-	{
+	private void tv_theme_cell_theme_enabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		ConkyTheme theme;
 		model.get (iter, 0, out theme, -1);
 		(cell as Gtk.CellRendererToggle).active = theme.Enabled;
 	}
 	
-	private void tvTheme_cellName_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
-	{
+	private void tv_theme_cell_theme_name_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		ConkyTheme theme;
 		model.get (iter, 0, out theme, -1);
 		(cell as Gtk.CellRendererText).text = theme.Name;
 	}
 	
-	private void tvTheme_cellEnabled_toggled (string path)
-	{
+	private void tv_theme_cell_theme_enabled_toggled (string path){
 		set_busy(true, this);
 		
 		ConkyTheme theme;
 		TreeIter iter;
 		
-		ListStore model = (ListStore) tvTheme.model; //get model
+		ListStore model = (ListStore) tv_theme.model; //get model
 		model.get_iter_from_string (out iter, path); //get selected iter
 		model.get (iter, 0, out theme, -1); //get theme
 		
 		theme.Enabled = !theme.Enabled;
 
-		//refresh tvConfig 
+		//refresh tv_config 
 		//Thread.usleep((ulong)1000000);
-		model = (ListStore) tvConfig.model;
-		tvConfig.model = null;
-		tvConfig.model = model;
+		model = (ListStore) tv_config.model;
+		tv_config.model = null;
+		tv_config.model = model;
 		
 		set_busy(false, this);
 	}
 
-	private void tvTheme_selection_changed () 
-	{
+	private void tv_theme_selection_changed () {
 		set_busy(true, this);
 		
 		//populate config list ----------
@@ -1180,7 +1181,7 @@ public class MainWindow : Window {
 		TreeModel model;
 		ListStore store;
 		
-		if (tvTheme.get_selection().get_selected(out model, out iter)){
+		if (tv_theme.get_selection().get_selected(out model, out iter)){
 			model.get (iter, 0, out theme, -1); //get theme
 			
 			store = new ListStore(1,typeof(ConkyConfig));
@@ -1188,54 +1189,51 @@ public class MainWindow : Window {
 				store.append(out iter);
 				store.set(iter, 0, conf);
 			}
-			tvConfig.model = store;
+			tv_config.model = store;
 		}
 		
 		//set preview and info buttons ---------
 		
 		if (theme != null) {
 			if (file_exists(theme.InfoFile)){
-				btnThemeInfo.set_sensitive(true);
+				btn_theme_info.set_sensitive(true);
 			}
 			else{
-				btnThemeInfo.set_sensitive(false);
+				btn_theme_info.set_sensitive(false);
 			}
 			
 			if (file_exists(theme.PreviewImage)){
-				btnThemePreview.set_sensitive(true);
+				btn_theme_preview.set_sensitive(true);
 			}
 			else{
-				btnThemePreview.set_sensitive(false);
+				btn_theme_preview.set_sensitive(false);
 			}
 		}
 		
 		set_busy(false, this);
 	}
 	
-	//tvConfig Handlers -----------
+	//tv_config Handlers -----------
 	
-	private void tvConfig_cellEnabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
-	{
+	private void tv_config_cell_widget_enabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		ConkyConfig conf;
 		model.get (iter, 0, out conf, -1);
 		(cell as Gtk.CellRendererToggle).active = conf.Enabled;
 	}
 	
-	private void tvConfig_cellName_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
-	{
+	private void tv_config_cell_widget_name_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		ConkyConfig conf;
 		model.get (iter, 0, out conf, -1);
 		(cell as Gtk.CellRendererText).text = conf.Name;
 	}
 	
-	private void tvConfig_cellEnabled_toggled (string path)
-	{
+	private void tv_config_cell_widget_enabled_toggled (string path){
 		set_busy(true, this);
 		
 		ConkyConfig conf;
 		TreeIter iter;
 		
-		ListStore model = (ListStore) tvConfig.model; //get model
+		ListStore model = (ListStore) tv_config.model; //get model
 		model.get_iter_from_string (out iter, path); //get selected iter
 		model.get (iter, 0, out conf, -1); //get theme
 		
@@ -1249,8 +1247,7 @@ public class MainWindow : Window {
 		set_busy(false, this);
 	}
 	
-	private void set_busy (bool busy, Gtk.Window win) 
-	{
+	private void set_busy (bool busy, Gtk.Window win) {
 		Gdk.Cursor? cursor = null;
 
 		if (busy){
@@ -1269,18 +1266,17 @@ public class MainWindow : Window {
 		do_events ();
 	}
 	
-	private void do_events ()
-    {
+	private void do_events (){
 		while(Gtk.events_pending ())
 			Gtk.main_iteration ();
 	}
 	
-	private ConkyTheme? tvTheme_get_selected_theme(){
+	private ConkyTheme? tv_theme_get_selected_theme(){
 		ConkyTheme theme = null;
 		TreeIter iter;
 		TreeModel model;
 
-		if (tvTheme.get_selection().get_selected(out model, out iter)){
+		if (tv_theme.get_selection().get_selected(out model, out iter)){
 			model.get (iter, 0, out theme, -1); //get theme
 			return theme;
 		}
@@ -1288,10 +1284,10 @@ public class MainWindow : Window {
 		return null;
 	}
 
-	//hboxThemeButtons ------------------------
+	//hbox_theme_buttons ------------------------
 	
-	private void btnThemeInfo_clicked () {
-		ConkyTheme theme = tvTheme_get_selected_theme();
+	private void btn_theme_info_clicked () {
+		ConkyTheme theme = tv_theme_get_selected_theme();
 		if (theme != null){
 			string info = "";
 			if (file_exists(theme.InfoFile)){
@@ -1302,8 +1298,8 @@ public class MainWindow : Window {
 		}
 	}
 	
-	private void btnThemePreview_clicked () {
-		ConkyTheme theme = tvTheme_get_selected_theme();;
+	private void btn_theme_preview_clicked () {
+		ConkyTheme theme = tv_theme_get_selected_theme();;
 		if (theme != null){
 			
 			try{
@@ -1340,13 +1336,11 @@ public class MainWindow : Window {
 	
 	//tbOptions handlers -------------------------
 	
-	private void chkStartup_clicked ()
-	{
+	private void chk_startup_clicked (){
 		App.autostart(chkStartup.active);
 	}
 	
-	private void btnInstallThemePack_clicked ()
-	{
+	private void btn_install_theme_pack_clicked (){
 		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack") + " (*.cmtp.7z)", this, Gtk.FileChooserAction.OPEN,
 							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
 							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
