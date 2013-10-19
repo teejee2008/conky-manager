@@ -7,7 +7,7 @@ man1dir = $(mandir)/man1
 CFLAGS = --std=c99
 
 all:
-	valac -X -D'GETTEXT_PACKAGE="conky-manager"' --Xcc="-lm" "Main.vala" "MainWindow.vala" "Utility.vala" --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 -o conky-manager 
+	valac -X -D'GETTEXT_PACKAGE="conky-manager"' --Xcc="-lm" "Main.vala" "MainWindow.vala" "Utility.vala" -o conky-manager --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 --pkg libsoup-2.4 --pkg json-glib-1.0 
 
 clean:
 	rm -rf *.o conky-manager
@@ -20,20 +20,36 @@ install:
 	mkdir -p $(DESTDIR)$(man1dir)
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/conky-manager
-	mkdir -p $(DESTDIR)$(sharedir)/conky-manager/images
-	mkdir -p $(DESTDIR)$(sharedir)/conky-manager/themepacks
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
-	
+
+	#binary
 	install -m 0755 conky-manager $(DESTDIR)$(bindir)
-	install -m 0755 conky-manager.desktop $(DESTDIR)$(launcherdir)
-	install -m 0755 ./images/conky-manager.png $(DESTDIR)$(sharedir)/pixmaps
 	
-	cp -dpr --no-preserve=ownership -t $(DESTDIR)$(sharedir)/conky-manager/images images/*
-	cp -dpr --no-preserve=ownership -t $(DESTDIR)$(sharedir)/conky-manager/themepacks themepacks/*.cmtp.7z
+	#launcher
+	install -m 0755 conky-manager.desktop $(DESTDIR)$(launcherdir)
+	
+	#app icon
+	install -m 0755 ./pixmaps/conky-manager.png $(DESTDIR)$(sharedir)/pixmaps
+	
+	#shared files
+	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/conky-manager" ./share/conky-manager/*
+	chmod --recursive 0755 $(DESTDIR)$(sharedir)/conky-manager/*
+	
+	#translations
+	#msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES/conky-manager.mo" ../po/conky-manager-it.po
 	
 uninstall:
+	#binary
 	rm -f $(DESTDIR)$(bindir)/conky-manager
+	
+	#launcher
 	rm -f $(DESTDIR)$(launcherdir)/conky-manager.desktop
+	
+	#app icon
 	rm -f $(DESTDIR)$(sharedir)/pixmaps/conky-manager.png
-	rm -rfd $(DESTDIR)$(sharedir)/conky-manager
+	
+	#shared files
+	rm -rf $(DESTDIR)$(sharedir)/conky-manager
     
+    #translations
+    #rm -f "$(DESTDIR)$(localedir)/*/LC_MESSAGES/conky-manager.mo"

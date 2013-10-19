@@ -23,14 +23,13 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=6
-FILE_NAME_0=7514;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_1=41946;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
-FILE_NAME_2=6910;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
-FILE_NAME_3=1191;Make;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
-FILE_NAME_4=266;None;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
-FILE_NAME_5=16967;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fselene%2Fsrc%2FMain.vala;0;4
-FILE_NAME_6=0;Lua;0;16;1;1;0;%2Fhome%2Fteejee%2Fconky-manager%2Fthemes%2Fverti-color%2Flua%2Fstev_bars.lua;0;4
+current_page=0
+FILE_NAME_0=18260;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_1=42303;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+FILE_NAME_2=35053;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
+FILE_NAME_3=347;None;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
+FILE_NAME_4=1539;Make;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
+FILE_NAME_5=27927;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Ftimeshift%2Fsrc%2FMain.vala;0;4
 
 [VTE]
 last_dir=/home/teejee

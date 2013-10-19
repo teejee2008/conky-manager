@@ -25,14 +25,21 @@ using GLib;
 using Gtk;
 using Gee;
 
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.DiskPartition;
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
+using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
+
 public Main App;
 public const string AppName = "Conky Manager";
 public const string AppVersion = "1.2";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
-public const bool LogTimestamp = false;
-public const bool UseConsoleColors = true;
-public const bool EnableDebuggingMessages = true;
 
 const string GETTEXT_PACKAGE = "conky-manager";
 const string LOCALE_DIR = "/usr/share/locale";
@@ -75,26 +82,26 @@ public class Main : GLib.Object {
 		string path = "";
 
 		path = home + "/conky-manager";
-		if (Utility.dir_exists(path) == false){
-			Utility.create_dir(path);
+		if (dir_exists(path) == false){
+			create_dir(path);
 			debug(_("Directory Created") + ": " + path);
 		}
 
 		path = home + "/conky-manager/themes";
-		if (Utility.dir_exists(path) == false){
-			Utility.create_dir(path);
+		if (dir_exists(path) == false){
+			create_dir(path);
 			debug(_("Directory Created") + ": " + path);
 		}
 		
 		path = home + "/.fonts";
-		if (Utility.dir_exists(path) == false){
-			Utility.create_dir(path);
+		if (dir_exists(path) == false){
+			create_dir(path);
 			debug(_("Directory Created") + ": " + path);
 		}
 		
 		path = home + "/.config/autostart";
-		if (Utility.dir_exists(path) == false){
-			Utility.create_dir(path);
+		if (dir_exists(path) == false){
+			create_dir(path);
 			debug(_("Directory Created") + ": " + path);
 		}
 		
@@ -119,12 +126,12 @@ public class Main : GLib.Object {
 		}
 		
 		//create empty config file if missing
-		if (Utility.file_exists(config_file) == false) { 
+		if (file_exists(config_file) == false) { 
 			Posix.system("touch \"" + config_file + "\""); 
 		}
 
 		//read config file
-		string txt = Utility.read_file(config_file);
+		string txt = read_file(config_file);
 		string[] filenames = txt.split("\n");
 			
 		try
@@ -133,13 +140,13 @@ public class Main : GLib.Object {
 			FileInfo file;
 			File fShare = File.parse_name (sharePath);
 				
-			if (Utility.dir_exists(sharePath)){
+			if (dir_exists(sharePath)){
 				enumerator = fShare.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 		
 				while ((file = enumerator.next_file ()) != null) {
 					
 					string filePath = sharePath + "/" + file.get_name();
-					if (Utility.file_exists(filePath) == false) { continue; }
+					if (file_exists(filePath) == false) { continue; }
 					if (filePath.has_suffix(".cmtp.7z") == false) { continue; }
 					
 					bool is_installed = false;
@@ -162,7 +169,7 @@ public class Main : GLib.Object {
 							list += filename + "\n";
 						}
 						list += file.get_name() + "\n";
-						Utility.write_file(config_file,list);
+						write_file(config_file,list);
 					}
 				} 
 			}
@@ -196,17 +203,33 @@ public class Main : GLib.Object {
 	
 	public int install_theme_pack(string pkgPath, bool checkOnly = false){
 		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		
 		string home = Environment.get_home_dir ();
 		string temp_dir = Environment.get_tmp_dir();
-		temp_dir = temp_dir + "/" + Utility.timestamp2();
-		Utility.create_dir(temp_dir);
+		temp_dir = temp_dir + "/" + timestamp2();
+		create_dir(temp_dir);
 		
 		debug(_("Installing") + ": " + pkgPath);
 		
-		cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "7z x \"" + pkgPath + "\">nul\n";
-		Utility.execute_command_sync_batch (cmd); 
+		try{
+			cmd = "cd \"" + temp_dir + "\"\n";
+			cmd += "7z x \"" + pkgPath + "\">nul\n";
 		
+			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+			if (ret_val != 0){
+				log_error(_("Failed to unzip files from theme pack"));
+				log_error (std_err);
+				return -1;
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return -1;
+		}
+
 		string temp_dir_themes = temp_dir + "/themes";
 		string temp_dir_fonts = temp_dir + "/fonts";
 		string temp_dir_home = temp_dir + "/home";
@@ -216,7 +239,7 @@ public class Main : GLib.Object {
 
 		try
 		{	
-			if (Utility.dir_exists(temp_dir_themes)){
+			if (dir_exists(temp_dir_themes)){
 
 				File f_themes_dir = File.parse_name (temp_dir_themes);
 				FileEnumerator enumerator = f_themes_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
@@ -226,7 +249,7 @@ public class Main : GLib.Object {
 					string source_dir = temp_dir_themes + "/" + file.get_name();
 					string target_dir = UserPath + "/themes/" + file.get_name();
 
-					if (Utility.dir_exists(target_dir)) { 
+					if (dir_exists(target_dir)) { 
 						continue; 
 					}
 					else{
@@ -248,7 +271,7 @@ public class Main : GLib.Object {
 	    //copy fonts to ~/.fonts
 	    
 		try{
-			if (Utility.dir_exists(temp_dir_fonts)){
+			if (dir_exists(temp_dir_fonts)){
 				File f_fonts_dir = File.parse_name (temp_dir_fonts);
 				FileEnumerator enumerator = f_fonts_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 				
@@ -257,7 +280,7 @@ public class Main : GLib.Object {
 					string source_file = temp_dir_fonts + "/" + file.get_name();
 					string target_file = home + "/.fonts/" + file.get_name();
 					
-					if (Utility.file_exists(target_file)) { 
+					if (file_exists(target_file)) { 
 						continue; 
 					}
 					else{
@@ -278,7 +301,7 @@ public class Main : GLib.Object {
 		
 		try{
 			 
-			if (Utility.dir_exists(temp_dir_home)){
+			if (dir_exists(temp_dir_home)){
 				
 				File f_home_dir = File.parse_name (temp_dir_home);
 				FileEnumerator enumerator = f_home_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
@@ -289,7 +312,7 @@ public class Main : GLib.Object {
 					string dir_path = temp_dir_home + "/" + file.get_name();
 					
 					if ((dir_name.down() == "conky")||(dir_name.down() == ".conky")||(dir_name == ".fonts")){
-						if (Utility.dir_exists(dir_path)) { 
+						if (dir_exists(dir_path)) { 
 							debug(_("Copy files: ") + home + "/" + dir_name);
 							cmd = "rsync --recursive --perms --chmod=a=rwx \"" + dir_path + "\" \"" + home + "\"";
 							Posix.system(cmd);
@@ -324,7 +347,7 @@ public class Main : GLib.Object {
 	        FileInfo file;
 	        while ((file = enumerator.next_file ()) != null) {
 				string item = theme_dir + "/" + file.get_name();
-				if (Utility.dir_exists(item) == false) { continue; }
+				if (dir_exists(item) == false) { continue; }
 
 		        ConkyTheme theme = new ConkyTheme(item);
 		        ThemeList.add(theme);
@@ -347,7 +370,7 @@ public class Main : GLib.Object {
 		Gee.ArrayList<string> ActiveConfigList = new Gee.ArrayList<string>();
 
 		string cmd = "conky -c "; //without double-quotes
-		string txt = Utility.execute_command_sync_get_output ("ps w -C conky"); 
+		string txt = execute_command_sync_get_output ("ps w -C conky"); 
 		//use 'ps ew -C conky' for all users
 	
 		foreach(string line in txt.split("\n")){
@@ -402,7 +425,7 @@ public class Main : GLib.Object {
 	
 	public void run_startup_script(){
 		string home = Environment.get_home_dir ();
-		Utility.execute_command_sync("sh \"" + home + "/conky-manager/conky-startup.sh\"");
+		execute_command_sync("sh \"" + home + "/conky-manager/conky-startup.sh\"");
 		Posix.usleep(500000);//microseconds
 		refresh_status();
 	}
@@ -426,13 +449,13 @@ public class Main : GLib.Object {
 			}
 		}
 
-		Utility.write_file(startupScript, txt);
+		write_file(startupScript, txt);
 	}
 	
 	public bool check_startup(){
 		string home = Environment.get_home_dir ();
 		string startupFile = home + "/.config/autostart/conky.desktop";
-		return Utility.file_exists(startupFile);	
+		return file_exists(startupFile);	
 	}
 	
 	public void autostart(bool autostart){
@@ -454,10 +477,10 @@ Comment=
 """;
 			txt = txt.replace("{command}", "sh \"" + home + "/conky-manager/conky-startup.sh\"");
 			
-			Utility.write_file(startupFile, txt);
+			write_file(startupFile, txt);
 		}
 		else{
-			Utility.file_delete(startupFile);			
+			file_delete(startupFile);			
 		}
 	}
 	
@@ -486,12 +509,12 @@ for w in windows:
 """;
         
         string temp_dir = Environment.get_tmp_dir();
-		temp_dir = temp_dir + "/" + Utility.timestamp2();
-		Utility.create_dir(temp_dir);
+		temp_dir = temp_dir + "/" + timestamp2();
+		create_dir(temp_dir);
 		string py_file = temp_dir + "/minimize.py";
 		
-        Utility.write_file(py_file, txt);
-	    Utility.chmod (py_file, "u+x");
+        write_file(py_file, txt);
+	    chmod (py_file, "u+x");
 
         Posix.system(py_file);
 	}
@@ -532,13 +555,13 @@ public class ConkyTheme : GLib.Object {
 		
 		//find info file
 		string infoFile = BasePath + "/info.txt";
-		if (Utility.file_exists(infoFile)){
+		if (file_exists(infoFile)){
 			InfoFile = infoFile;
 		}
 		
 		//find preview image
 		string previewFile = BasePath + "/preview.png";
-		if (Utility.file_exists(previewFile)){
+		if (file_exists(previewFile)){
 			PreviewImage = previewFile;
 		}
 	}
@@ -551,12 +574,12 @@ public class ConkyTheme : GLib.Object {
 			FileInfo file;
 			File fileDir = File.parse_name (dirPath);
 			
-			if (Utility.dir_exists(dirPath)){
+			if (dir_exists(dirPath)){
 				enumerator = fileDir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 		
 				while ((file = enumerator.next_file ()) != null) {
 					string filePath = dirPath + "/" + file.get_name();
-					if (Utility.file_exists(filePath) == false) { continue; }
+					if (file_exists(filePath) == false) { continue; }
 					if (filePath.has_suffix("~")) { continue; } //ignore backups of config files
 					if (checkExt && (filePath.down().has_suffix(".conkyrc") == false)) { continue; }
 					
@@ -588,12 +611,12 @@ public class ConkyTheme : GLib.Object {
 			FileInfo file;
 			File directory = File.parse_name (dirPath);
 				
-	        if (Utility.dir_exists(dirPath)){
+	        if (dir_exists(dirPath)){
 				enumerator = directory.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 		
 				while ((file = enumerator.next_file ()) != null) {
 					string item = dirPath + "/" + file.get_name();
-					if (Utility.file_exists(item) == false) { continue; }
+					if (file_exists(item) == false) { continue; }
 					
 					string name = file.get_name();
 					string ext = name[name.last_index_of(".",0):name.length].down();
@@ -618,8 +641,8 @@ public class ConkyTheme : GLib.Object {
 			string fileName = fontFile.get_basename();
 			string targetFile = home + "/.fonts/" + fileName;
 			
-			if (Utility.file_exists(targetFile) == false){
-				Utility.copy_file(filePath, targetFile);
+			if (file_exists(targetFile) == false){
+				copy_file(filePath, targetFile);
 				debug(_("Font Installed: ") + targetFile);
 			}
 		}
@@ -678,7 +701,7 @@ public class ConkyConfig : GLib.Object {
 		//this function updates the status immediately
 		
 		string cmd = "conky -c " + Path; //without double-quotes
-		string txt = Utility.execute_command_sync_get_output ("ps w -C conky"); 
+		string txt = execute_command_sync_get_output ("ps w -C conky"); 
 		//use 'ps ew -C conky' for all users
 		
 		bool active = false;
@@ -692,6 +715,8 @@ public class ConkyConfig : GLib.Object {
 	}
 	
 	public void start_conky(){
+		string cmd;
+
 		update_status();
 		if (Enabled){
 			stop_conky();
@@ -699,9 +724,11 @@ public class ConkyConfig : GLib.Object {
 		
 		Theme.Install();
 		
-		string cmd = "cd \"" + Theme.BasePath + "\"\n";
+		cmd = "cd \"" + Theme.BasePath + "\"\n";
 		cmd += "conky -c \"" + Path + "\"\n";
-		Utility.execute_command_async_batch (cmd); 
+
+		execute_command_script_async(cmd);
+
 		Thread.usleep((ulong)1000000);
 		debug(_("Started") + ": " + Path);
 		
@@ -715,7 +742,7 @@ public class ConkyConfig : GLib.Object {
 		//We need to kill all instances
 		
 		string cmd = "conky -c " + Path; //without double-quotes
-		string txt = Utility.execute_command_sync_get_output ("ps w -C conky");
+		string txt = execute_command_sync_get_output ("ps w -C conky");
 		//use 'ps ew -C conky' for all users
 		
 		string pid = "";
@@ -734,12 +761,12 @@ public class ConkyConfig : GLib.Object {
 	
 	public void read_file(){
 		debug("Read config file from disk");
-		Text = Utility.read_file(Path);
+		this.Text = TeeJee.FileSystem.read_file(this.Path);
 	}
 	
 	public void write_changes_to_file(){
 		debug("Saved config file changes to disk");
-		Utility.write_file(this.Path, Text);
+		write_file(this.Path, Text);
 	}
 	
 	public string alignment{

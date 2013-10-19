@@ -23,9 +23,18 @@
  
 using Gtk;
 
-public class MainWindow : Window 
-{
-	private Notebook tabMain;
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.DiskPartition;
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
+using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
+
+public class MainWindow : Window {
+	private Notebook tab_main;
 	private Notebook tabWidgetProperties;
 	
 	private Label lblThemeTab;
@@ -105,11 +114,11 @@ public class MainWindow : Window
 	        log_error (e.message);
 	    }
 	    
-		//tabMain
-        tabMain = new Notebook ();
-		tabMain.margin = 6;
-		tabMain.switch_page.connect(tabMain_switch_page);
-		add(tabMain);
+		//tab_main
+        tab_main = new Notebook ();
+		tab_main.margin = 6;
+		tab_main.switch_page.connect(tab_main_switch_page);
+		add(tab_main);
 		
 		//vboxTheme
         vboxTheme = new Box (Orientation.VERTICAL, 6);
@@ -118,7 +127,7 @@ public class MainWindow : Window
         //lblThemeTab
 		lblThemeTab = new Label (_("Theme"));
 
-		tabMain.append_page (vboxTheme, lblThemeTab);
+		tab_main.append_page (vboxTheme, lblThemeTab);
 
 		//tvTheme
 		tvTheme = new TreeView();
@@ -246,7 +255,7 @@ public class MainWindow : Window
         gridEdit.column_homogeneous = false;
         gridEdit.visible = false;
         gridEdit.margin = 12;
-        tabMain.append_page (gridEdit, lblEditTab);
+        tab_main.append_page (gridEdit, lblEditTab);
 
         CellRendererText textCell;
         
@@ -692,7 +701,7 @@ public class MainWindow : Window
         //lblOptionsTab
 		lblOptionsTab = new Label (_("Options"));
 
-		tabMain.append_page (vboxOptions, lblOptionsTab);
+		tab_main.append_page (vboxOptions, lblOptionsTab);
 
         //lblHeaderStartup
 		lblHeaderStartup = new Gtk.Label("<b>" + _("Startup") + "</b>");
@@ -759,7 +768,7 @@ public class MainWindow : Window
         //lblAboutTab
 		lblAboutTab = new Label (_("About"));
 
-		tabMain.append_page (vboxAbout, lblAboutTab);
+		tab_main.append_page (vboxAbout, lblAboutTab);
 		
         //lblAppName
 		lblAppName = new Gtk.Label("""<span size="x-large" weight="bold">""" + AppName + "</span>");
@@ -842,10 +851,10 @@ public class MainWindow : Window
 		//tvConfig.model = store;
 	}
 	
-	//tabMain handlers ---------------------------
+	//tab_main handlers ---------------------------
 	
-	private void tabMain_switch_page (Widget page, uint new_page) {
-		uint old_page = tabMain.page;
+	private void tab_main_switch_page (Widget page, uint new_page) {
+		uint old_page = tab_main.page;
 		
 		if ((cmbWidget == null) || (cmbWidget.model == null)){
 			return;
@@ -901,7 +910,7 @@ public class MainWindow : Window
 
 		reload_widget_properties();
 		
-		if (tabMain.page == 1){
+		if (tab_main.page == 1){
 			set_busy(true, this);
 
 			//kill all widgets
@@ -938,7 +947,7 @@ public class MainWindow : Window
 		conf.read_file();
 		
 		//location
-		Utility.gtk_combobox_set_value(cmbAlignment, 1, conf.alignment);
+		gtk_combobox_set_value(cmbAlignment, 1, conf.alignment);
 		spinGapX.value = double.parse(conf.gap_x);
 		spinGapY.value = double.parse(conf.gap_y);
 		
@@ -950,36 +959,36 @@ public class MainWindow : Window
 		if(own_window_transparent == "yes"){
 			if(own_window_argb_visual == "yes"){
 				//own_window_argb_value, if present, will be ignored by Conky
-				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"trans");
+				gtk_combobox_set_value(cmbTransparencyType,1,"trans");
 			}
 			else if (own_window_argb_visual == "no"){
-				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
+				gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
 			}
 			else{
-				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
+				gtk_combobox_set_value(cmbTransparencyType,1,"pseudo");
 			}
 		}
 		else if (own_window_transparent == "no"){
 			if(own_window_argb_visual == "yes"){
 				if (own_window_argb_value == "0"){
-					Utility.gtk_combobox_set_value(cmbTransparencyType,1,"trans");
+					gtk_combobox_set_value(cmbTransparencyType,1,"trans");
 				}
 				else if (own_window_argb_value == "255"){
-					Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+					gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
 				}
 				else{
-					Utility.gtk_combobox_set_value(cmbTransparencyType,1,"semi");
+					gtk_combobox_set_value(cmbTransparencyType,1,"semi");
 				}
 			}
 			else if (own_window_argb_visual == "no"){
-				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+				gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
 			}
 			else{
-				Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+				gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
 			}
 		}
 		else{
-			Utility.gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
+			gtk_combobox_set_value(cmbTransparencyType,1,"opaque");
 		}
 
 		if (own_window_argb_value == ""){
@@ -988,7 +997,7 @@ public class MainWindow : Window
 		else{
 			spinOpacity.value = (int.parse(own_window_argb_value) / 255.0) * 100;
 		}
-		cbtnBackgroundColor.rgba = Utility.hex_to_rgba(conf.own_window_colour);
+		cbtnBackgroundColor.rgba = hex_to_rgba(conf.own_window_colour);
 		
 		//window size 
 		string size = conf.minimum_size;
@@ -1009,7 +1018,7 @@ public class MainWindow : Window
 		}
 		
 		if (time_format == "") { time_format = "12"; }
-		Utility.gtk_combobox_set_value(cmbTimeFormat,1,time_format);
+		gtk_combobox_set_value(cmbTimeFormat,1,time_format);
 		
 		//network
 		string net = conf.network_device;
@@ -1048,12 +1057,12 @@ public class MainWindow : Window
 		debug(_("Updating theme") + ": %s".printf(conf.Theme.Name + " - " + conf.Name));
 
 		//location
-		conf.alignment = Utility.gtk_combobox_get_value(cmbAlignment,1,"top_left");
+		conf.alignment = gtk_combobox_get_value(cmbAlignment,1,"top_left");
 		conf.gap_x = spinGapX.value.to_string();
 		conf.gap_y = spinGapY.value.to_string();
 		
 		//transparency
-		switch (Utility.gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
+		switch (gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
 			case "opaque":
 				conf.own_window_transparent = "no";
 				conf.own_window_argb_visual = "no";
@@ -1075,7 +1084,7 @@ public class MainWindow : Window
 				break;
 		}
 
-		conf.own_window_colour = Utility.rgba_to_hex(cbtnBackgroundColor.rgba, false, false); 
+		conf.own_window_colour = rgba_to_hex(cbtnBackgroundColor.rgba, false, false); 
 		
 		//window size 
 		conf.minimum_size = spinMinWidth.value.to_string() + " " + spinMinHeight.value.to_string();
@@ -1083,7 +1092,7 @@ public class MainWindow : Window
 		
 		//time
 		if(conf.time_format != ""){
-			conf.time_format = Utility.gtk_combobox_get_value(cmbTimeFormat,1,"");
+			conf.time_format = gtk_combobox_get_value(cmbTimeFormat,1,"");
 		}
 		
 		//network
@@ -1112,7 +1121,7 @@ public class MainWindow : Window
 	}
 
 	private void cmbTransparencyType_changed(){
-		switch (Utility.gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
+		switch (gtk_combobox_get_value(cmbTransparencyType,1,"semi")){
 			case "semi":
 				spinOpacity.sensitive = true;
 				break;
@@ -1185,14 +1194,14 @@ public class MainWindow : Window
 		//set preview and info buttons ---------
 		
 		if (theme != null) {
-			if (Utility.file_exists(theme.InfoFile)){
+			if (file_exists(theme.InfoFile)){
 				btnThemeInfo.set_sensitive(true);
 			}
 			else{
 				btnThemeInfo.set_sensitive(false);
 			}
 			
-			if (Utility.file_exists(theme.PreviewImage)){
+			if (file_exists(theme.PreviewImage)){
 				btnThemePreview.set_sensitive(true);
 			}
 			else{
@@ -1285,11 +1294,11 @@ public class MainWindow : Window
 		ConkyTheme theme = tvTheme_get_selected_theme();
 		if (theme != null){
 			string info = "";
-			if (Utility.file_exists(theme.InfoFile)){
-				info = Utility.read_file(theme.InfoFile);
+			if (file_exists(theme.InfoFile)){
+				info = read_file(theme.InfoFile);
 			}
 			
-			Utility.messagebox_show("[" + _("Info") + "] " + theme.Name, info);
+			gtk_messagebox_show("[" + _("Info") + "] " + theme.Name, info);
 		}
 	}
 	
@@ -1378,7 +1387,7 @@ public class MainWindow : Window
 	 	//show message
 	 	
 	 	if (files != null){
-			Utility.messagebox_show(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."));
+			gtk_messagebox_show(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."));
 		}
 	}
 }
