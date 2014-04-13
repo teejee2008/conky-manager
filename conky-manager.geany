@@ -23,13 +23,16 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=18260;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_1=42303;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
-FILE_NAME_2=35053;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
-FILE_NAME_3=347;None;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
-FILE_NAME_4=1539;Make;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
-FILE_NAME_5=27927;Vala;0;16;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Ftimeshift%2Fsrc%2FMain.vala;0;4
+current_page=7
+FILE_NAME_0=42269;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
+FILE_NAME_1=2544;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_2=10624;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+FILE_NAME_3=9976;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FEditWindow.vala;0;4
+FILE_NAME_4=345;None;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
+FILE_NAME_5=315;Make;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
+FILE_NAME_6=4416;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FSettingsWindow.vala;0;4
+FILE_NAME_7=3174;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FDonationWindow.vala;0;4
+FILE_NAME_8=3675;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Ftimeshift%2Fsrc%2FSettingsWindow.vala;0;4
 
 [VTE]
 last_dir=/home/teejee
@@ -48,3 +51,6 @@ filetypes=Vala;
 EX_00_LB=_Execute
 EX_00_CM=./conky-manager
 EX_00_WD=
+EX_01_LB=Execute (sudo)
+EX_01_CM=gksu ./conky-manager
+EX_01_WD=

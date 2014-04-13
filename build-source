@@ -1,3 +1,0 @@
-rm -rf ../builds
-bzr builddeb --source --native --build-dir ../builds/temp --result-dir ../builds
-ls -l ../builds

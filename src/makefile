@@ -7,7 +7,7 @@ man1dir = $(mandir)/man1
 CFLAGS = --std=c99
 
 all:
-	valac -X -D'GETTEXT_PACKAGE="conky-manager"' --Xcc="-lm" "Main.vala" "MainWindow.vala" "Utility.vala" -o conky-manager --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 --pkg libsoup-2.4 --pkg json-glib-1.0 
+	valac -X -D'GETTEXT_PACKAGE="conky-manager"' --Xcc="-lm" "Main.vala" "MainWindow.vala" "EditWindow.vala" "SettingsWindow.vala" "DonationWindow.vala" "Utility.vala" -o conky-manager --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 --pkg libsoup-2.4 --pkg json-glib-1.0 
 
 clean:
 	rm -rf *.o conky-manager
@@ -29,7 +29,7 @@ install:
 	install -m 0755 conky-manager.desktop $(DESTDIR)$(launcherdir)
 	
 	#app icon
-	install -m 0755 ./pixmaps/conky-manager.png $(DESTDIR)$(sharedir)/pixmaps
+	install -m 0755 share/pixmaps/conky-manager.png $(DESTDIR)$(sharedir)/pixmaps
 	
 	#shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/conky-manager" ./share/conky-manager/*

@@ -1,4 +1,0 @@
-./build-binary
-sudo gdebi --non-interactive ../builds/conky-manager*.deb
-echo "Finished"
-read dummy
