@@ -25,31 +25,22 @@ using Gtk;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
-using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
 public class DonationWindow : Dialog {
-	public DonationWindow(bool on_exit) {
+	public DonationWindow() {
 		title = "Donate";
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
         skip_taskbar_hint = false;
         set_default_size (400, 20);	
+		icon = App.get_app_icon(16);
 		
-		//set app icon
-		try{
-			this.icon = new Gdk.Pixbuf.from_file ("""/usr/share/pixmaps/conky-manager.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-
 		//vbox_main
 	    Box vbox_main = get_content_area();
 		vbox_main.margin = 6;
@@ -60,7 +51,7 @@ public class DonationWindow : Dialog {
 		//lbl_message
 		Label lbl_message = new Gtk.Label("");
 		//string msg = _("Did you find this software useful?\n\nYou can buy me a coffee or make a donation via PayPal to show your support. Or just drop me an email and say Hi.\n\nThis application is free and will continue to remain that way. Your contributions will help in developing it further and making it more awesome!\n\nFeel free to drop me a mail if you find any issues or if you have suggestions for improvement.\n\nRegards,\nTony George\nteejeetech@gmail.com");
-		string msg = _("Did you find this software useful?\n\nPlease consider making a donation to show your support.\n\nThis application is completely free and will continue to remain that way. Your contributions will help in keeping this project alive and developing it further.\n\nFeel free to mail me if you find any issues or if you need any changes in this application. I can be reached at teejeetech@gmail.com.\n\nRegards,\nTony George");
+		string msg = _("Did you find this software useful?\n\nPlease consider making a donation to show your support.\n\nThis application is completely free and will continue to remain that way. Your contributions will help in keeping this project alive and developing it further.\n\nFeel free to mail me if you find any issues or if you need any changes in this application. I can be reached at teejeetech@gmail.com.\n\n~ Tony George");
 		lbl_message.label = msg;
 		lbl_message.wrap = true;
 		vbox_main.pack_start(lbl_message,true,true,0);
@@ -92,17 +83,6 @@ public class DonationWindow : Dialog {
 		btn_visit.clicked.connect(()=>{
 			xdg_open("http://www.teejeetech.in");
 		});
-		
-		if (on_exit){
-			//btn_exit_no_show
-			Button btn_exit_no_show = new Button.with_label("   " + _("Don't Show This Again") + "   ");
-			vbox_actions.add(btn_exit_no_show);
-			
-			btn_exit_no_show.clicked.connect(() => {
-				App.donation_disable = true;
-				this.destroy();
-			});
-		}
 	}
 
 }

@@ -28,11 +28,9 @@ using Json;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
-using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
@@ -55,16 +53,19 @@ public class Main : GLib.Object {
 	public Gee.ArrayList<string> search_folders;
 	public Gee.ArrayList<ConkyRC> conkyrc_list;
 	public Gee.HashMap<string,ConkyRC> conkyrc_map;
+	public Gee.ArrayList<ConkyTheme> conkytheme_list;
 	
 	public bool is_aborted;
 	public string last_cmd;
 	
-	public int donation_counter = 0;
-	public bool donation_disable = false;
-	public int donation_reshow_frequency = 3;
-	
 	public bool capture_background = false;
 	public int selected_widget_index = 0;
+	public bool show_preview = true;
+	public bool show_list = true;
+	public bool show_active = false;
+	public int pane_position = 300;
+	public int window_width = 600;
+	public int window_height = 500;
 	
     public static int main(string[] args) {
 	
@@ -79,17 +80,19 @@ public class Main : GLib.Object {
 		App = new Main(args);
 
 		var window = new MainWindow();
+		
+		//connect destroy event
 		window.destroy.connect(()=>{
-			if (!App.donation_disable){
-				App.donation_counter++;
-				if ((App.donation_counter % App.donation_reshow_frequency) == 0){
-					window.show_donation_window(true);
-					App.donation_counter = 0;
-				}
-			}
 			App.exit_app();
 			Gtk.main_quit();
 		});
+		
+		//save window size when closed
+		window.delete_event.connect((event)=>{
+			window.get_size(out App.window_width,out App.window_height);
+			return false;
+		});
+		
 		window.show_all();
 
 	    Gtk.main();
@@ -105,15 +108,17 @@ public class Main : GLib.Object {
 		app_conf_path = home + "/.config/conky-manager.json";
 		search_folders = new Gee.ArrayList<string>();
 		
-		//load config ---------
+		conkyrc_list = new Gee.ArrayList<ConkyRC>();
+		conkyrc_map = new Gee.HashMap<string,ConkyRC>();
+		conkytheme_list = new Gee.ArrayList<ConkyTheme>();
 		
-		load_app_config();
-
 		//install new theme packs and fonts ---------------
 		
 		init_directories();
 		init_theme_packs();
 
+		load_app_config();
+				
 		//load themes --------
 		
 		//load_themes_and_widgets();
@@ -126,10 +131,12 @@ public class Main : GLib.Object {
 		config.set_string_member("data_dir", data_dir);
 		config.set_string_member("capture_background", capture_background.to_string());
 		config.set_string_member("selected_widget_index", selected_widget_index.to_string());
+		config.set_string_member("show_preview", show_preview.to_string());
+		config.set_string_member("show_list", show_list.to_string());
+		config.set_string_member("pane_position", pane_position.to_string());
+		config.set_string_member("window_width", window_width.to_string());
+		config.set_string_member("window_height", window_height.to_string());
 		
-		config.set_string_member("donation_counter", donation_counter.to_string());
-		config.set_string_member("donation_disable", donation_disable.to_string());
-
 		Json.Array arr = new Json.Array();
 		foreach(string path in search_folders){
 			arr.add_string_element(path);
@@ -178,9 +185,11 @@ public class Main : GLib.Object {
 		
 		capture_background = json_get_bool(config,"capture_background",false);
 		selected_widget_index = json_get_int(config,"selected_widget_index",0);
-		
-		donation_counter = json_get_int(config,"donation_counter",0);
-		donation_disable = json_get_bool(config,"donation_disable",false);
+		show_preview = json_get_bool(config,"show_preview",show_preview);
+		show_list = json_get_bool(config,"show_list",show_list);
+		pane_position = json_get_int(config,"pane_position",pane_position);
+		window_width = json_get_int(config,"window_width",window_width);
+		window_height = json_get_int(config,"window_height",window_height);
 
 		// search folders -------------------
 		
@@ -205,9 +214,9 @@ public class Main : GLib.Object {
 			}
 		}
 
-		// widget list ------------------------
-		
-		clear_themes_and_widgets();
+		//clear widget list
+		conkyrc_list = new Gee.ArrayList<ConkyRC>();
+		conkyrc_map = new Gee.HashMap<string,ConkyRC>();
 		
 		//add from config file
 		if (config.has_member ("conkyrc")){
@@ -220,7 +229,12 @@ public class Main : GLib.Object {
 				}
 			}
 		}
-
+		
+		//load from data_dir
+		find_conkytheme_files();
+		
+		refresh_conkyrc_status();
+		
 		log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
 	}
 	
@@ -315,28 +329,13 @@ public class Main : GLib.Object {
 	    }
 	}
 	
-	public void clear_themes_and_widgets(){
-		conkyrc_list = new Gee.ArrayList<ConkyRC>();
-		conkyrc_map = new Gee.HashMap<string,ConkyRC>();
-	}
-	
 	public void load_themes_and_widgets() {
 		is_aborted = false;
 		
-		clear_themes_and_widgets();
+		find_conkyrc_files();
+		find_conkytheme_files();
+		refresh_conkyrc_status();
 		
-		find_conkyrc_files(data_dir);
-		foreach(string path in search_folders){
-			if (!is_aborted){
-				find_conkyrc_files(path);
-			}
-		}
-		
-		CompareFunc<ConkyRC> func = (a, b) => {
-			return strcmp(a.name,b.name);
-		};
-		conkyrc_list.sort(func);
-
 		log_msg(_("Searching for conkyrc files... %d found").printf(conkyrc_list.size));
 	}
 
@@ -345,7 +344,23 @@ public class Main : GLib.Object {
 		command_kill("grep",last_cmd);
 	}
 	
-	public void find_conkyrc_files(string path){
+	public void find_conkyrc_files(){
+		conkyrc_list = new Gee.ArrayList<ConkyRC>();
+		conkyrc_map = new Gee.HashMap<string,ConkyRC>();
+		
+		find_conkyrc_files_in_path(data_dir);
+		foreach(string path in search_folders){
+			if (!is_aborted){
+				find_conkyrc_files_in_path(path);
+			}
+		}
+		CompareFunc<ConkyRC> func = (a, b) => {
+			return strcmp(a.name,b.name);
+		};
+		conkyrc_list.sort(func);
+	}
+	
+	public void find_conkyrc_files_in_path(string path){
 		string std_out = "";
 		string std_err = "";
 		string cmd = "grep -r \"^[[:blank:]]*TEXT[[:blank:]]*$\" \"%s\"".printf(path);
@@ -368,6 +383,30 @@ public class Main : GLib.Object {
 					conkyrc_map[rc.path] = rc;
 				}
 			}
+		}
+	}
+	
+	public void find_conkytheme_files(){
+		conkytheme_list = new Gee.ArrayList<ConkyTheme>();
+		
+		string std_out = "";
+		string std_err = "";
+		string cmd = "find \"%s/\" -name \"*.cmtheme\" -print0 | xargs -0 ls -1".printf(data_dir);
+		int exit_code = execute_command_script_sync(cmd, out std_out, out std_err);
+
+		if (exit_code != 0){
+			//no files found
+			return;
+		}
+		
+		string file_path;
+		foreach(string line in std_out.split("\n")){
+			if ((line == null)||(line.length == 0)){ continue; }
+			file_path = line.strip();
+			if (file_path.strip().has_suffix("~")){ continue; }
+
+			ConkyTheme th = new ConkyTheme.from_file(file_path,this);
+			conkytheme_list.add(th);
 		}
 	}
 
@@ -516,18 +555,28 @@ public class Main : GLib.Object {
 		return count;
 	}
 	
-	public void start_status_thread (){
-		try {
-			Thread.create<void> (status_thread, true);
-		} catch (ThreadError e) {
-			log_error (e.message);
-		}
-	}
+	public void refresh_conkyrc_status() {
+		Gee.ArrayList<string> active_list = new Gee.ArrayList<string>();
+
+		string cmd = "conky -c "; //without double-quotes
+		string txt = execute_command_sync_get_output ("ps w -C conky"); 
+		//use 'ps ew -C conky' for all users
 	
-	private void status_thread (){
-		while (true){  // loop runs for entire application lifetime
-			//refresh_status();
-			Thread.usleep((ulong)3000000);
+		foreach(string line in txt.split("\n")){
+			if (line.index_of(cmd) != -1){
+				string conf = line.substring(line.index_of(cmd) + 8).strip();
+				active_list.add(conf);
+			}
+		}
+		
+		foreach(ConkyRC rc in conkyrc_list){
+			bool active = false;
+			foreach(string path in active_list){
+				if (rc.path == path){
+					active = true;
+				}
+			}
+			rc.enabled = active;
 		}
 	}
 	
@@ -595,48 +644,109 @@ Comment=
 	
 	public void kill_all_conky(){
 		Posix.system("killall conky");
-		//refresh_status();
+		foreach(ConkyRC rc in conkyrc_list){
+			rc.enabled = false;
+		}
+	}
+
+	public Gdk.Pixbuf? get_app_icon(int icon_size){
+		var img_icon = get_shared_icon("conky-manager","conky-manager.png",icon_size,"pixmaps");
+		if (img_icon != null){
+			return img_icon.pixbuf;
+		}
+		else{
+			return null;
+		}
 	}
 	
-	public void minimize_all_other_windows(){
-		string txt =
-"""#!/usr/bin/env python
-import wnck
-import gtk
-
-screen = wnck.screen_get_default()
-
-while gtk.events_pending():
-    gtk.main_iteration()
-
-windows = screen.get_windows()
-active = screen.get_active_window()
-
-for w in windows:
-    if w != active and w.get_name().find("Conky") == -1:
-        w.minimize()
-""";
-        
-        string temp_dir = Environment.get_tmp_dir();
-		temp_dir = temp_dir + "/" + timestamp2();
-		create_dir(temp_dir);
-		string py_file = temp_dir + "/minimize.py";
+	public Gtk.Image? get_shared_icon(string icon_name, string fallback_icon_file_name, int icon_size, string icon_directory = "conky-manager/images"){
+		Gdk.Pixbuf pix_icon = null;
+		Gtk.Image img_icon = null;
 		
-        write_file(py_file, txt);
-	    chmod (py_file, "u+x");
+		try {
+			Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default();
+			pix_icon = icon_theme.load_icon (icon_name, icon_size, 0);
+		} catch (Error e) {
+			//log_error (e.message);
+		}
+		
+		string fallback_icon_file_path = App.share_folder + "/%s/%s".printf(icon_directory, fallback_icon_file_name);
+		
+		if (pix_icon == null){ 
+			try {
+				pix_icon = new Gdk.Pixbuf.from_file_at_size (fallback_icon_file_path, icon_size, icon_size);
+			} catch (Error e) {
+				log_error (e.message);
+			}
+		}
+		
+		if (pix_icon == null){ 
+			log_error (_("Missing Icon") + ": '%s', '%s'".printf(icon_name, fallback_icon_file_path));
+		}
+		else{
+			img_icon = new Gtk.Image.from_pixbuf(pix_icon);
+		}
 
-        Posix.system(py_file);
+		return img_icon; 
+	}
+
+}
+
+public abstract class ConkyConfigItem: GLib.Object{
+	public abstract string name { get; set; }
+	public abstract string path { get; set; }
+	public abstract string dir { get; set; }
+	public abstract string base_name { get; set; }
+	public abstract bool enabled { get; set; }
+	public abstract string image_path { get; set; }
+	public abstract void start();
+	public abstract void stop();
+	
+	public void init_path(string theme_file_path){
+		path = theme_file_path;
+		var f = File.new_for_path (theme_file_path);
+		name = path.replace(Environment.get_home_dir(),"~");
+		base_name = f.get_basename();
+		dir = f.get_parent().get_path();
+	}
+	
+	public void init_image_path(){
+		
+		string[] ext_list = {".png",".jpg",".jpeg"};
+		
+		//search using base name
+		foreach(string ext in ext_list){
+			image_path = dir + "/" + base_name + ext;
+			if (file_exists(image_path)){ return; }
+		}
+		
+		//search without basename extension
+		if (base_name.split(".").length == 2){
+			foreach(string ext in ext_list){
+				image_path = dir + "/" + base_name.split(".")[0] + ext;
+				if (file_exists(image_path)){ return; }
+			}
+		}
+		
+		//search using fixed names
+		foreach(string ext in ext_list){
+			image_path = dir + "/preview" + ext;
+			if (file_exists(image_path)){ return; }
+		}
+		
+		image_path = ""; //clear if not found
 	}
 }
 
-public class ConkyRC : GLib.Object {
-	//public ConkyTheme theme;
-	public string name = "";
-	public string base_name = "";
-	public string dir = "";
-	public string path = "";
-	public string image_path = "";
-	public bool enabled = false;
+public class ConkyRC : ConkyConfigItem {
+	private string _name = "";
+	private string _path = "";
+	private string _dir = "";
+	private string _image_path = "";
+	private string _base_name = "";
+	private bool _enabled = false;
+
+	
 	public string text = "";
 	
 	private Regex rex_conky_win;
@@ -646,19 +756,26 @@ public class ConkyRC : GLib.Object {
 	private string out_line;
 	private DataInputStream dis_out;
 	private DataInputStream dis_err;
-	private bool is_running = false;
+	private bool thread_is_running = false;
 	private int wait_interval = 0;
 	private uint timer_preview;
 	
 	public ConkyRC(string rc_file_path) {
-		path = rc_file_path;
-		
-		var f = File.new_for_path (rc_file_path);
-		name = path.replace(Environment.get_home_dir(),"~");
-		base_name = f.get_basename();
-		dir = f.get_parent().get_path();
+		init_path(rc_file_path);
 
 		image_path = dir + "/" + base_name + ".png";
+		if (!file_exists(image_path)){
+			if (base_name.split(".").length == 2){
+				image_path = dir + "/" + base_name.split(".")[0] + ".png";
+			}
+			if (!file_exists(image_path)){
+				image_path = dir + "/preview.png";
+			}
+			if (!file_exists(image_path)){
+				//set default path and check everytime if file exists
+				image_path = dir + "/" + base_name + ".png"; 
+			}
+		}
 
 		try{
 			rex_conky_win = new Regex("""\(0x([0-9a-zA-Z]*)\)""");
@@ -668,11 +785,80 @@ public class ConkyRC : GLib.Object {
 		}
 	}
 	
-	public void start_conky(){
+	public override string name{
+		get{
+			return _name;
+		}
+		set{
+			_name = value;
+		}
+	}
+	
+	public override string path{
+		get{
+			return _path;
+		}
+		set{
+			_path = value;
+		}
+	}
+
+	public override string dir{
+		get{
+			return _dir;
+		}
+		set{
+			_dir = value;
+		}
+	}
+	
+	public override string image_path{
+		get{
+			return _image_path;
+		}
+		set{
+			_image_path = value;
+		}
+	}
+	
+	public override bool enabled{
+		get{
+			return _enabled;
+		}
+		set{
+			_enabled = value;
+		}
+	}
+
+	public override string base_name{
+		get{
+			return _base_name;
+		}
+		set{
+			_base_name = value;
+		}
+	}
+	
+	public bool is_running(){
+		string cmd = "conky -c " + path; //without double-quotes
+		string txt = execute_command_sync_get_output ("ps w -C conky"); 
+		//use 'ps ew -C conky' for all users
+		
+		bool active = false;
+		foreach(string line in txt.split("\n")){
+			if (line.index_of(cmd) != -1){
+				active = true;
+				break;
+			}
+		}
+		return active;
+	}
+	
+	public override void start(){
 		string cmd;
 
-		if (enabled){
-			stop_conky();
+		if (is_running()){
+			stop();
 		}
 		
 		//Theme.install();
@@ -690,7 +876,12 @@ public class ConkyRC : GLib.Object {
 		enabled = true; 
 	}
 	
-	public bool stop_conky(){
+	public bool stop_handler(){
+		stop();
+		return true;
+	}
+	
+	public override void stop(){
 		
 		//Note: There may be more than one running instance of the same config
 		//We need to kill all instances
@@ -711,8 +902,6 @@ public class ConkyRC : GLib.Object {
 		//set the flag for immediate effect
 		//will be updated by the refresh_status() timer
 		enabled = false; 
-		
-		return true;
 	}
 	
 	public void read_file(){
@@ -734,7 +923,7 @@ public class ConkyRC : GLib.Object {
 	}
 	
 	public bool generate_preview(){
-		stop_conky();
+		stop();
 		read_file();
 		if (App.capture_background){
 			transparency = "pseudo";
@@ -755,14 +944,14 @@ public class ConkyRC : GLib.Object {
 		}
 		
 		try {
-			is_running = true;
+			thread_is_running = true;
 			Thread.create<void> (generate_preview_thread, true);
 		} catch (ThreadError e) {
-			is_running = false;
+			thread_is_running = false;
 			log_error (e.message);
 		}
 
-		while (is_running){
+		while (thread_is_running){
 			Thread.usleep ((ulong) 200000);
 			gtk_do_events();
 		}
@@ -800,9 +989,9 @@ public class ConkyRC : GLib.Object {
 			    out output_fd,
 			    out error_fd);
 			
-			is_running = true;
+			thread_is_running = true;
 			
-			timer_preview = Timeout.add (10 * 1000, stop_conky);
+			timer_preview = Timeout.add (10 * 1000, stop_handler);
 			
 			//create stream readers
 			UnixInputStream uis_out = new UnixInputStream(output_fd, false);
@@ -825,6 +1014,11 @@ public class ConkyRC : GLib.Object {
 		    } catch (Error e) {
 		        log_error (e.message);
 		    }
+		    
+		    //check if file was generated
+		    if (!file_exists(image_path)){
+				image_path = "";
+			}
 		}
 		catch (Error e) {
 			log_error (e.message);
@@ -851,19 +1045,22 @@ public class ConkyRC : GLib.Object {
 				if (rex_conky_win.match (out_line, 0, out match)){
 					Thread.usleep ((ulong) wait_interval * 1000000);
 					string win_id = match.fetch(1).strip();
+					
+					image_path = dir + "/" + base_name + ".png";
 					string cmd = "import -window 0x%s '%s'".printf(win_id,image_path);
 					execute_command_sync(cmd);
+					
 					Thread.usleep ((ulong) 200000);
 					if (timer_preview > 0){
 						Source.remove(timer_preview);
 						timer_preview = 0;
 					}
-					stop_conky();
+					stop();
 				}
 				out_line = dis_out.read_line (null);  //read next
 			}
 
-			is_running = false;
+			thread_is_running = false;
 			delete_file_temp();
 		}
 		catch (Error e) {
@@ -1366,5 +1563,157 @@ public class ConkyRC : GLib.Object {
 		this.text = new_text;
 		
 		return found;
+	}
+}
+
+public class ConkyTheme : ConkyConfigItem {
+	private string _name = "";
+	private string _path = "";
+	private string _dir = "";
+	private string _image_path = "";
+	private bool _enabled = false;
+	private string _base_name = "";
+
+	public string wallpaper_path = "";
+	public string text = "";
+	
+	public Gee.ArrayList<ConkyRC> conkyrc_list;
+	private Main main_app;
+	
+	public ConkyTheme.empty(string theme_file_path){
+		init_path(theme_file_path);
+		conkyrc_list = new Gee.ArrayList<ConkyRC>();
+	}
+	
+	public ConkyTheme.from_file(string theme_file_path, Main _main_app){
+		main_app = _main_app;
+		init_path(theme_file_path);
+		init_image_path();
+		
+		conkyrc_list = new Gee.ArrayList<ConkyRC>();
+		foreach(string line in read_file(theme_file_path).split("\n")){
+			if (line.has_prefix("\"")){
+				line = line[1:line.length];
+			}
+			if (line.has_suffix("\"")){
+				line = line[0:line.length-1];
+			}
+			if (line.has_suffix(".png")||line.has_suffix(".jpg")||line.has_suffix(".jpeg")){
+				wallpaper_path = line.replace("~", Environment.get_home_dir());
+			}
+			else{
+				string rcpath = line.replace("~", Environment.get_home_dir());
+				if (main_app.conkyrc_map.has_key(rcpath)){
+					conkyrc_list.add(main_app.conkyrc_map[rcpath]);
+				}
+			}
+		}
+	}
+
+	public void init_wallpaper_path(){
+		string[] ext_list = {".png",".jpg",".jpeg"};
+		
+		foreach(string ext in ext_list){
+			wallpaper_path = dir + "/wallpaper" + ext;
+			if (file_exists(wallpaper_path)){ return; }
+		}
+
+		wallpaper_path = "";
+	}
+	
+	public override string name{
+		get{
+			return _name;
+		}
+		set{
+			_name = value;
+		}
+	}
+	
+	public override string path{
+		get{
+			return _path;
+		}
+		set{
+			_path = value;
+		}
+	}
+
+	public override string dir{
+		get{
+			return _dir;
+		}
+		set{
+			_dir = value;
+		}
+	}
+	
+	public override string image_path{
+		get{
+			return _image_path;
+		}
+		set{
+			_image_path = value;
+		}
+	}
+	
+	public override bool enabled{
+		get{
+			return _enabled;
+		}
+		set{
+			_enabled = value;
+		}
+	}
+
+	public override string base_name{
+		get{
+			return _base_name;
+		}
+		set{
+			_base_name = value;
+		}
+	}
+	
+	public void set_wallpaper(){
+		if ((wallpaper_path.length > 0)&&(file_exists(wallpaper_path))){
+			execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
+		}
+	}
+	
+	public string get_current_wallpaper(){
+		string val = execute_command_sync_get_output("gsettings get org.gnome.desktop.background picture-uri");
+		val = val[1:val.length-2]; //remove quotes
+		val = val[7:val.length]; //remove prefix file://
+		return val.strip();
+	}
+
+	public string save_current_wallpaper(){
+		string path = get_current_wallpaper();
+		int ext_index = path.last_index_of(".");
+		wallpaper_path = dir + "/wallpaper" + path[ext_index: path.length].strip();
+		file_copy(path,wallpaper_path);
+		log_msg(_("Wallpaper saved") + ": '%s'".printf(wallpaper_path));
+		return wallpaper_path;
+	}
+
+	public string save_wallpaper(string src_path){
+		int ext_index = src_path.last_index_of(".");
+		wallpaper_path = dir + "/wallpaper" + src_path[ext_index: src_path.length].strip();
+		file_copy(src_path,wallpaper_path);
+		log_msg(_("Wallpaper saved") + ": '%s'".printf(wallpaper_path));
+		return wallpaper_path;
+	}
+
+	public override void start(){
+		main_app.kill_all_conky();
+		foreach(ConkyRC rc in conkyrc_list){
+			rc.start();
+		}
+		set_wallpaper();
+	}
+	
+	public override void stop(){
+		main_app.kill_all_conky();
 	}
 }

@@ -25,11 +25,9 @@ using Gtk;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
-using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
@@ -54,15 +52,8 @@ public class SettingsWindow : Dialog {
 		set_modal (true);
         skip_taskbar_hint = false;
         set_default_size (400, 20);	
+		icon = App.get_app_icon(16);
 		
-		//set app icon
-		try{
-			this.icon = new Gdk.Pixbuf.from_file ("""/usr/share/pixmaps/conky-manager.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	    
 	    folder_list_user = new Gee.ArrayList<string>();
 	    foreach(string path in App.search_folders){
 			folder_list_user.add(path);
@@ -384,7 +375,7 @@ public class SettingsWindow : Dialog {
 	 	//show message
 	 	
 	 	if (files != null){
-			gtk_messagebox_show(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."));
+			gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."),this);
 		}
 	}
 

@@ -25,11 +25,9 @@ using Gtk;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
-using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
@@ -40,6 +38,13 @@ public class MainWindow : Window {
 	private Box vbox_main;
 	private Box vbox_status;
 	private Box hbox_widget;
+	private TreeView tv_widget;
+	private ScrolledWindow sw_widget;
+	private Button btn_add_theme;
+	private ToggleButton btn_preview;
+	private ToggleButton btn_list;
+	private ToggleButton btn_active;
+	private Gtk.Paned pane;
 	
 	//toolbar
 	private Toolbar toolbar;
@@ -49,49 +54,154 @@ public class MainWindow : Window {
 	private ToolButton btn_stop;
 	private ToolButton btn_edit;
 	private ToolButton btn_edit_gui;
+	private ToolButton btn_open_dir;
 	private ToolButton btn_scan;
 	private ToolButton btn_generate_preview;
-	private ToolButton btn_generate_preview_all;
 	private ToolButton btn_kill_all;
 	private ToolButton btn_settings;
 	private ToolButton btn_donate;
 	private ToolButton btn_about;
+	
+	//status
 	private Box hbox_progressbar;
 	private ProgressBar progressbar;
 	private Label lbl_status;
-	private Label lbl_widget_name;
 	private Button btn_cancel_action;
 	private ScrolledWindow sw_preview;
 	private EventBox ebox_preview;
 	
 	//window dimensions
-	private int def_width = 600;
-	private int def_height = 500;
 	private bool is_running;
 	private bool is_aborted;
 	private ConkyRC current_rc;
 	private uint timer_init;
+	private Gee.ArrayList<ConkyRC> rclist_generate;
 	
 	public MainWindow() {
 		title = AppName + " v" + AppVersion;// + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
         window_position = WindowPosition.CENTER;
         modal = true;
-        set_default_size(def_width, def_height);
-
-        //set app icon
-		try{
-			this.icon = new Gdk.Pixbuf.from_file (App.share_folder + """/pixmaps/conky-manager.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-
+        set_default_size(App.window_width, App.window_height);
+		icon = App.get_app_icon(16);
+		
 		//vbox_main
         vbox_main = new Box (Orientation.VERTICAL, 6);
 		add(vbox_main);
-
-        //toolbar ---------------------------------------------------
+		
+		//toolbar
+        init_toolbar();
         
+        //hbox_widget
+        hbox_widget = new Box (Orientation.HORIZONTAL, 6);
+        hbox_widget.margin_left = 3;
+        hbox_widget.margin_right = 3;
+		vbox_main.add(hbox_widget);
+
+		//lbl_type
+		Label lbl_type = new Label (_("Browse:"));
+		hbox_widget.add(lbl_type);
+
+		//cmb_type
+		cmb_type = new ComboBox();
+		hbox_widget.pack_start (cmb_type, false, true, 0);
+
+		CellRendererText cell_type = new CellRendererText();
+        cmb_type.pack_start(cell_type, false );
+        cmb_type.set_cell_data_func (cell_type, (cell_type, cell, model, iter) => {
+			string type;
+			model.get (iter, 0, out type,-1);
+			(cell as Gtk.CellRendererText).text = type;
+		});
+		
+		cmb_type.changed.connect(cmb_type_changed);
+		
+		btn_add_theme = new Button.with_label("");
+		btn_add_theme.set_size_request(10,-1);
+		btn_add_theme.set_image(new Image.from_stock ("gtk-add", IconSize.MENU));
+		btn_add_theme.no_show_all = true;
+		btn_add_theme.set_tooltip_text(_("Saving running widgets as new theme"));
+		hbox_widget.pack_start (btn_add_theme, false, true, 0);
+		
+		btn_add_theme.clicked.connect(btn_add_theme_clicked);
+
+		//lbl_expand
+		Label lbl_expand = new Label ("");
+		lbl_expand.hexpand = true;
+		hbox_widget.add(lbl_expand);
+		
+		//btn_preview
+		btn_preview = new ToggleButton.with_label(_("Preview"));
+		btn_preview.active = App.show_preview;
+		btn_preview.set_tooltip_text(_("Toggle Preview"));
+		hbox_widget.pack_start (btn_preview, false, true, 0);
+
+		//btn_list
+		btn_list = new ToggleButton.with_label(_("List"));
+		btn_list.active = App.show_list;
+		btn_list.set_tooltip_text(_("Toggle List"));
+		hbox_widget.pack_start (btn_list, false, true, 0);
+		
+		//btn_active
+		btn_active = new ToggleButton.with_label(_("Active"));
+		btn_active.active = false;
+		btn_active.set_tooltip_text(_("Show Active Widgets Only"));
+		hbox_widget.pack_start (btn_active, false, true, 0);
+
+		btn_preview.toggled.connect(btn_preview_toggled);
+		btn_list.toggled.connect(btn_list_toggled);
+		btn_active.toggled.connect(btn_active_toggled);
+		
+		//status
+        vbox_status = new Box (Orientation.VERTICAL, 3);
+        vbox_status.no_show_all = true;
+        vbox_status.margin = 3;
+		vbox_main.add(vbox_status);
+
+		lbl_status = new Label ("");
+		lbl_status.halign = Align.START;
+		lbl_status.max_width_chars = 100;
+		lbl_status.ellipsize = Pango.EllipsizeMode.END;
+		vbox_status.pack_start (lbl_status, false, true, 0);
+		
+		//progressbar
+        hbox_progressbar = new Box (Orientation.HORIZONTAL, 6);
+		vbox_status.add(hbox_progressbar);
+
+		progressbar = new ProgressBar();
+		progressbar.no_show_all = true;
+		progressbar.set_size_request(-1,20);
+		hbox_progressbar.pack_start (progressbar, true, true, 0);
+
+		btn_cancel_action = new Gtk.Button.with_label (" " + _("Stop") + " ");
+		btn_cancel_action.set_size_request(50,-1);
+		btn_cancel_action.set_tooltip_text(_("Stop"));
+		hbox_progressbar.pack_start (btn_cancel_action, false, false, 0);
+		
+		pane = new Gtk.Paned (Gtk.Orientation.VERTICAL);
+		pane.position = App.pane_position;
+		vbox_main.add(pane);
+		
+		pane.notify["position"].connect (() => {
+			App.pane_position = pane.position;
+		});
+		
+		//list_view
+		init_list_view();
+		
+		//preview_area
+		init_preview_area();
+
+		//combo boxes
+		cmb_type_refresh();
+
+		//keyboard_shortcuts
+		init_keyboard_shortcuts();
+
+		timer_init = Timeout.add(100, init_delayed);
+		
+	}
+	
+	private void init_toolbar(){
         //toolbar
 		toolbar = new Gtk.Toolbar ();
 		toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
@@ -158,7 +268,16 @@ public class MainWindow : Window {
         toolbar.add(btn_edit);
 
         btn_edit.clicked.connect(btn_edit_clicked);
-        
+
+		//btn_open_dir
+		btn_open_dir = new Gtk.ToolButton.from_stock ("gtk-directory");
+		btn_open_dir.is_important = false;
+		btn_open_dir.label = _("Open Folder");
+		btn_open_dir.set_tooltip_text (_("Open Theme Folder"));
+        toolbar.add(btn_open_dir);
+
+        btn_open_dir.clicked.connect(btn_open_dir_clicked);
+
         //separator1
 		var separator2 = new Gtk.SeparatorToolItem();
 		separator2.set_draw(true);
@@ -168,7 +287,7 @@ public class MainWindow : Window {
 		btn_scan = new Gtk.ToolButton.from_stock ("gtk-refresh");
 		btn_scan.is_important = false;
 		btn_scan.label = _("Refresh");
-		btn_scan.set_tooltip_text (_("Reload themes"));
+		btn_scan.set_tooltip_text (_("Search for new themes"));
         toolbar.add(btn_scan);
 
         btn_scan.clicked.connect(btn_scan_clicked);
@@ -177,23 +296,12 @@ public class MainWindow : Window {
 		btn_generate_preview = new Gtk.ToolButton.from_stock ("gtk-missing-image");
 		btn_generate_preview.is_important = false;
 		btn_generate_preview.label = _("Generate Preview");
-		btn_generate_preview.set_tooltip_text (_("Generate preview image for this widget"));
+		btn_generate_preview.set_tooltip_text (_("Generate preview images"));
         toolbar.add(btn_generate_preview);
-		
-		btn_generate_preview.set_icon_widget(new Gtk.Image.from_file(App.share_folder + "/conky-manager/images/image-generate24x24.png"));
+
+		btn_generate_preview.icon_widget = App.get_shared_icon("","image-generate24x24.png",24);
 		
         btn_generate_preview.clicked.connect(btn_generate_preview_clicked);
-
-		//btn_generate_preview_all
-		btn_generate_preview_all = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_generate_preview_all.is_important = false;
-		btn_generate_preview_all.label = _("Generate Missing Previews");
-		btn_generate_preview_all.set_tooltip_text (_("Generate missing preview images for all widgets"));
-        toolbar.add(btn_generate_preview_all);
-		
-		btn_generate_preview_all.set_icon_widget(new Gtk.Image.from_file(App.share_folder + "/conky-manager/images/image-generate-all24x24.png"));
-		
-        btn_generate_preview_all.clicked.connect(btn_generate_preview_all_clicked);
 
 		//btn_kill_all
 		btn_kill_all = new Gtk.ToolButton.from_stock ("gtk-cancel");
@@ -222,6 +330,7 @@ public class MainWindow : Window {
         //btn_donate
 		btn_donate = new Gtk.ToolButton.from_stock ("gtk-dialog-info");
 		btn_donate.is_important = false;
+		btn_donate.icon_widget = App.get_shared_icon("donate","donate.svg",32);
 		btn_donate.label = _("Donate");
 		btn_donate.set_tooltip_text (_("Donate"));
         toolbar.add(btn_donate);
@@ -236,99 +345,80 @@ public class MainWindow : Window {
         toolbar.add(btn_about);
 
         btn_about.clicked.connect(btn_about_clicked);
-        
-        //hbox_widget
-        hbox_widget = new Box (Orientation.HORIZONTAL, 6);
-        hbox_widget.margin_left = 3;
-        hbox_widget.margin_right = 3;
-		vbox_main.add(hbox_widget);
-
-		//lbl_widget_name
-		lbl_widget_name = new Label ("");
-		lbl_widget_name.use_markup = true;
-		lbl_widget_name.halign = Align.START;
-		lbl_widget_name.max_width_chars = 100;
-		lbl_widget_name.ellipsize = Pango.EllipsizeMode.END;
-		hbox_widget.pack_start (lbl_widget_name, true, true, 0);
+	}
+	
+	private void init_list_view(){
+		//list view
+		tv_widget = new TreeView();
+		tv_widget.get_selection().mode = SelectionMode.SINGLE;
+		tv_widget.headers_visible = false;
+		tv_widget.activate_on_single_click = true;
+		tv_widget.set_rules_hint (true);
 		
-		//cmb_type
-		cmb_type = new ComboBox();
-		hbox_widget.pack_start (cmb_type, false, true, 0);
+		sw_widget = new ScrolledWindow(null, null);
+		sw_widget.set_shadow_type (ShadowType.ETCHED_IN);
+		sw_widget.add (tv_widget);
+		sw_widget.expand = true;
+		pane.pack1(sw_widget,true,true);
 
-		CellRendererText cell_type = new CellRendererText();
-        cmb_type.pack_start(cell_type, false );
-        cmb_type.set_cell_data_func (cell_type, (cell_type, cell, model, iter) => {
-			string type;
-			model.get (iter, 0, out type,-1);
-			(cell as Gtk.CellRendererText).text = type;
+		TreeViewColumn col_widget = new TreeViewColumn();
+		col_widget.title = " " + _("Enable") + " ";
+		tv_widget.append_column(col_widget);
+		
+		CellRendererToggle cell_widget_enable = new CellRendererToggle ();
+		cell_widget_enable.activatable = true;
+		col_widget.pack_start (cell_widget_enable, false);
+		
+		col_widget.set_cell_data_func (cell_widget_enable, (cell_layout, cell, model, iter)=>{
+			bool val;
+			model.get (iter, 0, out val, -1);
+			(cell as Gtk.CellRendererToggle).active = val;
 		});
+		
+		cell_widget_enable.toggled.connect (cell_widget_enable_toggled);
 
-		//vbox_status
-        vbox_status = new Box (Orientation.VERTICAL, 3);
-        vbox_status.no_show_all = true;
-        vbox_status.margin = 3;
-		vbox_main.add(vbox_status);
-
-		//lbl_status
-		lbl_status = new Label ("");
-		lbl_status.halign = Align.START;
-		lbl_status.max_width_chars = 100;
-		lbl_status.ellipsize = Pango.EllipsizeMode.END;
-		vbox_status.pack_start (lbl_status, false, true, 0);
+		CellRendererText cell_widget_name = new CellRendererText ();
+		col_widget.pack_start (cell_widget_name, false);
 		
-		//hbox_progressbar
-        hbox_progressbar = new Box (Orientation.HORIZONTAL, 6);
-		vbox_status.add(hbox_progressbar);
+		col_widget.set_cell_data_func (cell_widget_name, (cell_layout, cell, model, iter)=>{
+			ConkyRC rc;
+			model.get (iter, 1, out rc, -1);
+			(cell as Gtk.CellRendererText).text = rc.name;
+		});
 		
-		//progressbar
-		progressbar = new ProgressBar();
-		progressbar.no_show_all = true;
-		progressbar.set_size_request(-1,20);
-		//progressbar.pulse_step = 0.2;
-		hbox_progressbar.pack_start (progressbar, true, true, 0);
-		
-		//btn_cancel_action
-		btn_cancel_action = new Gtk.Button.with_label (" " + _("Stop") + " ");
-		btn_cancel_action.set_size_request(50,-1);
-		btn_cancel_action.set_tooltip_text(_("Stop"));
-		hbox_progressbar.pack_start (btn_cancel_action, false, false, 0);
-		
-		//sw_preview
+		tv_widget.row_activated.connect(tv_widget_row_activated);
+	}
+	
+	private void init_preview_area(){
 		sw_preview = new ScrolledWindow(null, null);
 		sw_preview.set_shadow_type(ShadowType.ETCHED_IN);
 		sw_preview.expand = true;
-		vbox_main.add(sw_preview);
+		pane.pack2(sw_preview,true,true);
+		
+		string tt = _("Use the keyboard arrow keys to browse.\nPress ENTER to start and stop.");
+		sw_preview.set_tooltip_text(tt);
 
-		//img_preview
 		img_preview = new Image();
 		ebox_preview = new EventBox();
 		ebox_preview.add(img_preview);
 		sw_preview.add(ebox_preview);
-		
-		//tooltip
-		string tt = _("Use the Arrow Keys to Browse.\nPress ENTER to Start and Stop.");
-		sw_preview.set_tooltip_text(tt);
-		
-		//initialize
-		cmb_type_refresh();
-		
-		//show first widget
-		show_preview(selected_widget());
-		
+	}
+	
+	private void init_keyboard_shortcuts(){
 		this.key_press_event.connect ((w, event) => {
 
 			if (!toolbar.sensitive) { return false; }
-			
-			if (event.keyval == 65361) {
+
+			if ((event.keyval == 65361)||(event.keyval == 65362)) {
 				btn_prev_clicked();
-				return true;
+				return false;
 			}
-			else if (event.keyval == 65363) {
+			else if ((event.keyval == 65363)||(event.keyval == 65364)){
 				btn_next_clicked();
-				return true;
+				return false;
 			}
 			else if (event.keyval == 65293) {
-				if (selected_widget().enabled){
+				if (selected_item().enabled){
 					btn_stop_clicked();
 				}
 				else{
@@ -339,108 +429,237 @@ public class MainWindow : Window {
 
 			return false;
 		});
-
-		timer_init = Timeout.add(100, initialize_themes);
-		
 	}
 	
-	private bool initialize_themes(){
+	private bool init_delayed(){
 		Source.remove(timer_init);
+		
+		//call handlers
+		btn_preview_toggled();
+		btn_list_toggled();
+		cmb_type_changed();
+		
+		//scan for themes on first run
 		if (App.conkyrc_list.size == 0){
 			btn_scan_clicked();
 		}
+		
+		//refresh list and preview area
+		reload_themes();
+		
 		return true;
 	}
 	
-	//actions
+	private void reload_themes(){
+		
+		double vpos = sw_widget.vadjustment.value;
+		
+		tv_widget_refresh();
+		show_preview(selected_item());
+		
+		if (btn_preview.active){
+			sw_preview.visible = true;
+		}
+		
+		if (btn_list.active){
+			sw_widget.visible = true;
+		}
 
+		sw_widget.vadjustment.value = vpos;
+	}
+	
+	//actions
+	
+	private void btn_preview_toggled(){
+		App.show_preview = btn_preview.active;
+		sw_preview.visible = App.show_preview;
+		if ((!btn_list.active)&&(!btn_preview.active)){
+			btn_list.active = true;
+		}
+	}
+
+	private void btn_list_toggled(){
+		App.show_list = btn_list.active;
+		sw_widget.visible = App.show_list;
+		if ((!btn_list.active)&&(!btn_preview.active)){
+			btn_preview.active = true;
+		}
+	}
+
+	private void btn_active_toggled(){
+		App.show_active = btn_active.active;
+		reload_themes();
+	}
+	
 	private void cmb_type_refresh(){
 		ListStore store = new ListStore(1, typeof(string));
 
 		TreeIter iter;
 		store.append(out iter);
-		store.set (iter, 0, "Widget");
+		store.set (iter, 0, "Widgets");
 		store.append(out iter);
-		store.set (iter, 0, "Theme");
+		store.set (iter, 0, "Themes");
 			
 		cmb_type.set_model (store);
 		cmb_type.active = 0;
 	}
 
-	private void btn_prev_clicked(){
-		if (App.selected_widget_index > 0){
-			App.selected_widget_index--;
-		}
-		show_preview(selected_widget());
+	private void cmb_type_changed(){
+		btn_add_theme.visible = (cmb_type.active == 1);
+		btn_active.visible = (cmb_type.active == 0);
+		reload_themes();
 	}
 
-	private void btn_next_clicked(){
-		if (App.selected_widget_index < (App.conkyrc_list.size - 1)){
-			App.selected_widget_index++;
-		}
-		show_preview(selected_widget());
-	}
-	
-	private void btn_start_clicked(){
-		ConkyRC rc = selected_widget();
-		rc.start_conky();
-		show_preview(rc);
-	}
-	
-	private void btn_stop_clicked(){
-		ConkyRC rc = selected_widget();
-		rc.stop_conky();
-		show_preview(rc);
-	}
-	
-	private void btn_edit_gui_clicked(){
-		ConkyRC rc = selected_widget();
+	private void btn_add_theme_clicked(){
+		App.refresh_conkyrc_status();
 		
-		var dialog = new EditWindow(rc);
-		dialog.set_transient_for(this);
+		var dialog = new CreateThemeWindow(null);
+		dialog.set_transient_for (this);
 		dialog.show_all();
 		dialog.run();
 		dialog.destroy();
-	}
-
-	private void btn_edit_clicked(){
-		ConkyRC rc = selected_widget();
 		
-		exo_open_textfile(rc.path);
+		reload_themes();
+	}
+	
+	private void btn_prev_clicked(){
+		if (App.selected_widget_index > 0){
+			App.selected_widget_index--;
+			TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
+			tv_widget.get_selection().select_path(path);
+		}
+		show_preview(selected_item());
+	}
+	
+	private void btn_next_clicked(){
+		if (App.selected_widget_index < (App.conkyrc_list.size - 1)){
+			App.selected_widget_index++;
+			TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
+			tv_widget.get_selection().select_path(path);
+		}
+		show_preview(selected_item());
+	}
+	
+	private void btn_start_clicked(){
+		ConkyConfigItem item = selected_item();
+		item.start();
+		show_preview(item);
+		
+		TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
+		TreeIter iter;
+		bool enabled;
+		
+		var model = (ListStore) tv_widget.model;
+		model.get_iter(out iter, path);
+		model.get(iter, 0, out enabled, -1);
+		enabled = true;
+		model.set(iter, 0, enabled, -1);
+	}
+	
+	private void btn_stop_clicked(){
+		ConkyConfigItem item  = selected_item();
+		item.stop();
+		show_preview(item);
+
+		TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
+		TreeIter iter;
+		bool enabled;
+		
+		var model = (ListStore) tv_widget.model;
+		model.get_iter(out iter, path);
+		model.get(iter, 0, out enabled, -1);
+		enabled = false;
+		model.set(iter, 0, enabled, -1);
+	}
+	
+	private void btn_edit_gui_clicked(){
+		ConkyConfigItem item = selected_item();
+		
+		if (item is ConkyRC){
+			var dialog = new EditWindow((ConkyRC) item);
+			dialog.set_transient_for(this);
+			dialog.show_all();
+			dialog.run();
+			dialog.destroy();
+		}
+		else{
+			App.refresh_conkyrc_status();
+			
+			var dialog = new CreateThemeWindow((ConkyTheme)selected_item());
+			dialog.set_transient_for (this);
+			dialog.show_all();
+			dialog.run();
+			dialog.destroy();
+		}
+	}
+	
+	private void btn_edit_clicked(){
+		ConkyConfigItem item = selected_item();
+		if (item != null) { exo_open_textfile(item.path); };
 	}
 
+	private void btn_open_dir_clicked(){
+		ConkyConfigItem item = selected_item();
+		if (item != null) { exo_open_folder(item.dir); };
+	}
+	
 	private void btn_scan_clicked(){
 		scan_themes();
 	}
 
 	private void btn_generate_preview_clicked(){
-		ConkyRC rc = selected_widget();
+		//get options
+		var dialog = new GeneratePreviewWindow();
+		dialog.set_transient_for (this);
+		dialog.show_all();
+		dialog.optGenerateCurrent.sensitive = (selected_item() != null);
 		
-		toolbar.sensitive = false;
-		hbox_widget.sensitive = false;
-		gtk_set_busy(true, this);
+		int response = dialog.run();
+		string action = dialog.action;
+		dialog.destroy();
 		
-		rc.generate_preview();
+		//clear list
+		rclist_generate = new Gee.ArrayList<ConkyRC>();
 		
-		toolbar.sensitive = true;
-		hbox_widget.sensitive = true;
-		gtk_set_busy(false, this);
-		
-		show_preview(rc);
-	}
-
-	private void btn_generate_preview_all_clicked(){
+		//make list
+		if (response == Gtk.ResponseType.OK){
+			switch(action){
+				case "current":
+					rclist_generate.add((ConkyRC)selected_item());
+					break;
+				case "missing":
+					foreach(ConkyRC rc in App.conkyrc_list){
+						if (!file_exists(rc.image_path)){
+							rclist_generate.add(rc);
+						}
+					}
+					break;
+				case "all":
+					foreach(ConkyRC rc in App.conkyrc_list){
+						rclist_generate.add(rc);
+					}
+					break;
+			}
+		}
+		else{ 
+			return; //cancel
+		}
 
 		progress_begin("Generating previews...");
-		sw_preview.visible = true;
-		is_aborted = false;
-		img_preview.pixbuf = null;
 		
-		btn_cancel_action.clicked.connect(btn_cancel_action_generate_preview_all);
+		//change view
+		bool show_preview = btn_preview.active;
+		bool show_list = btn_list.active;
+		btn_preview.active = true;
+		btn_list.active = false;
+		
+		is_aborted = false;
+
+		btn_cancel_action.clicked.connect(btn_cancel_action_generate_preview);
 		
 		try {
 			is_running = true;
-			Thread.create<void> (btn_generate_preview_all_clicked_thread, true);
+			Thread.create<void> (btn_generate_preview_clicked_thread, true);
 		} catch (ThreadError e) {
 			is_running = false;
 			log_error (e.message);
@@ -451,45 +670,78 @@ public class MainWindow : Window {
 			gtk_do_events();
 		}
 				
-		btn_cancel_action.clicked.disconnect(btn_cancel_action_generate_preview_all);
+		btn_cancel_action.clicked.disconnect(btn_cancel_action_generate_preview);
 		
 		progress_hide();
+		
+		//restore selected view
+		btn_preview.active = show_preview;
+		btn_list.active = show_list;
+		
+		reload_themes();
 	}
 	
-	private void btn_generate_preview_all_clicked_thread(){
-		//get total count
-		int count_total = 0;
-		foreach(ConkyRC rc in App.conkyrc_list){
-			if (!file_exists(rc.image_path)){
-				count_total++;
-			}
-		}
+	private void btn_generate_preview_clicked_thread(){
+		generate_previews();
+		is_running = false;
+	}
+	
+	private void generate_previews(){
+		App.kill_all_conky();
 		
+		int count_total = rclist_generate.size;
 		int count = 0;
-		foreach(ConkyRC rc in App.conkyrc_list){
+		
+		foreach(ConkyRC rc in rclist_generate){
 			
 			if (is_aborted) { break; }
 			
-			if (!file_exists(rc.image_path)){
-				current_rc = rc;
-				rc.generate_preview();
-				current_rc = null;
-				
-				count++;
-				progressbar.fraction = count / (count_total * 1.0);
+			current_rc = rc;
+			rc.generate_preview();
+			current_rc = null;
+			
+			count++;
+			progressbar.fraction = count / (count_total * 1.0);
 
-				show_preview(rc);
-				
-				lbl_status.label = _("Generating Previews") + " [%d OF %d]\n%s".printf(count, count_total, rc.name);
-				gtk_do_events();
-			}
+			show_preview(rc);
+			
+			lbl_status.label = _("Generating Previews") + " [%d OF %d]\n%s".printf(count, count_total, rc.name);
+			gtk_do_events();
 		}
 		
-		is_running = false;
+		foreach(ConkyRC rc in App.conkyrc_list){
+			if (rc.enabled){
+				rc.start();
+			}
+		}
+	}
+	
+	private void btn_cancel_action_scan(){
+		App.load_themes_and_widgets_cancel();
+	}
+	
+	private void btn_cancel_action_generate_preview(){
+		is_aborted = true;
+		if (current_rc != null){
+			current_rc.stop();
+		}
 	}
 	
 	private void btn_kill_all_clicked(){
 		App.kill_all_conky();
+		
+		ListStore model = (ListStore)tv_widget.model;
+		TreeIter iter;
+		bool enabled;
+		ConkyConfigItem item;
+		bool iterExists = model.get_iter_first (out iter);
+		while (iterExists){
+			model.get (iter, 0, out enabled, 1, out item, -1);
+			enabled = false;
+			model.set (iter, 0, enabled, -1);
+			
+			iterExists = model.iter_next (ref iter);
+		}
 	}
 	
 	private void btn_settings_clicked(){
@@ -501,7 +753,7 @@ public class MainWindow : Window {
 	}
 
 	public void show_donation_window(bool on_exit){
-		var dialog = new DonationWindow(on_exit);
+		var dialog = new DonationWindow();
 		dialog.set_transient_for(this);
 		dialog.show_all();
 		dialog.run();
@@ -525,13 +777,7 @@ public class MainWindow : Window {
 		dialog.comments = _("Utility for managing Conky configuration files");
 		dialog.copyright = "Copyright © 2014 Tony George (teejee2008@gmail.com)";
 		dialog.version = AppVersion;
-		
-		try{
-			dialog.logo = new Gdk.Pixbuf.from_file (App.share_folder + """/pixmaps/conky-manager.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
+		dialog.logo = App.get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.wrap_license = true;
@@ -548,31 +794,30 @@ public class MainWindow : Window {
 		dialog.present ();
 	}
 	
-	private void show_preview(ConkyRC? rc){
-		sw_preview.visible = true;
-		img_preview.visible = true;
+	private void show_preview(ConkyConfigItem? item){
 		img_preview.pixbuf = null;
 		
-		if (rc == null){
+		if (item == null){
 			img_preview.pixbuf = null;
 			return;
 		}
 		
-		lbl_widget_name.label = ((rc.enabled) ? "<span font-weight='bold'>[Running] </span>" : "") + " %d OF %d | ".printf(App.selected_widget_index + 1, App.conkyrc_list.size) + escape_html(rc.name);
-		
+		//var list = selected_list();
+		//lbl_widget_name.label = ((item.enabled) ? "<span font-weight='bold'>[Running] </span>" : "") + "[%d|%d] ".printf(App.selected_widget_index + 1, list.size) + escape_html(item.name);
+
 		int screen_width = Gdk.Screen.width();
 		int screen_height = Gdk.Screen.height();
 
-		if ((rc.image_path.length > 0) && file_exists(rc.image_path)){
+		if ((item.image_path.length > 0) && file_exists(item.image_path)){
 			try{
-				Gdk.Pixbuf px = new Gdk.Pixbuf.from_file(rc.image_path);
+				Gdk.Pixbuf px = new Gdk.Pixbuf.from_file(item.image_path);
 
 				//scale down the image if it is very large
 				if ((px.width > (screen_width * 1.5)) || (px.height > (screen_height * 1.5))){
 					//scale down 50%
 					int scaled_width = px.width / 2;
 					int scaled_height = px.height / 2;
-					px = new Gdk.Pixbuf.from_file_at_scale(rc.image_path,scaled_width,scaled_height,true);
+					px = new Gdk.Pixbuf.from_file_at_scale(item.image_path,scaled_width,scaled_height,true);
 					img_preview.pixbuf = px;
 				}
 				else{
@@ -590,8 +835,7 @@ public class MainWindow : Window {
 
 	private void scan_themes(){
 		progress_begin(_("Searching directories..."));
-		resize(def_width,30);
-		
+
 		btn_cancel_action.clicked.connect(btn_cancel_action_scan);
 		
 		try {
@@ -611,29 +855,16 @@ public class MainWindow : Window {
 		btn_cancel_action.clicked.disconnect(btn_cancel_action_scan);
 		
 		progress_hide();
-		resize(def_width,def_height);
 
-		if (App.selected_widget_index < App.conkyrc_list.size){
-			show_preview(selected_widget());
-		}
+		reload_themes();
 	}
 	
 	private void scan_themes_thread(){
 		App.load_themes_and_widgets();
+		reload_themes();
 		is_running = false;
 	}
 
-	private void btn_cancel_action_scan(){
-		App.load_themes_and_widgets_cancel();
-	}
-	
-	private void btn_cancel_action_generate_preview_all(){
-		is_aborted = true;
-		if (current_rc != null){
-			current_rc.stop_conky();
-		}
-	}
-	
 	private void progress_begin(string message = ""){
 		toolbar.sensitive = false;
 		hbox_widget.visible = false;
@@ -670,17 +901,101 @@ public class MainWindow : Window {
 		gtk_do_events();
 	}
 	
-	private ConkyRC? selected_widget(){
-		if (App.selected_widget_index >= App.conkyrc_list.size){
+	private ConkyConfigItem? selected_item(){
+		var list = selected_list();
+		
+		if (App.selected_widget_index >= list.size){
 			App.selected_widget_index = 0;
 		}
 		
-		if (App.selected_widget_index < App.conkyrc_list.size){
-			return App.conkyrc_list[App.selected_widget_index];
+		if (App.selected_widget_index < list.size){
+			return list[App.selected_widget_index];
 		}
 		else{
 			return null;
 		}
+	}
+	
+	private Gee.ArrayList<ConkyConfigItem> selected_list(){
+		Gee.ArrayList<ConkyConfigItem> list = null;
+		if (cmb_type.active == 0){
+			list = App.conkyrc_list;
+		}
+		else{
+			list = App.conkytheme_list;
+		}
+		return list;
+	}
+	
+	//list view handlers
+
+	private void tv_widget_refresh(){
+		ListStore model = null;
 		
+		model = new ListStore(2, typeof(bool), typeof(ConkyConfigItem));
+		
+		Gee.ArrayList<ConkyConfigItem> list = null;
+		if (cmb_type.active == 0){
+			list = App.conkyrc_list;
+		}
+		else{
+			list = App.conkytheme_list;
+		}
+		
+		foreach(ConkyConfigItem item in list){
+			if ((cmb_type.active == 0)&&(App.show_active)){
+				if (!item.enabled) { 
+					continue; 
+				}
+			}
+			
+			TreeIter iter;
+			model.append(out iter);
+			model.set(iter, 0, item.enabled);
+			model.set(iter, 1, item);
+		}
+
+		tv_widget.set_model(model);
+		tv_widget.columns_autosize();
+	}
+	
+	private void tv_widget_row_activated (TreePath path, TreeViewColumn column){
+		TreeIter iter;
+		ListStore model = (ListStore)tv_widget.model;
+		bool enabled;
+		
+		ConkyConfigItem item;
+		model.get_iter (out iter, path);
+		model.get (iter, 0, out enabled, 1, out item, -1);
+
+		int index = -1;
+		foreach(ConkyConfigItem item2 in selected_list()){
+			index++;
+			if (item2.path == item.path){
+				break;
+			}
+		}
+		
+		App.selected_widget_index = index;
+		show_preview(selected_item());
+	}
+	
+	private void cell_widget_enable_toggled (string path){
+		TreeIter iter;
+		ListStore model = (ListStore)tv_widget.model;
+		bool enabled;
+		ConkyConfigItem item;
+		
+		model.get_iter_from_string (out iter, path);
+		model.get (iter, 0, out enabled, 1, out item, -1);
+		enabled = !enabled;
+		model.set (iter, 0, enabled);
+		
+		if (enabled){
+			item.start();
+		}
+		else{
+			item.stop();
+		}
 	}
 }

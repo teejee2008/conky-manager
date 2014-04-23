@@ -25,11 +25,9 @@ using Gtk;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
-using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
@@ -69,17 +67,10 @@ public class EditWindow : Dialog {
 		set_modal (true);
         skip_taskbar_hint = true;
         set_default_size (400, 20);	
+		icon = App.get_app_icon(16);
 		
 		conkyrc = conkyrc_edit;
-		
-		//set app icon
-		try{
-			this.icon = new Gdk.Pixbuf.from_file ("""/usr/share/pixmaps/conky-manager.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	    
+
 	    Box vbox_main = get_content_area();
 	    
         CellRendererText textCell;
@@ -547,7 +538,7 @@ public class EditWindow : Dialog {
 
 		ConkyRC conf = conkyrc;
 		
-		conf.stop_conky();
+		conf.stop();
 		conf.read_file();
 		
 		debug("-----------------------------------------------------");
@@ -582,7 +573,7 @@ public class EditWindow : Dialog {
 		
 		debug("-----------------------------------------------------");
 		
-		conf.start_conky();
+		conf.start();
 		
 		gtk_set_busy(false, this);
 	}
