@@ -507,6 +507,7 @@ public class MainWindow : Window {
 	private void cmb_type_changed(){
 		btn_add_theme.visible = (cmb_type.active == 1);
 		btn_active.visible = (cmb_type.active == 0);
+		btn_generate_preview.visible = (cmb_type.active == 0);
 		reload_themes();
 	}
 

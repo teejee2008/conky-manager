@@ -132,13 +132,7 @@ public class CreateThemeWindow : Dialog {
 		if (th != null){
 			if (th.wallpaper_path.length > 0){
 				cmb_wallpaper.active = 2;
-
-				try{
-					fcb_wallpaper.set_file(File.new_for_path(th.wallpaper_path));
-				}
-				catch(Error e){
-					log_error(e.message);
-				}
+				fcb_wallpaper.select_filename(th.wallpaper_path);
 			}
 		}
 		
@@ -326,7 +320,12 @@ public class CreateThemeWindow : Dialog {
 			txt += th.save_current_wallpaper().replace(Environment.get_home_dir(),"~");
 		}
 		else if ((cmb_wallpaper.active == 2)&&(file_exists(fcb_wallpaper.get_filename()))){
-			txt += th.save_wallpaper(fcb_wallpaper.get_filename()).replace(Environment.get_home_dir(),"~");
+			if (fcb_wallpaper.get_filename() != th.wallpaper_path){
+				txt += th.save_wallpaper(fcb_wallpaper.get_filename()).replace(Environment.get_home_dir(),"~");
+			}
+			else{
+				txt += th.wallpaper_path;
+			}
 		}
 
 		write_file(th.path,txt);
