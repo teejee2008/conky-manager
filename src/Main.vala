@@ -104,7 +104,7 @@ public class Main : GLib.Object {
 		string home = Environment.get_home_dir();
 		app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		share_folder = "/usr/share";
-		data_dir = home + "/conky-manager";
+		data_dir = home + "/.conky";
 		app_conf_path = home + "/.config/conky-manager.json";
 		search_folders = new Gee.ArrayList<string>();
 		
@@ -128,7 +128,7 @@ public class Main : GLib.Object {
 	public void save_app_config(){
 		var config = new Json.Object();
 
-		config.set_string_member("data_dir", data_dir);
+		//config.set_string_member("data_dir", data_dir);
 		config.set_string_member("capture_background", capture_background.to_string());
 		config.set_string_member("selected_widget_index", selected_widget_index.to_string());
 		config.set_string_member("show_preview", show_preview.to_string());
@@ -178,10 +178,10 @@ public class Main : GLib.Object {
         var node = parser.get_root();
         var config = node.get_object();
         
-        string val = json_get_string(config,"data_dir","");
-        if (val.length > 0){
-			data_dir = val;
-		}
+        //string val = json_get_string(config,"data_dir","");
+        //if (val.length > 0){
+		//	data_dir = val;
+		//}
 		
 		capture_background = json_get_bool(config,"capture_background",false);
 		selected_widget_index = json_get_int(config,"selected_widget_index",0);

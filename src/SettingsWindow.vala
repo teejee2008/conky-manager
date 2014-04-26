@@ -36,7 +36,7 @@ public class SettingsWindow : Dialog {
 	private Notebook notebook;
 	private Switch switch_startup;
 	private Switch switch_capture_bg;
-	private FileChooserButton fcb_theme_dir;
+	//private FileChooserButton fcb_theme_dir;
 	private Button btn_install_theme_pack;
 	private Button btn_add_folder;
 	private Button btn_remove_folder;
@@ -72,36 +72,12 @@ public class SettingsWindow : Dialog {
 		
 		//vbox_options
         Box vbox_options = new Box (Orientation.VERTICAL, 6);
-		vbox_options.margin = 6;
+		vbox_options.margin = 12;
 
         //lbl_options
 		Label lbl_options = new Gtk.Label(_("General"));
 
 		notebook.append_page (vbox_options, lbl_options);
-
-        //lbl_header_theme_dir
-		Label lbl_header_theme_dir = new Gtk.Label("<b>" + _("Theme Directory") + "</b>");
-		lbl_header_theme_dir.set_use_markup(true);
-		lbl_header_theme_dir.xalign = (float) 0.0;
-		lbl_header_theme_dir.margin_bottom = 6;
-		vbox_options.add(lbl_header_theme_dir);
-		
-		// fcb_theme_dir
-		fcb_theme_dir = new FileChooserButton (_("Theme Directory"), FileChooserAction.SELECT_FOLDER);
-		fcb_theme_dir.margin_bottom = 6;
-		fcb_theme_dir.margin_left = 6;
-		fcb_theme_dir.create_folders = true;
-		if ((App.data_dir.length > 0) && dir_exists (App.data_dir)){
-			fcb_theme_dir.set_filename (App.data_dir);
-		}
-		vbox_options.add (fcb_theme_dir);
-
-        //lbl_header_options
-		Label lbl_header_options = new Gtk.Label("<b>" + _("Options") + "</b>");
-		lbl_header_options.set_use_markup(true);
-		lbl_header_options.xalign = (float) 0.0;
-		lbl_header_options.margin_bottom = 6;
-		vbox_options.add(lbl_header_options);
 
         //hbox_startup --------------------------------------------------
         
@@ -164,12 +140,31 @@ public class SettingsWindow : Dialog {
 		vbox_folders.margin = 6;
 
         //lbl_folders
-		Label lbl_folders = new Gtk.Label(_("Search Folders"));
+		Label lbl_folders = new Gtk.Label(_("Locations"));
 
 		notebook.append_page (vbox_folders, lbl_folders);
 		
 		//tv_folders -----------------------------------------------
+
+		//hbox_datadir
+        Box hbox_datadir = new Box (Orientation.HORIZONTAL, 6);
+		vbox_folders.add(hbox_datadir);
 		
+        //lbl_header_theme_dir
+		Label lbl_header_theme_dir = new Gtk.Label(_("Theme Directory"));
+		lbl_header_theme_dir.set_use_markup(true);
+		lbl_header_theme_dir.xalign = (float) 0.0;
+		hbox_datadir.add(lbl_header_theme_dir);
+		
+		Entry entry_themedir = new Gtk.Entry();
+		hbox_datadir.add(entry_themedir);
+		entry_themedir.text = App.data_dir.replace(Environment.get_home_dir() ,"~");
+		entry_themedir.sensitive = false;
+		entry_themedir.hexpand = true;
+		Gdk.Color black;
+		Gdk.Color.parse("000000",out black);
+		entry_themedir.modify_fg(StateType.INSENSITIVE,black);
+
         //lbl_search_folders
 		Label lbl_search_folders = new Gtk.Label(_("Additional locations to search for Conky themes"));
 		lbl_search_folders.xalign = (float) 0.0;
@@ -178,10 +173,9 @@ public class SettingsWindow : Dialog {
 		//tv_folders
 		tv_folders = new TreeView();
 		tv_folders.get_selection().mode = SelectionMode.MULTIPLE;
-		tv_folders.headers_visible = true;
+		tv_folders.headers_visible = false;
 		tv_folders.set_rules_hint (true);
-		//tv_folders.row_activated.connect(tv_folders_row_activated);
-		
+
 		//sw_folders
 		ScrolledWindow sw_folders = new ScrolledWindow(null, null);
 		sw_folders.set_shadow_type (ShadowType.ETCHED_IN);
@@ -304,20 +298,6 @@ public class SettingsWindow : Dialog {
 	}
 	
 	private void btn_apply_changes_clicked () {
-		
-		//theme directory
-		string dir = fcb_theme_dir.get_filename ();
-		if (!dir_exists(dir)){
-			create_dir(dir);
-		}
-		if (dir_exists(dir)){
-			App.data_dir = dir;
-		}
-		App.init_directories();
-		//App.init_theme_packs();
-		//App.load_themes();
-		//load_themes();
-		
 		//options
 		App.autostart(switch_startup.active);
 		App.capture_background = switch_capture_bg.active;

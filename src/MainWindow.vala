@@ -772,7 +772,7 @@ public class MainWindow : Window {
 		dialog.authors = {"Tony George"};
 		dialog.documenters = null; 
 		//dialog.translator_credits = "tomberry88 (Italian)"; 
-		//dialog.add_credit_section("Sponsors", {"Colin Mills"});
+		//dialog.add_credit_section("Sponsors", "Colin Mills");
 		
 		dialog.program_name = "Conky Manager";
 		dialog.comments = _("Utility for managing Conky configuration files");
