@@ -989,14 +989,33 @@ public class MainWindow : Window {
 		
 		model.get_iter_from_string (out iter, path);
 		model.get (iter, 0, out enabled, 1, out item, -1);
+		
+		if (item is ConkyTheme){
+			//reset the 'enabled' flag for all other themes
+			TreeIter iter2;
+			bool iterExists = model.get_iter_first (out iter2);
+			while (iterExists){
+				if (iter2 != iter){
+					model.set (iter2, 0, false);
+				}
+				iterExists = model.iter_next (ref iter2);
+			}
+		}
+
+		//toggle current item
 		enabled = !enabled;
 		model.set (iter, 0, enabled);
 		
+		gtk_set_busy(true, this);
+		
+		//start or stop
 		if (enabled){
 			item.start();
 		}
 		else{
 			item.stop();
 		}
+		
+		gtk_set_busy(false, this);
 	}
 }

@@ -35,8 +35,7 @@ public class SettingsWindow : Dialog {
 	
 	private Notebook notebook;
 	private Switch switch_startup;
-	private Switch switch_capture_bg;
-	//private FileChooserButton fcb_theme_dir;
+	private SpinButton spin_startup_delay;
 	private Button btn_install_theme_pack;
 	private Button btn_add_folder;
 	private Button btn_remove_folder;
@@ -98,25 +97,26 @@ public class SettingsWindow : Dialog {
         switch_startup.active =  App.check_startup();
         hbox_startup.pack_end(switch_startup,false,false,0);
 
-        //hbox_capture_bg --------------------------------------------------
+        //hbox_startup_delay --------------------------------------------------
         
-        Box hbox_capture_bg = new Box (Gtk.Orientation.HORIZONTAL, 6);
-        vbox_options.add (hbox_capture_bg);
+        Box hbox_startup_delay = new Box (Gtk.Orientation.HORIZONTAL, 6);
+        vbox_options.add (hbox_startup_delay);
         
-        //lbl_capture_bg
-		Label lbl_capture_bg = new Gtk.Label(_("Preview Generation: Capture Background") );
-		lbl_capture_bg.hexpand = true;
-		lbl_capture_bg.xalign = (float) 0.0;
-		lbl_capture_bg.valign = Align.CENTER;
-		lbl_capture_bg.set_tooltip_text(_("When enabled, the generated preview images will have the same background as the desktop wallpaper. Otherwise the background will be a solid color (the widget's background color)."));
-		hbox_capture_bg.add(lbl_capture_bg);
+        //lbl_startup_delay
+		Label lbl_startup_delay = new Gtk.Label(_("Startup Delay (seconds)") );
+		lbl_startup_delay.set_use_markup(true);
+		lbl_startup_delay.hexpand = true;
+		lbl_startup_delay.xalign = (float) 0.0;
+		lbl_startup_delay.valign = Align.CENTER;
+		hbox_startup_delay.add(lbl_startup_delay);
 		
-		//switch_capture_bg
-        switch_capture_bg = new Gtk.Switch();
-        switch_capture_bg.set_size_request(100,20);
-        switch_capture_bg.active =  App.capture_background;
-        hbox_capture_bg.pack_end(switch_capture_bg,false,false,0);
-        
+		//spin_startup_delay
+		spin_startup_delay = new SpinButton.with_range(-100,100,10);
+		spin_startup_delay.xalign = (float) 0.5;
+		spin_startup_delay.value = App.startup_delay;
+		spin_startup_delay.set_size_request(100,20);
+		hbox_startup_delay.pack_end(spin_startup_delay,false,false,0);
+		
         //hbox_import_themepack  --------------------------------------------------
         
         Box hbox_import_themepack = new Box (Gtk.Orientation.HORIZONTAL, 6);
@@ -166,8 +166,10 @@ public class SettingsWindow : Dialog {
 		entry_themedir.modify_fg(StateType.INSENSITIVE,black);
 
         //lbl_search_folders
-		Label lbl_search_folders = new Gtk.Label(_("Additional locations to search for Conky themes"));
+		Label lbl_search_folders = new Gtk.Label(_("Additional locations to search for Conky themes") + ":");
+		lbl_search_folders.set_use_markup(true);
 		lbl_search_folders.xalign = (float) 0.0;
+		lbl_search_folders.margin_top = 10;
 		vbox_folders.add(lbl_search_folders);
 		
 		//tv_folders
@@ -298,9 +300,9 @@ public class SettingsWindow : Dialog {
 	}
 	
 	private void btn_apply_changes_clicked () {
-		//options
+		//startup
 		App.autostart(switch_startup.active);
-		App.capture_background = switch_capture_bg.active;
+		App.startup_delay = (int) spin_startup_delay.value;
 		
 		//search folders
 		App.search_folders = folder_list_user;
