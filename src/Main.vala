@@ -473,10 +473,16 @@ public class Main : GLib.Object {
 		string std_err;
 		int ret_val;
 		
+		//create temp dir
 		string home = Environment.get_home_dir ();
 		string temp_dir = Environment.get_tmp_dir();
 		temp_dir = temp_dir + "/" + timestamp2();
 		create_dir(temp_dir);
+		
+		//check and create ~/.conky
+		if (dir_exists(data_dir) == false){
+			create_dir(data_dir);
+		}
 		
 		log_debug(_("Installing") + ": " + pkgPath);
 		
@@ -507,7 +513,7 @@ public class Main : GLib.Object {
 				
 				while ((file = enumerator.next_file ()) != null) {
 					string source_dir = temp_dir_themes + "/" + file.get_name();
-					string target_dir = data_dir + "/themes/" + file.get_name();
+					string target_dir = data_dir + "/" + file.get_name();
 
 					if (dir_exists(target_dir)) { 
 						continue; 
@@ -547,7 +553,8 @@ public class Main : GLib.Object {
 						if (!checkOnly){
 							//install
 							log_debug(_("Font copied") + ": " + target_file);
-							Posix.system("cp -r \"" + source_file + "\" \"" + target_file + "\"");
+							copy_file(source_file, target_file);
+							//Posix.system("cp -r \"" + source_file + "\" \"" + target_file + "\"");
 						}
 					}
 				} 

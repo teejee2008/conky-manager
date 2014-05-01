@@ -36,7 +36,6 @@ public class SettingsWindow : Dialog {
 	private Notebook notebook;
 	private Switch switch_startup;
 	private SpinButton spin_startup_delay;
-	private Button btn_install_theme_pack;
 	private Button btn_add_folder;
 	private Button btn_remove_folder;
 	private Button btn_apply_changes;
@@ -117,22 +116,6 @@ public class SettingsWindow : Dialog {
 		spin_startup_delay.set_size_request(100,20);
 		hbox_startup_delay.pack_end(spin_startup_delay,false,false,0);
 		
-        //hbox_import_themepack  --------------------------------------------------
-        
-        Box hbox_import_themepack = new Box (Gtk.Orientation.HORIZONTAL, 6);
-        vbox_options.add (hbox_import_themepack);
-        
-		//lbl_theme_pack
-		Label lbl_theme_pack = new Gtk.Label(_("Import Theme Pack (*.cmtp.7z)"));
-		lbl_theme_pack.xalign = (float) 0.0;
-		hbox_import_themepack.add(lbl_theme_pack);
-
-		//btn_install_theme_pack
-		btn_install_theme_pack = new Button.with_label("   " + _("Import") + "   ");
-        btn_install_theme_pack.clicked.connect (btn_install_theme_pack_clicked);
-        btn_install_theme_pack.set_size_request(100,20);
-		hbox_import_themepack.pack_end(btn_install_theme_pack,false,false,0);
-
 		//vbox_folders -----------------------------------------------
 		
 		//vbox_folders
@@ -315,50 +298,4 @@ public class SettingsWindow : Dialog {
 	private void btn_cancel_changes_clicked () {
 		this.destroy();
 	}
-
-	private void btn_install_theme_pack_clicked (){
-		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack") + " (*.cmtp.7z)", this, Gtk.FileChooserAction.OPEN,
-							"gtk-cancel", Gtk.ResponseType.CANCEL,
-							"gtk-open", Gtk.ResponseType.ACCEPT);
-		dlgAddFiles.local_only = true;
- 		dlgAddFiles.set_modal (true);
- 		dlgAddFiles.set_select_multiple (true);
- 		
-		Gtk.FileFilter filter = new Gtk.FileFilter ();
-		dlgAddFiles.set_filter (filter);
-		filter.add_pattern ("*.cmtp.7z");
-		
-		//show the dialog and get list of files
-		
-		SList<string> files = null;
- 		if (dlgAddFiles.run() == Gtk.ResponseType.ACCEPT){
-			files = dlgAddFiles.get_filenames();
-	 	}
-
-		//install theme packs
-		
-		gtk_set_busy(true, dlgAddFiles);
-
-		int count = 0;
-		if (files != null){
-	 		foreach (string file in files){
-				if (file.has_suffix(".cmtp.7z")){
-					count += App.install_theme_pack(file);
-				}
-			}
-		}
-		
-		//refresh theme list
-		
-	 	//App.load_themes();
-	 	//load_themes();
-	 	dlgAddFiles.destroy ();
-	 	
-	 	//show message
-	 	
-	 	if (files != null){
-			gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."),this);
-		}
-	}
-
 }

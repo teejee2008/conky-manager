@@ -58,6 +58,7 @@ public class MainWindow : Window {
 	private ToolButton btn_scan;
 	private ToolButton btn_generate_preview;
 	private ToolButton btn_kill_all;
+	private ToolButton btn_import_themes;
 	private ToolButton btn_settings;
 	private ToolButton btn_donate;
 	private ToolButton btn_about;
@@ -311,6 +312,15 @@ public class MainWindow : Window {
         toolbar.add(btn_kill_all);
 
         btn_kill_all.clicked.connect(btn_kill_all_clicked);
+
+		//btn_import_themes
+		btn_import_themes = new Gtk.ToolButton.from_stock ("gtk-open");
+		btn_import_themes.is_important = false;
+		btn_import_themes.label = _("Import");
+		btn_import_themes.set_tooltip_text (_("Import Theme Pack (*.cmtp.7z)"));
+        toolbar.add(btn_import_themes);
+
+        btn_import_themes.clicked.connect(btn_import_themes_clicked);
         
         //separator
 		var separator = new Gtk.SeparatorToolItem();
@@ -743,6 +753,46 @@ public class MainWindow : Window {
 			
 			iterExists = model.iter_next (ref iter);
 		}
+	}
+
+	private void btn_import_themes_clicked(){
+		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import Theme Pack") + " (*.cmtp.7z)", this, Gtk.FileChooserAction.OPEN,
+							"gtk-cancel", Gtk.ResponseType.CANCEL,
+							"gtk-open", Gtk.ResponseType.ACCEPT);
+		dlgAddFiles.local_only = true;
+ 		dlgAddFiles.set_modal (true);
+ 		dlgAddFiles.set_select_multiple (true);
+ 		
+		Gtk.FileFilter filter = new Gtk.FileFilter ();
+		dlgAddFiles.set_filter (filter);
+		filter.add_pattern ("*.cmtp.7z");
+		
+		//show the dialog and get list of files
+		SList<string> files = null;
+ 		if (dlgAddFiles.run() == Gtk.ResponseType.ACCEPT){
+			files = dlgAddFiles.get_filenames();
+	 	}
+		dlgAddFiles.destroy();
+		
+		if (files == null){
+			return;
+		}
+		
+		gtk_set_busy(true, this);
+		gtk_do_events();
+		
+		int count = 0;
+		foreach (string file in files){
+			if (file.has_suffix(".cmtp.7z")){
+				count += App.install_theme_pack(file);
+			}
+		}
+		
+		scan_themes();
+
+		gtk_set_busy(false, this);
+
+		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."),this);
 	}
 	
 	private void btn_settings_clicked(){
