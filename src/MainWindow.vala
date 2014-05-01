@@ -77,6 +77,10 @@ public class MainWindow : Window {
 	private ConkyRC current_rc;
 	private uint timer_init;
 	private Gee.ArrayList<ConkyRC> rclist_generate;
+
+	private const Gtk.TargetEntry[] targets = {
+		{ "text/uri-list", 0, 0}
+	};
 	
 	public MainWindow() {
 		title = AppName + " v" + AppVersion;// + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
@@ -84,6 +88,9 @@ public class MainWindow : Window {
         modal = true;
         set_default_size(App.window_width, App.window_height);
 		icon = App.get_app_icon(16);
+
+		Gtk.drag_dest_set (this,Gtk.DestDefaults.ALL, targets, Gdk.DragAction.COPY);
+		drag_data_received.connect(on_drag_data_received);
 		
 		//vbox_main
         vbox_main = new Box (Orientation.VERTICAL, 6);
@@ -477,6 +484,28 @@ public class MainWindow : Window {
 
 		sw_widget.vadjustment.value = vpos;
 	}
+
+	private void on_drag_data_received (Gdk.DragContext drag_context, int x, int y, Gtk.SelectionData data, uint info, uint time) {
+        gtk_set_busy(true, this);
+		gtk_do_events();
+        
+        int count = 0;
+        foreach(string uri in data.get_uris()){
+			string file = uri.replace("file://","").replace("file:/","");
+			file = Uri.unescape_string(file);
+			if (file.has_suffix(".cmtp.7z")){
+				count += App.install_theme_pack(file);
+			}
+		}
+
+        Gtk.drag_finish (drag_context, true, false, time);
+
+		scan_themes();
+
+		gtk_set_busy(false, this);
+
+		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."),this);
+    }
 	
 	//actions
 	
