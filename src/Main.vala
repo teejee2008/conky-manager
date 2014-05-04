@@ -142,12 +142,6 @@ public class Main : GLib.Object {
 		}
 		config.set_array_member("search-locations",arr);
 
-		arr = new Json.Array();
-		foreach(ConkyRC rc in conkyrc_list){
-			arr.add_string_element(rc.path);
-		}
-		config.set_array_member("conkyrc",arr);
-		
 		var json = new Json.Generator();
 		json.pretty = true;
 		json.indent = 2;
@@ -209,34 +203,6 @@ public class Main : GLib.Object {
 			}
 		}
 
-		//clear widget list
-		conkyrc_list = new Gee.ArrayList<ConkyRC>();
-
-		//add from config file
-		if (config.has_member ("conkyrc")){
-			foreach (Json.Node jnode in config.get_array_member ("conkyrc").get_elements()) {
-				string file_path = jnode.get_string();
-				
-				bool found = false;
-				foreach(ConkyConfigItem item in conkyrc_list){
-					if (item.path == file_path){
-						found = true;
-						break;
-					}
-				}
-				
-				if (!found && file_exists(file_path)){
-					ConkyRC rc = new ConkyRC(file_path);
-					conkyrc_list.add(rc);
-				}
-			}
-		}
-
-		//load themes
-		find_conkytheme_files();
-
-		refresh_conkyrc_status();
-		
 		log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
 	}
 	
@@ -471,7 +437,7 @@ public class Main : GLib.Object {
 		foreach(string line in std_out.split("\n")){
 			if (line == null){ continue; }
 			if (line.length == 0){ continue; }
-			
+
 			file_path = line.strip();
 			if (file_path.has_suffix("~")){ continue; }
 			if (file_path.split(" ").length < 2){ continue; }
@@ -492,7 +458,7 @@ public class Main : GLib.Object {
 			
 			if (file_exists(target_file) == false){
 				copy_file(file_path, target_file);
-				debug(_("Font Installed: ") + target_file);
+				log_msg(_("Font Copied: ") + target_file);
 			}
 		}
 	}
@@ -795,6 +761,8 @@ public abstract class ConkyConfigItem: GLib.Object{
 	private string _image_path = "";
 	private string _base_name = "";
 	private bool _enabled = false;
+	private string _url = "";
+	private string _credits = "";
 	
 	public abstract void start();
 	public abstract void stop();
@@ -834,6 +802,18 @@ public abstract class ConkyConfigItem: GLib.Object{
 		image_path = ""; //clear if not found
 	}
 
+	public void init_credits(){
+		string source_file = dir + "/source.txt";
+		if (file_exists(source_file)){
+			url = TeeJee.FileSystem.read_file(source_file).replace("\n","");
+		}
+
+		string credits_file = dir + "/credits.txt";
+		if (file_exists(credits_file)){
+			credits = TeeJee.FileSystem.read_file(credits_file).replace("\n","");
+		}
+	}
+	
 	public string name{
 		get{
 			return _name;
@@ -887,6 +867,24 @@ public abstract class ConkyConfigItem: GLib.Object{
 			_base_name = value;
 		}
 	}
+
+	public string url{
+		get{
+			return _url;
+		}
+		set{
+			_url = value;
+		}
+	}
+	
+	public string credits{
+		get{
+			return _credits;
+		}
+		set{
+			_credits = value;
+		}
+	}
 	
 }
 
@@ -902,24 +900,12 @@ public class ConkyRC : ConkyConfigItem {
 	private DataInputStream dis_err;
 	private bool thread_is_running = false;
 	private int wait_interval = 0;
-	private uint timer_preview;
+	private uint timer_stop;
 	
 	public ConkyRC(string rc_file_path) {
 		init_path(rc_file_path);
-
-		image_path = dir + "/" + base_name + ".png";
-		if (!file_exists(image_path)){
-			if (base_name.split(".").length == 2){
-				image_path = dir + "/" + base_name.split(".")[0] + ".png";
-			}
-			if (!file_exists(image_path)){
-				image_path = dir + "/preview.png";
-			}
-			if (!file_exists(image_path)){
-				//set default path and check everytime if file exists
-				image_path = dir + "/" + base_name + ".png"; 
-			}
-		}
+		init_image_path();
+		init_credits();
 
 		try{
 			rex_conky_win = new Regex("""\(0x([0-9a-zA-Z]*)\)""");
@@ -1045,11 +1031,14 @@ public class ConkyRC : ConkyConfigItem {
 			Thread.usleep ((ulong) 200000);
 			gtk_do_events();
 		}
-			
+
+		//check if file was generated
 		if ((image_path.length > 0) && (file_exists(image_path))){
+			log_msg(_("Saved") + ": " + image_path);
 			return true;
 		}
 		else{
+			image_path = "";
 			return false;
 		}
 	}
@@ -1081,7 +1070,7 @@ public class ConkyRC : ConkyConfigItem {
 			
 			thread_is_running = true;
 			
-			timer_preview = Timeout.add (10 * 1000, stop_handler);
+			timer_stop = Timeout.add (10 * 1000, stop_handler);
 			
 			//create stream readers
 			UnixInputStream uis_out = new UnixInputStream(output_fd, false);
@@ -1104,11 +1093,6 @@ public class ConkyRC : ConkyConfigItem {
 		    } catch (Error e) {
 		        log_error (e.message);
 		    }
-		    
-		    //check if file was generated
-		    if (!file_exists(image_path)){
-				image_path = "";
-			}
 		}
 		catch (Error e) {
 			log_error (e.message);
@@ -1133,17 +1117,21 @@ public class ConkyRC : ConkyConfigItem {
 			out_line = dis_out.read_line (null);
 		    while (out_line != null) {
 				if (rex_conky_win.match (out_line, 0, out match)){
+					
+					//wait for one second till window is displayed on screen
 					Thread.usleep ((ulong) wait_interval * 1000000);
+					
 					string win_id = match.fetch(1).strip();
 					
 					image_path = dir + "/" + base_name + ".png";
 					string cmd = "import -window 0x%s '%s'".printf(win_id,image_path);
 					execute_command_sync(cmd);
 					
-					Thread.usleep ((ulong) 200000);
-					if (timer_preview > 0){
-						Source.remove(timer_preview);
-						timer_preview = 0;
+					Thread.usleep ((ulong) 100000); //wait 100ms before killing conky
+					
+					if (timer_stop > 0){
+						Source.remove(timer_stop);
+						timer_stop = 0;
 					}
 					stop();
 				}
@@ -1672,6 +1660,7 @@ public class ConkyTheme : ConkyConfigItem {
 		main_app = _main_app;
 		init_path(theme_file_path);
 		init_image_path();
+		init_credits();
 		
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
 		foreach(string line in read_file(theme_file_path).split("\n")){

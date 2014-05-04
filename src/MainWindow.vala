@@ -71,6 +71,12 @@ public class MainWindow : Window {
 	private ScrolledWindow sw_preview;
 	private EventBox ebox_preview;
 	
+	//credits
+	private Box hbox_credits;
+	private Label lbl_credits;
+	private Label lbl_source;
+	private LinkButton lbtn_source;
+	
 	//window dimensions
 	private bool is_running;
 	private bool is_aborted;
@@ -192,6 +198,27 @@ public class MainWindow : Window {
 		pane.notify["position"].connect (() => {
 			App.pane_position = pane.position;
 		});
+
+		//credits
+        hbox_credits = new Box (Orientation.HORIZONTAL, 3);
+        //hbox_credits.margin = 3;
+		vbox_main.add(hbox_credits);
+
+		lbl_source = new Label (_("Source") + ":");
+		lbl_source.halign = Align.START;
+		lbl_source.max_width_chars = 100;
+		lbl_source.ellipsize = Pango.EllipsizeMode.END;
+		hbox_credits.pack_start (lbl_source, false, true, 0);
+		
+		lbtn_source = new LinkButton(_(""));
+		lbtn_source.halign = Align.START;
+		hbox_credits.pack_start (lbtn_source, true, true, 0);
+		
+		lbl_credits = new Label (_("Credits"));
+		lbl_credits.halign = Align.START;
+		lbl_credits.max_width_chars = 100;
+		lbl_credits.ellipsize = Pango.EllipsizeMode.END;
+		//hbox_credits.pack_end (lbl_credits, false, true, 0);
 		
 		//list_view
 		init_list_view();
@@ -206,7 +233,6 @@ public class MainWindow : Window {
 		init_keyboard_shortcuts();
 
 		timer_init = Timeout.add(100, init_delayed);
-		
 	}
 	
 	private void init_toolbar(){
@@ -456,13 +482,12 @@ public class MainWindow : Window {
 		btn_list_toggled();
 		cmb_type_changed();
 		
-		//scan for themes on first run
+		/*//scan for themes on first run
 		if (App.conkyrc_list.size == 0){
-			btn_scan_clicked();
-		}
+			
+		}*/
 		
-		//refresh list and preview area
-		reload_themes();
+		btn_scan_clicked();
 		
 		return true;
 	}
@@ -723,11 +748,25 @@ public class MainWindow : Window {
 	}
 	
 	private void btn_generate_preview_clicked_thread(){
+		gtk_set_busy(true,this);
+		
 		generate_previews();
 		is_running = false;
+		
+		gtk_set_busy(false,this);
 	}
 	
 	private void generate_previews(){
+		
+		//save running widgets
+		var running_list = new Gee.ArrayList<string>();
+		foreach(ConkyRC rc in App.conkyrc_list){
+			if (rc.enabled){
+				running_list.add(rc.path);
+			}
+		}
+		
+		//kill running widgets
 		App.kill_all_conky();
 		
 		int count_total = rclist_generate.size;
@@ -740,7 +779,7 @@ public class MainWindow : Window {
 			current_rc = rc;
 			rc.generate_preview();
 			current_rc = null;
-			
+
 			count++;
 			progressbar.fraction = count / (count_total * 1.0);
 
@@ -750,11 +789,15 @@ public class MainWindow : Window {
 			gtk_do_events();
 		}
 		
+		//start widgets that were running
 		foreach(ConkyRC rc in App.conkyrc_list){
-			if (rc.enabled){
+			if (running_list.contains(rc.path)){
 				rc.start();
 			}
 		}
+		
+		//show previously selected widget
+		show_preview(selected_item());
 	}
 	
 	private void btn_cancel_action_scan(){
@@ -763,9 +806,7 @@ public class MainWindow : Window {
 	
 	private void btn_cancel_action_generate_preview(){
 		is_aborted = true;
-		if (current_rc != null){
-			current_rc.stop();
-		}
+		App.kill_all_conky();
 	}
 	
 	private void btn_kill_all_clicked(){
@@ -883,9 +924,6 @@ public class MainWindow : Window {
 			return;
 		}
 		
-		//var list = selected_list();
-		//lbl_widget_name.label = ((item.enabled) ? "<span font-weight='bold'>[Running] </span>" : "") + "[%d|%d] ".printf(App.selected_widget_index + 1, list.size) + escape_html(item.name);
-
 		int screen_width = Gdk.Screen.width();
 		int screen_height = Gdk.Screen.height();
 
@@ -911,6 +949,22 @@ public class MainWindow : Window {
 		}
 		else{
 			img_preview.pixbuf = null;
+		}
+		
+		if (item.url.length > 0){
+			lbtn_source.uri = item.url;
+			lbtn_source.label = item.url;
+		}
+		else{
+			lbtn_source.uri = "";
+			lbtn_source.label = _("N/A");
+		}
+		
+		if (item.credits.length > 0){
+			//lbl_credits.visible = true;
+		}
+		else{
+			//lbl_credits.visible = false;
 		}
 	}
 
@@ -955,11 +1009,12 @@ public class MainWindow : Window {
 		hbox_progressbar.visible = true;
 		progressbar.visible = true;
 		btn_cancel_action.visible = true;
-		sw_preview.visible = false;
-		
+
 		progressbar.fraction = 0.0;
 		lbl_status.label = message;
-
+		
+		hbox_credits.visible = false;
+		
 		//gtk_set_busy(true, this);
 		gtk_do_events();
 	}
@@ -973,11 +1028,12 @@ public class MainWindow : Window {
 		hbox_progressbar.visible = false;
 		progressbar.visible = false;
 		btn_cancel_action.visible = false;
-		sw_preview.visible = true;
 
 		progressbar.fraction = 0.0;
 		lbl_status.label = message;
 
+		hbox_credits.visible = true;
+		
 		//gtk_set_busy(false, this);
 		gtk_do_events();
 	}

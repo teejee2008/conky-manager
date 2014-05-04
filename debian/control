@@ -12,5 +12,5 @@ Package: conky-manager
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, realpath, conky-all, p7zip-full, rsync, python-wnck
 #Recommends: 
-Description: Simple tool for managing conky scripts
- Simple tool for managing conky scripts
+Description: Utility for managing Conky configuration files
+ Utility for managing Conky configuration files
