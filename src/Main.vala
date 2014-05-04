@@ -336,6 +336,7 @@ public class Main : GLib.Object {
 		
 		find_conkyrc_files();
 		find_conkytheme_files();
+		find_and_install_fonts();
 		refresh_conkyrc_status();
 		
 		log_msg(_("Searching for conkyrc files... %d found").printf(conkyrc_list.size));
@@ -396,7 +397,7 @@ public class Main : GLib.Object {
 	
 	public void find_conkytheme_files(){
 		conkytheme_list = new Gee.ArrayList<ConkyTheme>();
-		
+
 		find_conkytheme_files_in_path(data_dir);
 		foreach(string path in search_folders){
 			if (!is_aborted){
@@ -442,6 +443,56 @@ public class Main : GLib.Object {
 			if (!found){
 				ConkyTheme th = new ConkyTheme.from_file(file_path,this);
 				conkytheme_list.add(th);
+			}
+		}
+	}
+    
+    public void find_and_install_fonts(){
+		find_and_install_fonts_in_path(data_dir);
+		foreach(string path in search_folders){
+			if (!is_aborted){
+				find_and_install_fonts_in_path(path);
+			}
+		}
+	}
+	
+    public void find_and_install_fonts_in_path(string path){
+		string std_out = "";
+		string std_err = "";
+		string cmd = "rsync -aim --dry-run --include=\"*.ttf\" --include=\"*.TTF\" --include=\"*.otf\"  --include=\"*.OTF\" --include=\"*/\" --exclude=\"*\" \"%s/\" /tmp".printf(path);
+		int exit_code = execute_command_script_sync(cmd, out std_out, out std_err);
+
+		if (exit_code != 0){
+			//no files found
+			return;
+		}
+
+		string file_path;
+		foreach(string line in std_out.split("\n")){
+			if (line == null){ continue; }
+			if (line.length == 0){ continue; }
+			
+			file_path = line.strip();
+			if (file_path.has_suffix("~")){ continue; }
+			if (file_path.split(" ").length < 2){ continue; }
+			
+			if (file_path.has_suffix(".ttf")||file_path.has_suffix(".TTF")||file_path.has_suffix(".otf")||file_path.has_suffix(".OTF")){
+				//ok
+			}
+			else{
+				continue;
+			}
+
+			file_path = path + "/" + file_path[file_path.index_of(" ") + 1:file_path.length].strip();
+			
+			File font_file = File.new_for_path (file_path);
+			string file_name = font_file.get_basename();
+			string home = Environment.get_home_dir ();
+			string target_file = home + "/.fonts/" + file_name;
+			
+			if (file_exists(target_file) == false){
+				copy_file(file_path, target_file);
+				debug(_("Font Installed: ") + target_file);
 			}
 		}
 	}
@@ -914,7 +965,7 @@ public class ConkyRC : ConkyConfigItem {
 		//will be updated by the refresh_status() timer
 		enabled = true; 
 	}
-	
+
 	public bool stop_handler(){
 		stop();
 		return true;

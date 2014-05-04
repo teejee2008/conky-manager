@@ -572,7 +572,8 @@ public class MainWindow : Window {
 	}
 	
 	private void btn_next_clicked(){
-		if (App.selected_widget_index < (App.conkyrc_list.size - 1)){
+		var item_list = selected_list();
+		if (App.selected_widget_index < (item_list.size - 1)){
 			App.selected_widget_index++;
 			TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
 			tv_widget.get_selection().select_path(path);

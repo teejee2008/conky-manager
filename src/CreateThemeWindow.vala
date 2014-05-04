@@ -126,7 +126,9 @@ public class CreateThemeWindow : Dialog {
 		grid_wp.attach(fcb_wallpaper,1,1,1,1);
 		
 		fcb_wallpaper.selection_changed.connect(()=>{
-			th.wallpaper_path = fcb_wallpaper.get_file().get_path();
+			if (th != null){
+				th.wallpaper_path = fcb_wallpaper.get_file().get_path();
+			}
 		});
 
 		if (th != null){
@@ -317,14 +319,16 @@ public class CreateThemeWindow : Dialog {
 		}
 		
 		if (cmb_wallpaper.active == 1){
-			txt += th.save_current_wallpaper().replace(Environment.get_home_dir(),"~");
+			th.wallpaper_path = th.save_current_wallpaper();
+			txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~");
 		}
 		else if ((cmb_wallpaper.active == 2)&&(file_exists(fcb_wallpaper.get_filename()))){
 			if (fcb_wallpaper.get_filename() != th.wallpaper_path){
-				txt += th.save_wallpaper(fcb_wallpaper.get_filename()).replace(Environment.get_home_dir(),"~");
+				th.wallpaper_path = th.save_wallpaper(fcb_wallpaper.get_filename());
+				txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~");
 			}
 			else{
-				txt += th.wallpaper_path;
+				txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~");
 			}
 		}
 
