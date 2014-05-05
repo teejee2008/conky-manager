@@ -40,6 +40,7 @@ public class CreateThemeWindow : Dialog {
 	private ScrolledWindow sw_widget;
 	private Entry entry_name;
 	private ComboBox cmb_wallpaper;
+	private ComboBox cmb_scaling;
     private FileChooserButton fcb_wallpaper;
 	public ConkyTheme th = null;
 
@@ -137,7 +138,76 @@ public class CreateThemeWindow : Dialog {
 				fcb_wallpaper.select_filename(th.wallpaper_path);
 			}
 		}
+
+		//lbl_scaling
+		Label lbl_scaling = new Label (_("Scaling") + ":");
+		lbl_scaling.xalign = (float) 0.0;
+		grid_wp.attach(lbl_scaling,0,2,1,1);
+
+		//cmb_scaling
+		cmb_scaling = new ComboBox();
+		cmb_scaling.hexpand = true;
+		grid_wp.attach(cmb_scaling,1,2,1,1);
+
+		CellRendererText cell_scaling= new CellRendererText();
+        cmb_scaling.pack_start(cell_scaling, false );
+        cmb_scaling.set_cell_data_func (cell_scaling, (cell_scaling, cell, model, iter) => {
+			string type;
+			model.get (iter, 0, out type,-1);
+			(cell as Gtk.CellRendererText).text = type;
+		});
 		
+		store = new ListStore(1, typeof(string));
+		store.append(out iter);
+		store.set (iter, 0, "none");
+		store.append(out iter);
+		store.set (iter, 0, "wallpaper");
+		store.append(out iter);
+		store.set (iter, 0, "centered");
+		store.append(out iter);
+		store.set (iter, 0, "scaled");
+		store.append(out iter);
+		store.set (iter, 0, "stretched");
+		store.append(out iter);
+		store.set (iter, 0, "zoom");
+		store.append(out iter);
+		store.set (iter, 0, "spanned");
+		cmb_scaling.set_model (store);
+		
+		if (th == null){
+			cmb_scaling.active = 3;
+		}
+		else{
+			switch (th.wallpaper_scaling){
+				case "none":
+					cmb_scaling.active = 0;
+					break;
+				case "wallpaper":
+					cmb_scaling.active = 1;
+					break;
+				case "centered":
+					cmb_scaling.active = 2;
+					break;
+				case "scaled":
+					cmb_scaling.active = 3;
+					break;
+				case "stretched":
+					cmb_scaling.active = 4;
+					break;
+				case "zoom":
+					cmb_scaling.active = 5;
+					break;
+				case "spanned":
+					cmb_scaling.active = 6;
+					break;
+				default:
+					cmb_scaling.active = 3;
+					break;
+			}
+		}
+		
+		
+		//set initial state
 		cmb_wallpaper.changed.connect(()=>{
 			fcb_wallpaper.sensitive = (cmb_wallpaper.active == 2);
 		});
@@ -318,18 +388,26 @@ public class CreateThemeWindow : Dialog {
 			iterExists = model.iter_next (ref iter);
 		}
 		
-		if (cmb_wallpaper.active == 1){
+		//TODO: cleanup the following code
+		if (cmb_wallpaper.active == 0){
+			th.wallpaper_path = "";
+			th.wallpaper_scaling = "";
+		}
+		else if (cmb_wallpaper.active == 1){
 			th.wallpaper_path = th.save_current_wallpaper();
-			txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~");
+			th.wallpaper_scaling = gtk_combobox_get_value(cmb_scaling,0,"");
+			
+			txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~") + "\n";
+			txt += "wallpaper-scaling:" + th.wallpaper_scaling + "\n";
 		}
 		else if ((cmb_wallpaper.active == 2)&&(file_exists(fcb_wallpaper.get_filename()))){
 			if (fcb_wallpaper.get_filename() != th.wallpaper_path){
 				th.wallpaper_path = th.save_wallpaper(fcb_wallpaper.get_filename());
-				txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~");
 			}
-			else{
-				txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~");
-			}
+			th.wallpaper_scaling = gtk_combobox_get_value(cmb_scaling,0,"");
+			
+			txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~") + "\n";
+			txt += "wallpaper-scaling:" + th.wallpaper_scaling + "\n";
 		}
 
 		write_file(th.path,txt);

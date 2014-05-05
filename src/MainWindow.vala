@@ -572,6 +572,7 @@ public class MainWindow : Window {
 		btn_add_theme.visible = (cmb_type.active == 1);
 		btn_active.visible = (cmb_type.active == 0);
 		btn_generate_preview.visible = (cmb_type.active == 0);
+		btn_active.active = false;
 		reload_themes();
 	}
 
@@ -614,10 +615,24 @@ public class MainWindow : Window {
 		TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
 		TreeIter iter;
 		bool enabled;
-		
-		var model = (ListStore) tv_widget.model;
+		ListStore model = (ListStore) tv_widget.model;
 		model.get_iter(out iter, path);
 		model.get(iter, 0, out enabled, -1);
+		
+		//uncheck checkboxes for all other themes/widgets
+		model = (ListStore)tv_widget.model;
+		if (item is ConkyTheme){
+			TreeIter iter2;
+			bool iterExists = model.get_iter_first (out iter2);
+			while (iterExists){
+				if (iter2 != iter){
+					model.set (iter2, 0, false);
+				}
+				iterExists = model.iter_next (ref iter2);
+			}
+		}
+
+		//check checkbox for selected theme/widget
 		enabled = true;
 		model.set(iter, 0, enabled, -1);
 	}
@@ -1126,8 +1141,8 @@ public class MainWindow : Window {
 		model.get_iter_from_string (out iter, path);
 		model.get (iter, 0, out enabled, 1, out item, -1);
 		
+		//uncheck checkboxes for all other themes/widgets
 		if (item is ConkyTheme){
-			//reset the 'enabled' flag for all other themes
 			TreeIter iter2;
 			bool iterExists = model.get_iter_first (out iter2);
 			while (iterExists){
@@ -1138,7 +1153,7 @@ public class MainWindow : Window {
 			}
 		}
 
-		//toggle current item
+		//toggle checkbox for selected theme/widget
 		enabled = !enabled;
 		model.set (iter, 0, enabled);
 		

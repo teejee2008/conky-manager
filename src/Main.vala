@@ -709,6 +709,7 @@ Comment=
 		foreach(ConkyRC rc in conkyrc_list){
 			rc.enabled = false;
 		}
+		log_msg("Stopping all conkys... OK");
 	}
 
 	public Gdk.Pixbuf? get_app_icon(int icon_size){
@@ -1647,6 +1648,7 @@ public class ConkyRC : ConkyConfigItem {
 public class ConkyTheme : ConkyConfigItem {
 	public string wallpaper_path = "";
 	public string text = "";
+	public string wallpaper_scaling = "";
 	
 	public Gee.ArrayList<ConkyRC> conkyrc_list;
 	private Main main_app;
@@ -1664,18 +1666,37 @@ public class ConkyTheme : ConkyConfigItem {
 		
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
 		foreach(string line in read_file(theme_file_path).split("\n")){
+			//remove quotes
 			if (line.has_prefix("\"")){
 				line = line[1:line.length];
 			}
 			if (line.has_suffix("\"")){
 				line = line[0:line.length-1];
 			}
+			
+			//read options
+			if (line.contains("wallpaper-scaling") && (line.split(":").length == 2)){
+				string val = line.split(":")[1].strip().down();
+				switch (val){
+					case "scaled":
+					case "centered":
+					case "stretched":
+					case "zoom":
+					case "spanned":
+					case "none":
+					case "wallpaper":
+						wallpaper_scaling = val;
+						continue;
+				}
+			}
+			
+			//read wallpaper path
 			if (line.has_suffix(".png")||line.has_suffix(".jpg")||line.has_suffix(".jpeg")){
 				wallpaper_path = line.replace("~", Environment.get_home_dir());
 			}
 			else{
+				//read widget
 				string file_path = line.replace("~", Environment.get_home_dir());
-
 				foreach(ConkyRC item in _main_app.conkyrc_list){
 					if (item.path == file_path){
 						conkyrc_list.add(item);
@@ -1700,6 +1721,10 @@ public class ConkyTheme : ConkyConfigItem {
 	public void set_wallpaper(){
 		if ((wallpaper_path.length > 0)&&(file_exists(wallpaper_path))){
 			execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
+			if (wallpaper_scaling.length > 0){
+				Thread.usleep ((ulong) 1 * 1000000);
+				execute_command_sync("gsettings set org.gnome.desktop.background picture-options '%s'".printf(wallpaper_scaling));
+			}
 		}
 	}
 	
@@ -1729,10 +1754,10 @@ public class ConkyTheme : ConkyConfigItem {
 
 	public override void start(){
 		main_app.kill_all_conky();
+		set_wallpaper();
 		foreach(ConkyRC rc in conkyrc_list){
 			rc.start();
 		}
-		set_wallpaper();
 	}
 	
 	public override void stop(){
