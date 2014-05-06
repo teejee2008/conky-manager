@@ -43,8 +43,10 @@ public class MainWindow : Window {
 	private Button btn_add_theme;
 	private ToggleButton btn_preview;
 	private ToggleButton btn_list;
-	private ToggleButton btn_active;
 	private Gtk.Paned pane;
+	private Label lblFilter;
+	private Entry txtFilter;
+	private TreeModelFilter filterThemes;
 	
 	//toolbar
 	private Toolbar toolbar;
@@ -98,6 +100,8 @@ public class MainWindow : Window {
 		Gtk.drag_dest_set (this,Gtk.DestDefaults.ALL, targets, Gdk.DragAction.COPY);
 		drag_data_received.connect(on_drag_data_received);
 		
+		string tt = "";
+		
 		//vbox_main
         vbox_main = new Box (Orientation.VERTICAL, 6);
 		add(vbox_main);
@@ -128,7 +132,12 @@ public class MainWindow : Window {
 		});
 		
 		cmb_type.changed.connect(cmb_type_changed);
+
+		tt = _("Browse widgets or themes.\nA 'widget' is a conky configuration file (conkyrc)\nA 'theme' is a group of widgets plus wallpaper");
+		lbl_type.set_tooltip_text(tt);
+		cmb_type.set_tooltip_text(tt);
 		
+		//add theme button
 		btn_add_theme = new Button.with_label("");
 		btn_add_theme.set_size_request(10,-1);
 		btn_add_theme.set_image(new Image.from_stock ("gtk-add", IconSize.MENU));
@@ -137,7 +146,19 @@ public class MainWindow : Window {
 		hbox_widget.pack_start (btn_add_theme, false, true, 0);
 		
 		btn_add_theme.clicked.connect(btn_add_theme_clicked);
-
+		
+		//filter
+		lblFilter = new Label(_("Filter"));
+		hbox_widget.add(lblFilter);
+		
+		txtFilter = new Entry();
+		hbox_widget.pack_start (txtFilter, true, true, 0);
+		txtFilter.changed.connect(()=>{ filterThemes.refilter(); });
+		
+		tt = _("Enter name or path to filter.\nEnter '0' to list running widgets");
+		lblFilter.set_tooltip_text(tt);
+		txtFilter.set_tooltip_text(tt);
+		
 		//lbl_expand
 		Label lbl_expand = new Label ("");
 		lbl_expand.hexpand = true;
@@ -156,16 +177,9 @@ public class MainWindow : Window {
 		btn_list.set_image(App.get_shared_icon("","view-list.svg",16));
 		btn_list.set_tooltip_text(_("Toggle List"));
 		hbox_widget.pack_start (btn_list, false, true, 0);
-		
-		//btn_active
-		btn_active = new ToggleButton.with_label(_("Active"));
-		btn_active.active = false;
-		btn_active.set_tooltip_text(_("Show Active Widgets Only"));
-		hbox_widget.pack_start (btn_active, false, true, 0);
 
 		btn_preview.toggled.connect(btn_preview_toggled);
 		btn_list.toggled.connect(btn_list_toggled);
-		btn_active.toggled.connect(btn_active_toggled);
 		
 		//status
         vbox_status = new Box (Orientation.VERTICAL, 3);
@@ -496,6 +510,8 @@ public class MainWindow : Window {
 	
 	private void reload_themes(){
 		
+		txtFilter.text = "";
+		
 		double vpos = sw_widget.vadjustment.value;
 		
 		tv_widget_refresh();
@@ -552,11 +568,6 @@ public class MainWindow : Window {
 		}
 	}
 
-	private void btn_active_toggled(){
-		App.show_active = btn_active.active;
-		reload_themes();
-	}
-	
 	private void cmb_type_refresh(){
 		ListStore store = new ListStore(1, typeof(string));
 
@@ -572,9 +583,8 @@ public class MainWindow : Window {
 
 	private void cmb_type_changed(){
 		btn_add_theme.visible = (cmb_type.active == 1);
-		btn_active.visible = (cmb_type.active == 0);
 		btn_generate_preview.visible = (cmb_type.active == 0);
-		btn_active.active = false;
+		txtFilter.text = "";
 		reload_themes();
 	}
 
@@ -617,12 +627,11 @@ public class MainWindow : Window {
 		TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
 		TreeIter iter;
 		bool enabled;
-		ListStore model = (ListStore) tv_widget.model;
+		var model = get_tv_model();
 		model.get_iter(out iter, path);
 		model.get(iter, 0, out enabled, -1);
 		
 		//uncheck checkboxes for all other themes/widgets
-		model = (ListStore)tv_widget.model;
 		if (item is ConkyTheme){
 			TreeIter iter2;
 			bool iterExists = model.get_iter_first (out iter2);
@@ -648,7 +657,7 @@ public class MainWindow : Window {
 		TreeIter iter;
 		bool enabled;
 		
-		var model = (ListStore) tv_widget.model;
+		var model = get_tv_model();
 		model.get_iter(out iter, path);
 		model.get(iter, 0, out enabled, -1);
 		enabled = false;
@@ -829,7 +838,7 @@ public class MainWindow : Window {
 	private void btn_kill_all_clicked(){
 		App.kill_all_conky();
 		
-		ListStore model = (ListStore)tv_widget.model;
+		var model = get_tv_model();
 		TreeIter iter;
 		bool enabled;
 		ConkyConfigItem item;
@@ -1084,9 +1093,7 @@ public class MainWindow : Window {
 	//list view handlers
 
 	private void tv_widget_refresh(){
-		ListStore model = null;
-		
-		model = new ListStore(2, typeof(bool), typeof(ConkyConfigItem));
+		ListStore model = new ListStore(2, typeof(bool), typeof(ConkyConfigItem));
 		
 		Gee.ArrayList<ConkyConfigItem> list = null;
 		if (cmb_type.active == 0){
@@ -1108,14 +1115,48 @@ public class MainWindow : Window {
 			model.set(iter, 0, item.enabled);
 			model.set(iter, 1, item);
 		}
-
-		tv_widget.set_model(model);
+		
+		filterThemes = new TreeModelFilter (model, null);
+		filterThemes.set_visible_func(filterThemes_filter);
+		tv_widget.set_model (filterThemes);
 		tv_widget.columns_autosize();
+	}
+
+	private bool filterThemes_filter (Gtk.TreeModel model, Gtk.TreeIter iter){
+		if ((txtFilter.text == null)||(txtFilter.text.strip().length == 0)){
+			return true;
+		}
+		
+		ConkyConfigItem item;
+		model.get (iter, 1, out item, -1);
+		
+		switch (txtFilter.text.strip().down()){
+			case "active":
+			case "enabled":
+			case "running":
+			case "0":
+				return item.enabled;
+		}
+		
+		try{
+			Regex regexName = new Regex (txtFilter.text, RegexCompileFlags.CASELESS);
+			MatchInfo match;
+
+			if (regexName.match (item.name, 0, out match)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		catch (Error e) {
+			return false;
+		}
 	}
 	
 	private void tv_widget_row_activated (TreePath path, TreeViewColumn column){
 		TreeIter iter;
-		ListStore model = (ListStore)tv_widget.model;
+		var model = get_tv_model();
 		bool enabled;
 		
 		ConkyConfigItem item;
@@ -1136,7 +1177,7 @@ public class MainWindow : Window {
 	
 	private void cell_widget_enable_toggled (string path){
 		TreeIter iter;
-		ListStore model = (ListStore)tv_widget.model;
+		var model = get_tv_model();
 		bool enabled;
 		ConkyConfigItem item;
 		
@@ -1170,5 +1211,9 @@ public class MainWindow : Window {
 		}
 		
 		gtk_set_busy(false, this);
+	}
+
+	private ListStore get_tv_model(){
+		return (ListStore) ((TreeModelFilter)tv_widget.model).child_model;
 	}
 }
