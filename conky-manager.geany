@@ -25,17 +25,15 @@ long_line_column=72
 [files]
 current_page=2
 FILE_NAME_0=32093;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
-FILE_NAME_1=42068;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_2=4392;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+FILE_NAME_1=22328;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_2=25201;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
 FILE_NAME_3=4834;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FEditWindow.vala;0;4
 FILE_NAME_4=345;None;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
-FILE_NAME_5=474;Make;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
-FILE_NAME_6=1135;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FSettingsWindow.vala;0;4
-FILE_NAME_7=2400;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FDonationWindow.vala;0;4
-FILE_NAME_8=1568;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FGeneratePreviewWindow.vala;0;4
-FILE_NAME_9=6190;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FCreateThemeWindow.vala;0;4
-FILE_NAME_10=31375;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fselene%2Fsrc%2FMainWindow.vala;0;4
-FILE_NAME_11=641;Conf;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fcontrol;0;4
+FILE_NAME_5=399;Make;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
+FILE_NAME_6=2400;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FDonationWindow.vala;0;4
+FILE_NAME_7=641;Conf;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fcontrol;0;4
+FILE_NAME_8=6072;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FAboutWindow.vala;0;4
+FILE_NAME_9=19395;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Ftimeshift%2Fsrc%2FSettingsWindow.vala;0;4
 
 [VTE]
 last_dir=/home/teejee

@@ -908,18 +908,32 @@ public class MainWindow : Window {
 		dialog.destroy();
 	}
 
-	private void btn_about_clicked (){
-		
-		var dialog = new Gtk.AboutDialog();
-		dialog.set_destroy_with_parent (true);
+	private void btn_about_clicked(){
+		var dialog = new AboutWindow();
 		dialog.set_transient_for (this);
-		dialog.set_modal (true);
-		
-		//dialog.artists = {"", ""};
-		dialog.authors = {"Tony George"};
+
+		dialog.authors = {
+			"Tony George:teejeetech@gmail.com"
+		};
+
+		dialog.translators = {
+			"Herve Robin",
+			"Harald H.",
+			"Jonatan Zeidler",
+			"Jiri Grönroos",
+			"Aleksey Kabanov",
+			"Саша Петровић",
+			"Stuartlittle1970@gmail.com",
+			"Litty",
+			"Kenichi Ito",
+			"gogo",
+			"Kondrashyn Artem",
+			"Tobias Bannert"
+		}; 
+
 		dialog.documenters = null; 
-		//dialog.translator_credits = "tomberry88 (Italian)"; 
-		//dialog.add_credit_section("Sponsors", "Colin Mills");
+		dialog.artists = null;
+		dialog.donations = null;
 		
 		dialog.program_name = "Conky Manager";
 		dialog.comments = _("Utility for managing Conky configuration files");
@@ -928,18 +942,11 @@ public class MainWindow : Window {
 		dialog.logo = App.get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
-		dialog.wrap_license = true;
-
 		dialog.website = "http://teejeetech.in";
 		dialog.website_label = "http://teejeetech.blogspot.in";
 
-		dialog.response.connect ((response_id) => {
-			if (response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT) {
-				dialog.hide_on_delete ();
-			}
-		});
-
-		dialog.present ();
+		dialog.initialize();
+		dialog.show_all();
 	}
 	
 	private void show_preview(ConkyConfigItem? item){
@@ -1131,9 +1138,6 @@ public class MainWindow : Window {
 		model.get (iter, 1, out item, -1);
 		
 		switch (txtFilter.text.strip().down()){
-			case "active":
-			case "enabled":
-			case "running":
 			case "0":
 				return item.enabled;
 		}
