@@ -144,14 +144,16 @@ public class MainWindow : Window {
 		hbox_widget.add(lbl_expand);
 		
 		//btn_preview
-		btn_preview = new ToggleButton.with_label(_("Preview"));
+		btn_preview = new ToggleButton.with_label("");
 		btn_preview.active = App.show_preview;
+		btn_preview.set_image(App.get_shared_icon("","view-preview.svg",16));
 		btn_preview.set_tooltip_text(_("Toggle Preview"));
 		hbox_widget.pack_start (btn_preview, false, true, 0);
 
 		//btn_list
-		btn_list = new ToggleButton.with_label(_("List"));
+		btn_list = new ToggleButton.with_label("");
 		btn_list.active = App.show_list;
+		btn_list.set_image(App.get_shared_icon("","view-list.svg",16));
 		btn_list.set_tooltip_text(_("Toggle List"));
 		hbox_widget.pack_start (btn_list, false, true, 0);
 		

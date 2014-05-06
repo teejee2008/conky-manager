@@ -77,7 +77,8 @@ public class CreateThemeWindow : Dialog {
 		init_list_view();
 
         // lbl_header_wp
-		Label lbl_header_wp = new Label ("<b>" + _("Wallpaper") + ":</b>");
+		Label lbl_header_wp = new Label ("<b>" + _("Wallpaper") + " - </b><i>" + _("Include desktop wallpaper in theme") + "</i>");
+		lbl_header_wp.margin_top = 5;
 		lbl_header_wp.set_use_markup(true);
 		lbl_header_wp.halign = Align.START;
 		vbox_main.pack_start (lbl_header_wp, false, true, 0);
@@ -89,7 +90,7 @@ public class CreateThemeWindow : Dialog {
         vbox_main.pack_start (grid_wp, false, true, 0);
 
 		//lbl_wp_option
-		Label lbl_wp_option = new Label (_("Wallpaper") + ":");
+		Label lbl_wp_option = new Label (_("Wallpaper") + ":" );
 		lbl_wp_option.xalign = (float) 0.0;
 		grid_wp.attach(lbl_wp_option,0,0,1,1);
 
@@ -205,13 +206,14 @@ public class CreateThemeWindow : Dialog {
 					break;
 			}
 		}
-		
-		
+
 		//set initial state
 		cmb_wallpaper.changed.connect(()=>{
 			fcb_wallpaper.sensitive = (cmb_wallpaper.active == 2);
+			cmb_scaling.sensitive = (cmb_wallpaper.active != 0);
 		});
 		fcb_wallpaper.sensitive = (cmb_wallpaper.active == 2);
+		cmb_scaling.sensitive = (cmb_wallpaper.active != 0);
 		
 		tv_widget_refresh();
 		
@@ -237,7 +239,9 @@ public class CreateThemeWindow : Dialog {
 	private void init_list_view(){
 		
         // lbl_header_widgets
-		Label lbl_header_widgets = new Label ("<b>" + _("Widgets") + ":</b>");
+		Label lbl_header_widgets = new Label ("<b>" + _("Widgets") + " - </b><i>" + _("Include running widgets in theme") + "</i>");
+		lbl_header_widgets.set_tooltip_text(_("Include running widgets in theme"));
+		lbl_header_widgets.margin_top = 5;
 		lbl_header_widgets.set_use_markup(true);
 		lbl_header_widgets.halign = Align.START;
 		vbox_main.pack_start (lbl_header_widgets, false, true, 0);
