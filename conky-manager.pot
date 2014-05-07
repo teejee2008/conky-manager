@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: conky-manager 1.0\n"
+"Project-Id-Version: conky-manager 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2013-07-14 21:37+0530\n"
+"POT-Creation-Date: 2014-05-07 11:18+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,353 +17,775 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/MainWindow.vala:607
+#: src/EditWindow.vala:384 src/MainWindowbak.vala:624
 msgid "12 Hour"
 msgstr ""
 
-#: src/MainWindow.vala:609
+#: src/EditWindow.vala:386 src/MainWindowbak.vala:626
 msgid "24 Hour"
 msgstr ""
 
-#: src/MainWindow.vala:760
+#: src/MainWindow.vala:402 src/MainWindow.vala:403 src/MainWindowbak.vala:723
 msgid "About"
 msgstr ""
 
-#: src/MainWindow.vala:311
+#: src/SettingsWindow.vala:199
+msgid "Add"
+msgstr ""
+
+#: src/SettingsWindow.vala:152
+msgid "Additional locations to search for Conky themes"
+msgstr ""
+
+#: src/EditWindow.vala:104 src/MainWindowbak.vala:328
 msgid "Alignment"
 msgstr ""
 
-#: src/MainWindow.vala:671 src/MainWindow.vala:674 src/MainWindow.vala:682
+#: src/GeneratePreviewWindow.vala:68
+msgid "All Widgets (Overwrite Existing Image)"
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:65
+msgid "All Widgets with Missing Previews"
+msgstr ""
+
+#: src/Main.vala:210
+msgid "App config loaded"
+msgstr ""
+
+#: src/Main.vala:162
+msgid "App config saved"
+msgstr ""
+
+#: src/MainWindow.vala:384 src/SettingsWindow.vala:47
+msgid "Application Settings"
+msgstr ""
+
+#: src/EditWindow.vala:445
+msgid "Apply"
+msgstr ""
+
+#: src/EditWindow.vala:448 src/MainWindowbak.vala:688
+#: src/MainWindowbak.vala:691 src/MainWindowbak.vala:699
 msgid "Apply Changes"
 msgstr ""
 
-#: src/MainWindow.vala:437
+#: src/AboutWindow.vala:312
+#, c-format
+msgid "Artists"
+msgstr ""
+
+#: src/AboutWindow.vala:304
+#, c-format
+msgid "Authors"
+msgstr ""
+
+#: src/AboutWindow.vala:275
+msgid "Back"
+msgstr ""
+
+#: src/EditWindow.vala:312 src/MainWindowbak.vala:454
 msgid "Background Color"
 msgstr ""
 
-#: src/MainWindow.vala:333
+#: src/EditWindow.vala:125 src/MainWindowbak.vala:350
 msgid "Bottom Left"
 msgstr ""
 
-#: src/MainWindow.vala:337
+#: src/EditWindow.vala:129 src/MainWindowbak.vala:354
 msgid "Bottom Middle"
 msgstr ""
 
-#: src/MainWindow.vala:335
+#: src/EditWindow.vala:127 src/MainWindowbak.vala:352
 msgid "Bottom Right"
 msgstr ""
 
-#: src/MainWindow.vala:730
-msgid "Commands"
+#: src/MainWindow.vala:136
+msgid ""
+"Browse widgets or themes.\n"
+"\n"
+"Widgets are Conky configuration files (conkyrc files)\n"
+"Themes are a set of Widgets along with wallpaper (cmtheme files)"
 msgstr ""
 
-#: src/Main.vala:80 src/Main.vala:86 src/Main.vala:92 src/Main.vala:98
+#: src/MainWindow.vala:119
+msgid "Browse:"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:232 src/GeneratePreviewWindow.vala:126
+#: src/SettingsWindow.vala:221
+msgid "Cancel"
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:82
+msgid "Capture Desktop Background"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:122
+msgid "Choose File"
+msgstr ""
+
+#: src/AboutWindow.vala:285 src/EditWindow.vala:461
+msgid "Close"
+msgstr ""
+
+#: src/Main.vala:604
+msgid "Copy files: "
+msgstr ""
+
+#: src/AboutWindow.vala:262 src/AboutWindow.vala:279 src/MainWindow.vala:233
+msgid "Credits"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:115
+msgid "Current Wallpaper"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:117
+msgid "Custom Wallpaper"
+msgstr ""
+
+#: src/DonationWindow.vala:54
+msgid ""
+"Did you find this software useful?\n"
+"\n"
+"Please consider making a donation to show your support.\n"
+"\n"
+"This application is completely free and will continue to remain that way. "
+"Your contributions will help in keeping this project alive and developing it "
+"further.\n"
+"\n"
+"Feel free to mail me if you find any issues or if you need any changes in "
+"this application. I can be reached at teejeetech@gmail.com.\n"
+"\n"
+"~ Tony George"
+msgstr ""
+
+#: src/Main.vala:219 src/Main.vala:225 src/Main.vala:231 src/Main.vala:237
 msgid "Directory Created"
 msgstr ""
 
-#: src/MainWindow.vala:679
+#: src/MainWindowbak.vala:696
 msgid "Discard"
 msgstr ""
 
-#: src/MainWindow.vala:240
+#: src/EditWindow.vala:464
+msgid "Discard Changes"
+msgstr ""
+
+#: src/AboutWindow.vala:328
+#, c-format
+msgid "Documenters"
+msgstr ""
+
+#: src/DonationWindow.vala:36 src/MainWindow.vala:393 src/MainWindow.vala:394
+msgid "Donate"
+msgstr ""
+
+#: src/DonationWindow.vala:67
+msgid "Donate via PayPal"
+msgstr ""
+
+#: src/AboutWindow.vala:336
+#, c-format
+msgid "Donors"
+msgstr ""
+
+#: src/MainWindow.vala:307 src/MainWindowbak.vala:257
 msgid "Edit"
 msgstr ""
 
-#: src/MainWindow.vala:152 src/MainWindow.vala:193
+#: src/CreateThemeWindow.vala:57
+msgid "Edit Theme"
+msgstr ""
+
+#: src/EditWindow.vala:64 src/MainWindow.vala:308
+msgid "Edit Widget"
+msgstr ""
+
+#: src/MainWindow.vala:317
+msgid "Edit file manually in a text editor"
+msgstr ""
+
+#: src/MainWindow.vala:424 src/MainWindowbak.vala:169
+#: src/MainWindowbak.vala:210
 msgid "Enable"
 msgstr ""
 
-#: src/Main.vala:623
-msgid "Font Installed: "
+#: src/MainWindow.vala:158
+msgid ""
+"Enter name or path to filter.\n"
+"Enter '0' to list running widgets"
 msgstr ""
 
-#: src/Main.vala:266
+#: src/Utility.vala:103
+msgid "Error"
+msgstr ""
+
+#: src/Main.vala:515
+msgid "Failed to unzip files from theme pack"
+msgstr ""
+
+#: src/MainWindow.vala:151
+msgid "Filter"
+msgstr ""
+
+#: src/Main.vala:465
+msgid "Font Copied: "
+msgstr ""
+
+#: src/Main.vala:576
 msgid "Font copied"
 msgstr ""
 
-#: src/Main.vala:568
-msgid "Found config"
-msgstr ""
-
-#: src/Main.vala:148
+#: src/Main.vala:277
 msgid "Found theme pack [installed]"
 msgstr ""
 
-#: src/Main.vala:156
+#: src/Main.vala:285
 msgid "Found theme pack [new]"
 msgstr ""
 
-#: src/MainWindow.vala:526
+#: src/SettingsWindow.vala:76
+msgid "General"
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:44 src/MainWindow.vala:348
+msgid "Generate Preview"
+msgstr ""
+
+#: src/MainWindow.vala:349
+msgid "Generate preview images"
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:56
+msgid "Generate preview images for"
+msgstr ""
+
+#: src/MainWindow.vala:740 src/MainWindow.vala:814
+msgid "Generating Previews"
+msgstr ""
+
+#: src/EditWindow.vala:213 src/MainWindowbak.vala:543
 msgid "Height Padding"
 msgstr ""
 
-#: src/MainWindow.vala:507
+#: src/EditWindow.vala:195 src/MainWindowbak.vala:524
 msgid ""
 "Height should be larger than the size of window contents,\n"
 "otherwise this setting will not have any effect"
 msgstr ""
 
-#: src/MainWindow.vala:347
+#: src/EditWindow.vala:139 src/MainWindowbak.vala:364
 msgid "Horizontal Gap"
 msgstr ""
 
-#: src/MainWindow.vala:721
-msgid "Import Conky Manager Theme Pack (*.cmtp.7z)"
+#: src/MainWindow.vala:368
+msgid "Import"
 msgstr ""
 
-#: src/MainWindow.vala:1341
+#: src/MainWindow.vala:856 src/MainWindowbak.vala:1310
+msgid "Import Theme Pack"
+msgstr ""
+
+#: src/MainWindow.vala:369
 msgid "Import Theme Pack (*.cmtp.7z)"
 msgstr ""
 
-#: src/MainWindow.vala:523
+#: src/CreateThemeWindow.vala:80
+msgid "Include desktop wallpaper in theme"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:242 src/CreateThemeWindow.vala:243
+msgid "Include running widgets in theme"
+msgstr ""
+
+#: src/EditWindow.vala:210 src/MainWindowbak.vala:540
 msgid ""
 "Increases the window height by adding empty lines at the end of the Conky "
 "config file"
 msgstr ""
 
-#: src/MainWindow.vala:212 src/MainWindow.vala:1292
+#: src/MainWindowbak.vala:229 src/MainWindowbak.vala:1246
 msgid "Info"
 msgstr ""
 
-#: src/Main.vala:204
+#: src/Main.vala:508
 msgid "Installing"
 msgstr ""
 
-#: src/MainWindow.vala:629
+#: src/EditWindow.vala:406 src/MainWindowbak.vala:646
 msgid "Interface"
 msgstr ""
 
-#: src/MainWindow.vala:742
-msgid "Kill Conky"
-msgstr ""
-
-#: src/MainWindow.vala:747
-msgid "Kill all running Conky instances"
-msgstr ""
-
-#: src/MainWindow.vala:649
+#: src/EditWindow.vala:425 src/MainWindowbak.vala:666
 msgid "LAN"
 msgstr ""
 
-#: src/MainWindow.vala:296
+#: src/MainWindowbak.vala:899
+msgid "Load theme"
+msgstr ""
+
+#: src/EditWindow.vala:475
+msgid "Loading"
+msgstr ""
+
+#: src/EditWindow.vala:88 src/MainWindowbak.vala:313
+#: src/SettingsWindow.vala:173
 msgid "Location"
 msgstr ""
 
-#: src/MainWindow.vala:339
+#: src/SettingsWindow.vala:126
+msgid "Locations"
+msgstr ""
+
+#: src/MainWindow.vala:316
+msgid "Manual Edit"
+msgstr ""
+
+#: src/EditWindow.vala:131 src/MainWindowbak.vala:356
 msgid "Middle Left"
 msgstr ""
 
-#: src/MainWindow.vala:343
+#: src/EditWindow.vala:135 src/MainWindowbak.vala:360
 msgid "Middle Middle"
 msgstr ""
 
-#: src/MainWindow.vala:341
+#: src/EditWindow.vala:133 src/MainWindowbak.vala:358
 msgid "Middle Right"
 msgstr ""
 
-#: src/MainWindow.vala:278
+#: src/MainWindowbak.vala:295
 msgid "Minimize all windows and show the widget on the desktop"
 msgstr ""
 
-#: src/MainWindow.vala:510
+#: src/EditWindow.vala:198 src/MainWindowbak.vala:527
 msgid "Minimum Height"
 msgstr ""
 
-#: src/MainWindow.vala:493
+#: src/EditWindow.vala:182 src/MainWindowbak.vala:510
 msgid "Minimum Width"
 msgstr ""
 
-#: src/MainWindow.vala:613
+#: src/Main.vala:751
+msgid "Missing Icon"
+msgstr ""
+
+#: src/MainWindow.vala:993
+msgid "N/A"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:349
+msgid "Name Required"
+msgstr ""
+
+#: src/EditWindow.vala:390 src/MainWindowbak.vala:630
 msgid "Network"
 msgstr ""
 
-#: src/MainWindow.vala:1020
+#: src/EditWindow.vala:522 src/MainWindowbak.vala:983
 msgid "Network interface cannot be changed for selected widget"
 msgstr ""
 
-#: src/MainWindow.vala:422
+#: src/MainWindow.vala:275
+msgid "Next"
+msgstr ""
+
+#: src/MainWindow.vala:276
+msgid "Next Widget"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:362
+msgid "No Widgets Selected"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:113
+msgid "None"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:225 src/GeneratePreviewWindow.vala:103
+#: src/SettingsWindow.vala:215
+msgid "OK"
+msgstr ""
+
+#: src/EditWindow.vala:298 src/MainWindowbak.vala:439
 msgid "Opacity (%)"
 msgstr ""
 
-#: src/MainWindow.vala:410
+#: src/EditWindow.vala:286 src/MainWindowbak.vala:427
 msgid "Opaque"
 msgstr ""
 
-#: src/MainWindow.vala:693
+#: src/MainWindow.vala:325
+msgid "Open Folder"
+msgstr ""
+
+#: src/MainWindow.vala:326
+msgid "Open Theme Folder"
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:71 src/MainWindowbak.vala:710
 msgid "Options"
 msgstr ""
 
-#: src/MainWindow.vala:220 src/MainWindow.vala:1312
+#: src/CreateThemeWindow.vala:350
+msgid "Please enter theme name"
+msgstr ""
+
+#: src/MainWindowbak.vala:237 src/MainWindowbak.vala:1266
 msgid "Preview"
 msgstr ""
 
-#: src/MainWindow.vala:223
+#: src/MainWindowbak.vala:240
 msgid "Preview Theme"
 msgstr ""
 
-#: src/MainWindow.vala:282
+#: src/MainWindow.vala:266
+msgid "Previous"
+msgstr ""
+
+#: src/MainWindow.vala:267
+msgid "Previous Widget"
+msgstr ""
+
+#: src/MainWindowbak.vala:299
 msgid "Properties"
 msgstr ""
 
-#: src/MainWindow.vala:414
+#: src/EditWindow.vala:290 src/MainWindowbak.vala:431
 msgid "Pseudo-Transparent"
 msgstr ""
 
-#: src/MainWindow.vala:228
+#: src/MainWindow.vala:339
+msgid "Refresh"
+msgstr ""
+
+#: src/MainWindowbak.vala:245
 msgid "Refresh List"
 msgstr ""
 
-#: src/MainWindow.vala:234
+#: src/MainWindowbak.vala:251
 msgid "Reload list of themes"
 msgstr ""
 
-#: src/MainWindow.vala:706
+#: src/SettingsWindow.vala:205
+msgid "Remove"
+msgstr ""
+
+#: src/EditWindow.vala:453
+msgid "Reset"
+msgstr ""
+
+#: src/EditWindow.vala:456
+msgid "Reset Changes"
+msgstr ""
+
+#: src/SettingsWindow.vala:86
 msgid "Run Conky at system startup"
 msgstr ""
 
-#: src/MainWindow.vala:416
+#: src/CreateThemeWindow.vala:57
+msgid "Save Theme"
+msgstr ""
+
+#: src/Main.vala:1042
+msgid "Saved"
+msgstr ""
+
+#: src/MainWindow.vala:145
+msgid "Saving running widgets as new theme"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:144
+msgid "Scaling"
+msgstr ""
+
+#: src/MainWindow.vala:340
+msgid "Search for new themes"
+msgstr ""
+
+#: src/MainWindow.vala:1005
+msgid "Searching directories..."
+msgstr ""
+
+#: src/Main.vala:312
+#, c-format
+msgid "Searching for conkyrc files... %d found"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:127
+msgid "Select Wallpaper"
+msgstr ""
+
+#: src/SettingsWindow.vala:270
+msgid "Select directory"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:363
+msgid "Select the widgets to include in theme"
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:62
+msgid "Selected Widget"
+msgstr ""
+
+#: src/EditWindow.vala:292 src/MainWindowbak.vala:433
 msgid "Semi-Transparent"
 msgstr ""
 
-#: src/MainWindow.vala:556
+#: src/DonationWindow.vala:74
+msgid "Send Email"
+msgstr ""
+
+#: src/EditWindow.vala:240 src/MainWindowbak.vala:573
 msgid ""
 "Setting Type to \"Opaque\" (from the transparency tab) will make it easier "
 "to see the changes"
 msgstr ""
 
-#: src/MainWindow.vala:463
+#: src/EditWindow.vala:335 src/MainWindowbak.vala:480
 msgid ""
 "Setting Type to \"Pseudo-Transparent\" will make the window transparent but "
 "the window will have a shadow. The shadow can be disabled by configuring "
 "your window manager."
 msgstr ""
 
-#: src/MainWindow.vala:452
+#: src/EditWindow.vala:325 src/MainWindowbak.vala:469
 msgid ""
 "Setting Type to \"Transparent\" will make the whole window transparent "
 "(including any images). Use \"Pseudo-Transparent\" if you want the images to "
 "be opaque."
 msgstr ""
 
-#: src/MainWindow.vala:272
+#: src/MainWindow.vala:383
+msgid "Settings"
+msgstr ""
+
+#: src/MainWindowbak.vala:289
 msgid "Show Desktop"
 msgstr ""
 
-#: src/MainWindow.vala:475
+#: src/EditWindow.vala:164 src/MainWindowbak.vala:492
 msgid "Size"
 msgstr ""
 
-#: src/Main.vala:706
+#: src/MainWindow.vala:223
+msgid "Source"
+msgstr ""
+
+#: src/MainWindow.vala:284 src/MainWindow.vala:293
+msgid "Start"
+msgstr ""
+
+#: src/MainWindow.vala:285
+msgid "Start/Restart Widget"
+msgstr ""
+
+#: src/Main.vala:953
 msgid "Started"
 msgstr ""
 
-#: src/MainWindow.vala:698
-msgid "Startup"
+#: src/SettingsWindow.vala:105
+msgid "Startup Delay (seconds)"
 msgstr ""
 
-#: src/Main.vala:726
+#: src/MainWindow.vala:205 src/MainWindow.vala:207
+msgid "Stop"
+msgstr ""
+
+#: src/MainWindow.vala:359
+msgid "Stop All Widgets"
+msgstr ""
+
+#: src/MainWindow.vala:294
+msgid "Stop Widget"
+msgstr ""
+
+#: src/MainWindow.vala:360
+msgid "Stop all running widgets"
+msgstr ""
+
+#: src/Main.vala:979 src/Utility.vala:710
 msgid "Stopped"
 msgstr ""
 
-#: src/MainWindow.vala:545
+#: src/EditWindow.vala:230 src/MainWindowbak.vala:562
 msgid ""
 "The minimum width & height must be more than the size of the window "
 "contents, otherwise the setting will not have any effect."
 msgstr ""
 
-#: src/MainWindow.vala:119 src/MainWindow.vala:139
+#: src/MainWindowbak.vala:136 src/MainWindowbak.vala:156
 msgid "Theme"
 msgstr ""
 
-#: src/MainWindow.vala:215
+#: src/SettingsWindow.vala:137
+msgid "Theme Directory"
+msgstr ""
+
+#: src/MainWindowbak.vala:232
 msgid "Theme Info"
 msgstr ""
 
-#: src/MainWindow.vala:714
-msgid "Theme Packs"
+#: src/CreateThemeWindow.vala:67
+msgid "Theme Name"
 msgstr ""
 
-#: src/Main.vala:237
+#: src/Main.vala:547
 msgid "Theme copied"
 msgstr ""
 
-#: src/MainWindow.vala:1381
+#: src/MainWindow.vala:578
+msgid "Themes"
+msgstr ""
+
+#: src/MainWindow.vala:550 src/MainWindow.vala:892 src/MainWindowbak.vala:1350
 msgid "Themes Imported"
 msgstr ""
 
-#: src/MainWindow.vala:568
+#: src/EditWindow.vala:346 src/MainWindowbak.vala:585
 msgid "Time"
 msgstr ""
 
-#: src/MainWindow.vala:584
+#: src/EditWindow.vala:362 src/MainWindowbak.vala:601
 msgid "Time Format"
 msgstr ""
 
-#: src/MainWindow.vala:1004
+#: src/EditWindow.vala:506 src/MainWindowbak.vala:967
 msgid "Time format cannot be changed for selected widget"
 msgstr ""
 
-#: src/MainWindow.vala:327
+#: src/MainWindow.vala:178
+msgid "Toggle List"
+msgstr ""
+
+#: src/MainWindow.vala:171
+msgid "Toggle Preview"
+msgstr ""
+
+#: src/EditWindow.vala:119 src/MainWindowbak.vala:344
 msgid "Top Left"
 msgstr ""
 
-#: src/MainWindow.vala:331
+#: src/EditWindow.vala:123 src/MainWindowbak.vala:348
 msgid "Top Middle"
 msgstr ""
 
-#: src/MainWindow.vala:329
+#: src/EditWindow.vala:121 src/MainWindowbak.vala:346
 msgid "Top Right"
 msgstr ""
 
-#: src/MainWindow.vala:374
+#: src/AboutWindow.vala:320
+#, c-format
+msgid "Translators"
+msgstr ""
+
+#: src/EditWindow.vala:251 src/MainWindowbak.vala:391
 msgid "Transparency"
 msgstr ""
 
-#: src/MainWindow.vala:391
+#: src/EditWindow.vala:268 src/MainWindowbak.vala:408
 msgid "Transparency Type"
 msgstr ""
 
-#: src/MainWindow.vala:412
+#: src/EditWindow.vala:288 src/MainWindowbak.vala:429
 msgid "Transparent"
 msgstr ""
 
-#: src/MainWindow.vala:772
+#: src/EditWindow.vala:545 src/MainWindowbak.vala:1011
+msgid "Updating theme"
+msgstr ""
+
+#: src/MainWindow.vala:457
+msgid ""
+"Use the keyboard arrow keys to browse.\n"
+"Press ENTER to start and stop."
+msgstr ""
+
+#: src/MainWindow.vala:939
+msgid "Utility for managing Conky configuration files"
+msgstr ""
+
+#: src/MainWindowbak.vala:735
 msgid "Version"
 msgstr ""
 
-#: src/MainWindow.vala:360
+#: src/EditWindow.vala:151 src/MainWindowbak.vala:377
 msgid "Vertical Gap"
 msgstr ""
 
-#: src/MainWindow.vala:640
+#: src/DonationWindow.vala:81
+msgid "Visit Website"
+msgstr ""
+
+#: src/CreateThemeWindow.vala:80 src/CreateThemeWindow.vala:93
+msgid "Wallpaper"
+msgstr ""
+
+#: src/Main.vala:1747 src/Main.vala:1755
+msgid "Wallpaper saved"
+msgstr ""
+
+#: src/Utility.vala:103
+msgid "Warning"
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:86
+msgid ""
+"When enabled, the generated image will have the same background as the "
+"current desktop wallpaper. When disabled, the background will be a solid "
+"color (the widget's background color)."
+msgstr ""
+
+#: src/EditWindow.vala:416 src/MainWindowbak.vala:657
 msgid "WiFi"
 msgstr ""
 
-#: src/MainWindow.vala:645
+#: src/EditWindow.vala:421 src/MainWindowbak.vala:662
 msgid "WiFi Network"
 msgstr ""
 
-#: src/MainWindow.vala:180 src/MainWindow.vala:254
+#: src/MainWindowbak.vala:197 src/MainWindowbak.vala:271
 msgid "Widget"
 msgstr ""
 
-#: src/MainWindow.vala:490
+#: src/CreateThemeWindow.vala:242 src/MainWindow.vala:576
+msgid "Widgets"
+msgstr ""
+
+#: src/EditWindow.vala:179 src/MainWindowbak.vala:507
 msgid ""
 "Width should be larger than the size of window contents,\n"
 "otherwise this setting will not have any effect"
 msgstr ""
 
-#: src/MainWindow.vala:419
+#: src/EditWindow.vala:295 src/MainWindowbak.vala:436
 msgid ""
 "Window Opacity\n"
 "\n"
 "0 = Fully Transparent, 100 = Fully Opaque"
 msgstr ""
 
-#: src/MainWindow.vala:654
+#: src/EditWindow.vala:430 src/MainWindowbak.vala:671
 msgid "Wired LAN Network"
 msgstr ""
 
-#: src/MainWindow.vala:1381
+#: src/EditWindow.vala:140
+msgid "[GAP_X] Horizontal distance from window border (in pixels)"
+msgstr ""
+
+#: src/EditWindow.vala:152
+msgid "[GAP_Y] Vertical distance from window border (in pixels)"
+msgstr ""
+
+#: src/MainWindow.vala:892
+msgid "new themes imported successfully"
+msgstr ""
+
+#: src/MainWindow.vala:550
+msgid "new themes were imported"
+msgstr ""
+
+#: src/MainWindowbak.vala:1350
 msgid "new themes were imported."
 msgstr ""

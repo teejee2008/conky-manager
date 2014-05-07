@@ -41,7 +41,7 @@ public class GeneratePreviewWindow : Dialog {
 	private Switch switch_capture_bg;
 	
 	public GeneratePreviewWindow() {
-		title = "Generate Preview";
+		title = _("Generate Preview");
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
@@ -59,13 +59,13 @@ public class GeneratePreviewWindow : Dialog {
 		lbl_header.margin_bottom = 6;
 		vbox_main.add(lbl_header);
 		
-		optGenerateCurrent = new RadioButton.with_label_from_widget (null, "Selected Widget");
+		optGenerateCurrent = new RadioButton.with_label_from_widget (null, _("Selected Widget"));
 		vbox_main.add(optGenerateCurrent);
 		
-		optGenerateMissing = new RadioButton.with_label_from_widget (optGenerateCurrent, "All Widgets with Missing Previews");
+		optGenerateMissing = new RadioButton.with_label_from_widget (optGenerateCurrent, _("All Widgets with Missing Previews"));
 		vbox_main.add(optGenerateMissing);
 
-		optGenerateAll = new RadioButton.with_label_from_widget (optGenerateCurrent, "All Widgets (Overwrite Existing Image)");
+		optGenerateAll = new RadioButton.with_label_from_widget (optGenerateCurrent, _("All Widgets (Overwrite Existing Image)"));
 		vbox_main.add(optGenerateAll);
 
 		Label lbl_header2 = new Gtk.Label("<b>" + _("Options") + ":</b>");

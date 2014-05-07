@@ -91,7 +91,7 @@ public class MainWindow : Window {
 	};
 	
 	public MainWindow() {
-		title = AppName + " v" + AppVersion;// + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
+		title = AppName + " v" + AppVersion;
         window_position = WindowPosition.CENTER;
         modal = true;
         set_default_size(App.window_width, App.window_height);
@@ -133,7 +133,7 @@ public class MainWindow : Window {
 		
 		cmb_type.changed.connect(cmb_type_changed);
 
-		tt = _("Browse widgets or themes.\nA 'widget' is a conky configuration file (conkyrc)\nA 'theme' is a group of widgets plus wallpaper");
+		tt = _("Browse widgets or themes.\n\nWidgets are Conky configuration files (conkyrc files)\nThemes are a set of Widgets along with wallpaper (cmtheme files)");
 		lbl_type.set_tooltip_text(tt);
 		cmb_type.set_tooltip_text(tt);
 		
@@ -226,7 +226,7 @@ public class MainWindow : Window {
 		lbl_source.ellipsize = Pango.EllipsizeMode.END;
 		hbox_credits.pack_start (lbl_source, false, true, 0);
 		
-		lbtn_source = new LinkButton(_(""));
+		lbtn_source = new LinkButton("");
 		lbtn_source.halign = Align.START;
 		hbox_credits.pack_start (lbtn_source, true, true, 0);
 		
@@ -547,7 +547,7 @@ public class MainWindow : Window {
 
 		gtk_set_busy(false, this);
 
-		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."),this);
+		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported"),this);
     }
 	
 	//actions
@@ -573,9 +573,9 @@ public class MainWindow : Window {
 
 		TreeIter iter;
 		store.append(out iter);
-		store.set (iter, 0, "Widgets");
+		store.set (iter, 0, _("Widgets"));
 		store.append(out iter);
-		store.set (iter, 0, "Themes");
+		store.set (iter, 0, _("Themes"));
 			
 		cmb_type.set_model (store);
 		cmb_type.active = 0;
@@ -737,7 +737,7 @@ public class MainWindow : Window {
 			return; //cancel
 		}
 
-		progress_begin("Generating previews...");
+		progress_begin(_("Generating Previews") + "...");
 		
 		//change view
 		bool show_preview = btn_preview.active;
@@ -889,7 +889,7 @@ public class MainWindow : Window {
 
 		gtk_set_busy(false, this);
 
-		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported."),this);
+		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes imported successfully"),this);
 	}
 	
 	private void btn_settings_clicked(){

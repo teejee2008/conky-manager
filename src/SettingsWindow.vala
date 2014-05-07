@@ -44,7 +44,7 @@ public class SettingsWindow : Dialog {
 	private Gee.ArrayList<string> folder_list_user;
 	
 	public SettingsWindow() {
-		title = "Application Settings";
+		title = _("Application Settings");
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
@@ -186,7 +186,8 @@ public class SettingsWindow : Dialog {
 		col_path.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
 			string path;
 			model.get (iter, 0, out path, -1);
-			(cell as Gtk.CellRendererText).text = path;
+			string home = Environment.get_home_dir();
+			(cell as Gtk.CellRendererText).text = path.replace(home,"~");
 		});
 		tv_folders.append_column(col_path);
 		

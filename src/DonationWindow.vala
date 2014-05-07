@@ -33,7 +33,7 @@ using TeeJee.Misc;
 
 public class DonationWindow : Dialog {
 	public DonationWindow() {
-		title = "Donate";
+		title = _("Donate");
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);

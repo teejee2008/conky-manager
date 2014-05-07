@@ -61,7 +61,7 @@ public class EditWindow : Dialog {
 	private ConkyRC conkyrc;
 	
 	public EditWindow(ConkyRC conkyrc_edit) {
-		title = "Widget Editor";
+		title = _("Edit Widget");
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
@@ -137,7 +137,7 @@ public class EditWindow : Dialog {
 		
 		//lbl_gap_x
 		lbl_gap_x = new Gtk.Label(_("Horizontal Gap"));
-		lbl_gap_x.set_tooltip_text("[GAP_X] Horizontal distance from window border (in pixels)");
+		lbl_gap_x.set_tooltip_text(_("[GAP_X] Horizontal distance from window border (in pixels)"));
 		lbl_gap_x.xalign = (float) 0.0;
 		grid_widget_location.attach(lbl_gap_x,0,++row,1,1);
 		
@@ -149,7 +149,7 @@ public class EditWindow : Dialog {
 		
 		//lbl_gap_y
 		lbl_gap_y = new Gtk.Label(_("Vertical Gap"));
-		lbl_gap_y.set_tooltip_text("[GAP_Y] Vertical distance from window border (in pixels)");
+		lbl_gap_y.set_tooltip_text(_("[GAP_Y] Vertical distance from window border (in pixels)"));
 		lbl_gap_y.xalign = (float) 0.0;
 		grid_widget_location.attach(lbl_gap_y,0,++row,1,1);
 		
@@ -160,7 +160,7 @@ public class EditWindow : Dialog {
 		spin_gap_y.set_size_request(120,-1);
 		grid_widget_location.attach(spin_gap_y,1,row,1,1);
 
-//lblWidgetSize
+		//lblWidgetSize
 		Label lblWidgetSize = new Label (_("Size"));
 
 		//grid_widget_size  -----------------------------------------------------------
@@ -461,7 +461,7 @@ public class EditWindow : Dialog {
 		btn_cancel_changes = new Button.with_label("  " + _("Close"));
 		btn_cancel_changes.set_image (new Image.from_stock ("gtk-cancel", IconSize.MENU));
         btn_cancel_changes.clicked.connect (btn_cancel_changes_clicked);
-        btn_cancel_changes.set_tooltip_text (_("Reset Changes"));
+        btn_cancel_changes.set_tooltip_text (_("Discard Changes"));
         //btn_cancel_changes.set_size_request(-1,30);
 		hbox_action.add(btn_cancel_changes);
 		

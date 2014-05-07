@@ -126,7 +126,9 @@ public class Main : GLib.Object {
 
 	public void save_app_config(){
 		var config = new Json.Object();
-
+		
+		string home = Environment.get_home_dir();
+		
 		config.set_string_member("capture_background", capture_background.to_string());
 		config.set_string_member("selected_widget_index", selected_widget_index.to_string());
 		config.set_string_member("show_preview", show_preview.to_string());
@@ -138,7 +140,9 @@ public class Main : GLib.Object {
 
 		Json.Array arr = new Json.Array();
 		foreach(string path in search_folders){
-			arr.add_string_element(path);
+			if (path != data_dir){
+				arr.add_string_element(path.replace(home,"~"));
+			}
 		}
 		config.set_array_member("search-locations",arr);
 
@@ -196,8 +200,8 @@ public class Main : GLib.Object {
 		//add from config file
 		if (config.has_member ("search-locations")){
 			foreach (Json.Node jnode in config.get_array_member ("search-locations").get_elements()) {
-				string path = jnode.get_string();
-				if (!search_folders.contains(path) && dir_exists(path)){
+				string path = jnode.get_string().replace("~",home);
+				if (!search_folders.contains(path) && dir_exists(path) && (path != data_dir)){
 					this.search_folders.add(path);
 				}
 			}

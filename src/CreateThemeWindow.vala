@@ -54,7 +54,7 @@ public class CreateThemeWindow : Dialog {
 		icon = App.get_app_icon(16);
 		
 		th = _theme;
-		title = (th == null) ? "Save Theme" : "Edit Theme";
+		title = (th == null) ? _("Save Theme") : _("Edit Theme");
 
 	    vbox_main = get_content_area();
 		vbox_main.margin = 6;
@@ -110,11 +110,11 @@ public class CreateThemeWindow : Dialog {
 		ListStore store = new ListStore(1, typeof(string));
 		TreeIter iter;
 		store.append(out iter);
-		store.set (iter, 0, "None");
+		store.set (iter, 0, _("None"));
 		store.append(out iter);
-		store.set (iter, 0, "Current Wallpaper");
+		store.set (iter, 0, _("Current Wallpaper"));
 		store.append(out iter);
-		store.set (iter, 0, "Custom Wallpaper");
+		store.set (iter, 0, _("Custom Wallpaper"));
 		cmb_wallpaper.set_model (store);
 		cmb_wallpaper.active = 0;
 
