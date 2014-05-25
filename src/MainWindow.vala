@@ -746,6 +746,7 @@ public class MainWindow : Window {
 		dialog.set_transient_for (this);
 		dialog.show_all();
 		dialog.optGenerateCurrent.sensitive = (selected_item() != null);
+		dialog.optGenerateMissing.active = (selected_item() == null);
 		
 		int response = dialog.run();
 		string action = dialog.action;
