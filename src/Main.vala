@@ -69,16 +69,19 @@ public class Main : GLib.Object {
 
     public static int main(string[] args) {
 	
-		// set locale
+		//set locale
 		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "");
 		Intl.textdomain(GETTEXT_PACKAGE);
 		Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
 		Intl.bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
-		
-		// initialize
-		Gtk.init (ref args);
-		App = new Main(args);
 
+		//initialize
+		Gtk.init (ref args);
+		
+		//set TMP_DIR path
+		init_tmp();
+
+		App = new Main(args);
 		var window = new MainWindow();
 		
 		//connect destroy event
@@ -99,7 +102,7 @@ public class Main : GLib.Object {
 
         return 0;
     }
-    
+
     public Main(string[] args) {
 		string home = Environment.get_home_dir();
 		app_path = (File.new_for_path (args[0])).get_parent().get_path ();
@@ -501,7 +504,7 @@ public class Main : GLib.Object {
 		
 		//create temp dir
 		string home = Environment.get_home_dir ();
-		string temp_dir = Environment.get_tmp_dir();
+		string temp_dir = TEMP_DIR;
 		temp_dir = temp_dir + "/" + timestamp2();
 		create_dir(temp_dir);
 		

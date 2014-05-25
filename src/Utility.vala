@@ -375,10 +375,25 @@ namespace TeeJee.JSON{
 }
 
 namespace TeeJee.ProcessManagement{
-	
 	using TeeJee.Logging;
 	using TeeJee.FileSystem;
 	using TeeJee.Misc;
+	
+	public string TEMP_DIR;
+
+    public static void init_tmp(){
+		string std_out, std_err;
+		
+		TEMP_DIR = Environment.get_tmp_dir() + "/conky-manager";
+		create_dir(TEMP_DIR);
+		
+		execute_command_script_sync("echo 'ok'",out std_out,out std_err);
+		if ((std_out == null)||(std_out.strip() != "ok")){
+			TEMP_DIR = Environment.get_home_dir() + "/.temp/conky-manager";
+			execute_command_sync("rm -rf '%s'".printf(TEMP_DIR));
+			create_dir(TEMP_DIR);
+		}
+	}
 	
 	/* Convenience functions for executing commands and managing processes */
 
@@ -467,7 +482,7 @@ namespace TeeJee.ProcessManagement{
 				
 		/* Generates temporary file path */
 		
-		return Environment.get_tmp_dir () + "/" + timestamp2() + (new Rand()).next_int().to_string();
+		return TEMP_DIR + "/" + timestamp2() + (new Rand()).next_int().to_string();
 	}
 	
 	public int execute_command_script_sync (string script, out string std_out, out string std_err){
@@ -486,7 +501,7 @@ namespace TeeJee.ProcessManagement{
 			int exit_code;
 			
 			Process.spawn_sync (
-			    Environment.get_tmp_dir (), //working dir
+			    TEMP_DIR, //working dir
 			    argv, //argv
 			    null, //environment
 			    SpawnFlags.SEARCH_PATH,
@@ -517,7 +532,7 @@ namespace TeeJee.ProcessManagement{
 			argv[2] = script;
 		
 			Process.spawn_sync (
-			    Environment.get_tmp_dir (), //working dir
+			    TEMP_DIR, //working dir
 			    argv, //argv
 			    null, //environment
 			    SpawnFlags.SEARCH_PATH,
