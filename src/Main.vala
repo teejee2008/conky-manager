@@ -136,7 +136,7 @@ public class Main : GLib.Object {
 	public bool check_dependencies(out string msg){
 		msg = "";
 		
-		string[] dependencies = { "rsync","cp","rm","touch","import","feh"};
+		string[] dependencies = { "rsync","killall","cp","rm","touch","7z","import","feh" };
 
 		string path;
 		foreach(string cmd_tool in dependencies){
