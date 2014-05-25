@@ -535,22 +535,18 @@ public class MainWindow : Window {
         gtk_set_busy(true, this);
 		gtk_do_events();
         
-        int count = 0;
+        SList<string> files = new SList<string>();
         foreach(string uri in data.get_uris()){
 			string file = uri.replace("file://","").replace("file:/","");
 			file = Uri.unescape_string(file);
 			if (file.has_suffix(".cmtp.7z")){
-				count += App.install_theme_pack(file);
+				files.append(file);
 			}
 		}
 
+		install_theme_packs(files);
+
         Gtk.drag_finish (drag_context, true, false, time);
-
-		scan_themes();
-
-		gtk_set_busy(false, this);
-
-		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes were imported"),this);
     }
 	
 	//actions
@@ -917,21 +913,30 @@ public class MainWindow : Window {
 			return;
 		}
 		
+		install_theme_packs(files);
+	}
+	
+	private void install_theme_packs(SList<string> files){
 		gtk_set_busy(true, this);
 		gtk_do_events();
 		
-		int count = 0;
+		bool ok = true;
 		foreach (string file in files){
 			if (file.has_suffix(".cmtp.7z")){
-				count += App.install_theme_pack(file);
+				ok = ok && App.install_theme_pack(file);
 			}
 		}
 		
 		scan_themes();
 
 		gtk_set_busy(false, this);
-
-		gtk_messagebox(_("Themes Imported"), count.to_string() + " " + _("new themes imported successfully"),this);
+		
+		if (ok){
+			gtk_messagebox(_("Themes Imported"), _("Themes imported successfully"),this);
+		}
+		else{
+			gtk_messagebox(_("Error"), _("Failed to import themes"),this);
+		}
 	}
 	
 	private void btn_settings_clicked(){

@@ -496,14 +496,13 @@ public class Main : GLib.Object {
         return count;
 	}
 	
-	public int install_theme_pack(string pkgPath, bool checkOnly = false){
+	public bool install_theme_pack(string pkgPath, bool checkOnly = false){
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
 		
 		//create temp dir
-		string home = Environment.get_home_dir ();
 		string temp_dir = TEMP_DIR;
 		temp_dir = temp_dir + "/" + timestamp2();
 		create_dir(temp_dir);
@@ -515,6 +514,7 @@ public class Main : GLib.Object {
 		
 		log_debug(_("Installing") + ": " + pkgPath);
 		
+		//unzip
 		cmd = "cd \"" + temp_dir + "\"\n";
 		cmd += "7z x \"" + pkgPath + "\">nul\n";
 	
@@ -522,109 +522,24 @@ public class Main : GLib.Object {
 		if (ret_val != 0){
 			log_error(_("Failed to unzip files from theme pack"));
 			log_error (std_err);
-			return -1;
+			return false;
+		}
+		
+		//install
+		foreach(string dirname in new string[]{".conky",".Conky",".fonts",".config/conky",".config/Conky"}){
+			string src_path = temp_dir + "/" + dirname;
+			string dst_path = Environment.get_home_dir() + "/" + dirname;
+			
+			if (dir_exists(src_path)){
+				//rsync folder
+				Posix.system("rsync -ai--numeric-ids --relative '%s/' '%s/'".printf(src_path,dst_path));
+			}
 		}
 
-		string temp_dir_themes = temp_dir + "/themes";
-		string temp_dir_fonts = temp_dir + "/fonts";
-		string temp_dir_home = temp_dir + "/home";
-		int count = 0;
-	
-		//copy themes to <data_dir>/themes
-
-		try
-		{	
-			if (dir_exists(temp_dir_themes)){
-
-				File f_themes_dir = File.parse_name (temp_dir_themes);
-				FileEnumerator enumerator = f_themes_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-				FileInfo file;
-				
-				while ((file = enumerator.next_file ()) != null) {
-					string source_dir = temp_dir_themes + "/" + file.get_name();
-					string target_dir = data_dir + "/" + file.get_name();
-
-					if (dir_exists(target_dir)) { 
-						continue; 
-					}
-					else{
-						count++;
-						
-						if (!checkOnly){
-							//install
-							log_debug(_("Theme copied") + ": " + target_dir);
-							Posix.system("cp -r \"" + source_dir + "\" \"" + target_dir + "\"");
-						}
-					}
-				} 
-			}
-        }
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	    
-	    //copy fonts to ~/.fonts
-	    
-		try{
-			if (dir_exists(temp_dir_fonts)){
-				File f_fonts_dir = File.parse_name (temp_dir_fonts);
-				FileEnumerator enumerator = f_fonts_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-				
-				FileInfo file;
-				while ((file = enumerator.next_file ()) != null) {
-					string source_file = temp_dir_fonts + "/" + file.get_name();
-					string target_file = home + "/.fonts/" + file.get_name();
-					
-					if (file_exists(target_file)) { 
-						continue; 
-					}
-					else{
-						if (!checkOnly){
-							//install
-							log_debug(_("Font copied") + ": " + target_file);
-							copy_file(source_file, target_file);
-							//Posix.system("cp -r \"" + source_file + "\" \"" + target_file + "\"");
-						}
-					}
-				} 
-			}
-        }
-        catch(Error e){
-	        log_error (e.message);
-	    }
-
-		//copy files to ~
-		
-		try{
-			 
-			if (dir_exists(temp_dir_home)){
-				
-				File f_home_dir = File.parse_name (temp_dir_home);
-				FileEnumerator enumerator = f_home_dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-				FileInfo file;
-				
-				while ((file = enumerator.next_file ()) != null) {
-					string dir_name = file.get_name();
-					string dir_path = temp_dir_home + "/" + file.get_name();
-					
-					if ((dir_name.down() == "conky")||(dir_name.down() == ".conky")||(dir_name == ".fonts")){
-						if (dir_exists(dir_path)) { 
-							log_debug(_("Copy files: ") + home + "/" + dir_name);
-							cmd = "rsync --recursive --perms --chmod=a=rwx \"" + dir_path + "\" \"" + home + "\"";
-							Posix.system(cmd);
-						}
-					} 
-				} 
-			}
-        }
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	    
 		//delete temp files
 		Posix.system("rm -rf \"" + temp_dir + "\"");
 		
-		return count;
+		return true;
 	}
 	
 	public void refresh_conkyrc_status() {

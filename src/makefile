@@ -36,7 +36,7 @@ install:
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/conky-manager/*
 	
 	#translations
-	#msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES/conky-manager.mo" ../po/conky-manager-it.po
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/cs_CZ/LC_MESSAGES/conky-manager.mo" ../po/conky-manager-cs.po
 	
 uninstall:
 	#binary
@@ -52,4 +52,4 @@ uninstall:
 	rm -rf $(DESTDIR)$(sharedir)/conky-manager
     
     #translations
-    #rm -f "$(DESTDIR)$(localedir)/*/LC_MESSAGES/conky-manager.mo"
+	rm -f "$(DESTDIR)$(localedir)/*/LC_MESSAGES/conky-manager.mo"
