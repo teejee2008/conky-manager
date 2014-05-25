@@ -220,12 +220,6 @@ public class Main : GLib.Object {
 			log_debug(_("Directory Created") + ": " + path);
 		}
 
-		path = data_dir + "/themes";
-		if (dir_exists(path) == false){
-			create_dir(path);
-			log_debug(_("Directory Created") + ": " + path);
-		}
-		
 		path = home + "/.fonts";
 		if (dir_exists(path) == false){
 			create_dir(path);
@@ -243,11 +237,6 @@ public class Main : GLib.Object {
 		string sharePath = "/usr/share/conky-manager/themepacks";
 		string config_file = data_dir + "/.themepacks";
 		
-		//delete config file if no themes found
-		if (get_installed_theme_count() == 0) { 
-			Posix.system("rm -f \"" + config_file + "\""); 
-		}
-		
 		//create empty config file if missing
 		if (file_exists(config_file) == false) { 
 			Posix.system("touch \"" + config_file + "\""); 
@@ -263,9 +252,8 @@ public class Main : GLib.Object {
 		//skip import of theme packs installed by previous versions of conky manager
 		filenames.add("default-themes-1.1.cmtp.7z");
 		filenames.add("default-themes-1.2.cmtp.7z");
-		
-		try
-		{
+								
+		try{
 			FileEnumerator enumerator;
 			FileInfo file;
 			File fShare = File.parse_name (sharePath);
@@ -282,17 +270,18 @@ public class Main : GLib.Object {
 					bool is_installed = false;
 					foreach(string filename in filenames){
 						if (file.get_name() == filename){
-							log_debug(_("Found theme pack [installed]") + ": " + filePath);
+							log_msg(_("Found theme pack [installed]") + ": " + filePath);
 							is_installed = true;
 							break;
 						}
 					}
 					
 					if (!is_installed){
-						log_debug("-----------------------------------------------------");
-						log_debug(_("Found theme pack [new]") + ": " + filePath);
+						log_msg("-----------------------------------------------------");
+						log_msg(_("Found theme pack [new]") + ": " + filePath);
 						install_theme_pack(filePath);
-						log_debug("-----------------------------------------------------");
+						filenames.add(file.get_name());
+						log_msg("-----------------------------------------------------");
 						
 						string list = "";
 						foreach(string filename in filenames){
@@ -307,6 +296,58 @@ public class Main : GLib.Object {
         catch(Error e){
 	        log_error (e.message);
 	    }
+	}
+
+	public bool install_theme_pack(string pkgPath, bool checkOnly = false){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		
+		//create temp dir
+		string temp_dir = TEMP_DIR;
+		temp_dir = temp_dir + "/" + timestamp2();
+		create_dir(temp_dir);
+		
+		//check and create ~/.conky
+		if (dir_exists(data_dir) == false){
+			create_dir(data_dir);
+		}
+		
+		log_msg(_("Importing") + ": " + pkgPath);
+		
+		//unzip
+		cmd = "cd \"" + temp_dir + "\"\n";
+		cmd += "7z x \"" + pkgPath + "\">nul\n";
+	
+		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+		if (ret_val != 0){
+			log_error(_("Failed to unzip files from theme pack"));
+			log_error (std_err);
+			return false;
+		}
+		
+		//install
+		foreach(string dirname in new string[]{".conky",".Conky",".fonts",".config/conky",".config/Conky"}){
+			string src_path = temp_dir + "/" + dirname;
+			string dst_path = Environment.get_home_dir() + "/" + dirname;
+			
+			if (dir_exists(src_path)){
+				
+				//create destination
+				if (!dir_exists(dst_path)){
+					create_dir(dst_path);
+				}
+				
+				//rsync folder
+				execute_command_sync("rsync -ai --numeric-ids '%s/' '%s'".printf(src_path,dst_path));
+			}
+		}
+
+		//delete temp files
+		Posix.system("rm -rf \"" + temp_dir + "\"");
+		
+		return true;
 	}
 	
 	public void load_themes_and_widgets() {
@@ -474,74 +515,7 @@ public class Main : GLib.Object {
 			}
 		}
 	}
-	
-	public int get_installed_theme_count(){
-		string path = data_dir + "/themes";
-		var directory = File.new_for_path (path);
-		int count = 0;
-		
-		try{
-			var enumerator = directory.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-			FileInfo info;
-			while ((info = enumerator.next_file ()) != null) {
-				if (info.get_file_type () == FileType.DIRECTORY){
-					count++;
-				}
-			}
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-		
-        return count;
-	}
-	
-	public bool install_theme_pack(string pkgPath, bool checkOnly = false){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-		
-		//create temp dir
-		string temp_dir = TEMP_DIR;
-		temp_dir = temp_dir + "/" + timestamp2();
-		create_dir(temp_dir);
-		
-		//check and create ~/.conky
-		if (dir_exists(data_dir) == false){
-			create_dir(data_dir);
-		}
-		
-		log_debug(_("Installing") + ": " + pkgPath);
-		
-		//unzip
-		cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "7z x \"" + pkgPath + "\">nul\n";
-	
-		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
-		if (ret_val != 0){
-			log_error(_("Failed to unzip files from theme pack"));
-			log_error (std_err);
-			return false;
-		}
-		
-		//install
-		foreach(string dirname in new string[]{".conky",".Conky",".fonts",".config/conky",".config/Conky"}){
-			string src_path = temp_dir + "/" + dirname;
-			string dst_path = Environment.get_home_dir() + "/" + dirname;
-			
-			if (dir_exists(src_path)){
-				//rsync folder
-				Posix.system("rsync -ai--numeric-ids --relative '%s/' '%s/'".printf(src_path,dst_path));
-			}
-		}
 
-		//delete temp files
-		Posix.system("rm -rf \"" + temp_dir + "\"");
-		
-		return true;
-	}
-	
 	public void refresh_conkyrc_status() {
 		Gee.ArrayList<string> active_list = new Gee.ArrayList<string>();
 
