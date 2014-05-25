@@ -10,7 +10,7 @@ Homepage: http://teejeetech.blogspot.in/
 
 Package: conky-manager
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, realpath, conky-all, p7zip-full, rsync, feh
+Depends: ${shlibs:Depends}, ${misc:Depends}, realpath, conky-all, p7zip-full, rsync, feh, imagemagick
 #Recommends: 
 Description: Utility for managing Conky configuration files
  Utility for managing Conky configuration files

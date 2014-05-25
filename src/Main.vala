@@ -43,6 +43,8 @@ public const string AppAuthorEmail = "teejeetech@gmail.com";
 const string GETTEXT_PACKAGE = "conky-manager";
 const string LOCALE_DIR = "/usr/share/locale";
 
+extern void exit(int exit_code);
+
 public class Main : GLib.Object {
 	
 	public string app_path = "";
@@ -113,6 +115,15 @@ public class Main : GLib.Object {
 		
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
 		conkytheme_list = new Gee.ArrayList<ConkyTheme>();
+
+		//check dependencies ---------------------
+		
+		string message;
+		if (!check_dependencies(out message)){
+			string title = _("Missing Dependencies");
+			gtk_messagebox(title, message, null, true);
+			exit(0);
+		}
 		
 		//install new theme packs and fonts ---------------
 		
@@ -120,11 +131,30 @@ public class Main : GLib.Object {
 		init_theme_packs();
 
 		load_app_config();
-				
-		//load themes --------
+	}
+
+	public bool check_dependencies(out string msg){
+		msg = "";
 		
-		//load_themes_and_widgets();
-		//start_status_thread();
+		string[] dependencies = { "rsync","cp","rm","touch","import","feh"};
+
+		string path;
+		foreach(string cmd_tool in dependencies){
+			path = get_cmd_path (cmd_tool);
+			if ((path == null) || (path.length == 0)){
+				msg += " * " + cmd_tool + "\n";
+			}
+		}
+		
+		if (msg.length > 0){
+			msg = _("Commands listed below are not available") + ":\n\n" + msg + "\n";
+			msg += _("Please install required packages and try running it again");
+			log_error(msg);
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 
 	public void save_app_config(){
