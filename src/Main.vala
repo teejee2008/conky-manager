@@ -59,7 +59,7 @@ public class Main : GLib.Object {
 
 	public int startup_delay = 20;
 	public bool capture_background = false;
-	public int selected_widget_index = 0;
+	//public int selected_widget_index = 0;
 	public bool show_preview = true;
 	public bool show_list = true;
 	public bool show_active = false;
@@ -130,7 +130,6 @@ public class Main : GLib.Object {
 		string home = Environment.get_home_dir();
 		
 		config.set_string_member("capture_background", capture_background.to_string());
-		config.set_string_member("selected_widget_index", selected_widget_index.to_string());
 		config.set_string_member("show_preview", show_preview.to_string());
 		config.set_string_member("show_list", show_list.to_string());
 		config.set_string_member("pane_position", pane_position.to_string());
@@ -176,7 +175,6 @@ public class Main : GLib.Object {
         var config = node.get_object();
 
 		capture_background = json_get_bool(config,"capture_background",false);
-		selected_widget_index = json_get_int(config,"selected_widget_index",0);
 		show_preview = json_get_bool(config,"show_preview",show_preview);
 		show_list = json_get_bool(config,"show_list",show_list);
 		pane_position = json_get_int(config,"pane_position",pane_position);
@@ -254,8 +252,15 @@ public class Main : GLib.Object {
 
 		//read config file
 		string txt = read_file(config_file);
-		string[] filenames = txt.split("\n");
-			
+		Gee.ArrayList<string> filenames = new Gee.ArrayList<string>();
+		foreach(string item in txt.split("\n")){
+			filenames.add(item);
+		}
+		
+		//skip import of theme packs installed by previous versions of conky manager
+		filenames.add("default-themes-1.1.cmtp.7z");
+		filenames.add("default-themes-1.2.cmtp.7z");
+		
 		try
 		{
 			FileEnumerator enumerator;
@@ -270,7 +275,7 @@ public class Main : GLib.Object {
 					string filePath = sharePath + "/" + file.get_name();
 					if (file_exists(filePath) == false) { continue; }
 					if (filePath.has_suffix(".cmtp.7z") == false) { continue; }
-					
+
 					bool is_installed = false;
 					foreach(string filename in filenames){
 						if (file.get_name() == filename){
@@ -1724,10 +1729,14 @@ public class ConkyTheme : ConkyConfigItem {
 	
 	public void set_wallpaper(){
 		if ((wallpaper_path.length > 0)&&(file_exists(wallpaper_path))){
-			execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
+			//execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
+			//execute_command_sync("gsettings set org.gnome.desktop.background picture-options %s".printf(wallpaper_scaling));
+			
 			if (wallpaper_scaling.length > 0){
-				Thread.usleep ((ulong) 1 * 1000000);
-				execute_command_sync("gsettings set org.gnome.desktop.background picture-options '%s'".printf(wallpaper_scaling));
+				Posix.system("feh --bg-%s '%s'".printf(wallpaper_scaling,wallpaper_path));
+			}
+			else{
+				Posix.system("feh --bg-max '%s'".printf(wallpaper_path));
 			}
 		}
 	}

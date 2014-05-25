@@ -153,7 +153,10 @@ public class MainWindow : Window {
 		
 		txtFilter = new Entry();
 		hbox_widget.pack_start (txtFilter, true, true, 0);
-		txtFilter.changed.connect(()=>{ filterThemes.refilter(); });
+		txtFilter.changed.connect(()=>{ 
+			filterThemes.refilter(); 
+			show_preview(selected_item()); 
+		});
 		
 		tt = _("Enter name or path to filter.\nEnter '0' to list running widgets");
 		lblFilter.set_tooltip_text(tt);
@@ -601,67 +604,109 @@ public class MainWindow : Window {
 	}
 	
 	private void btn_prev_clicked(){
-		if (App.selected_widget_index > 0){
-			App.selected_widget_index--;
-			TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
-			tv_widget.get_selection().select_path(path);
-		}
+		TreeModel model;
+		TreeSelection selection = tv_widget.get_selection();
+		TreeIter iter;
+		
+		if (selection.count_selected_rows() > 0){
+			selection.get_selected(out model, out iter);
+
+			if (model.iter_previous(ref iter)){
+				selection.select_iter(iter);
+			}
+		}	
+
 		show_preview(selected_item());
 	}
 	
 	private void btn_next_clicked(){
-		var item_list = selected_list();
-		if (App.selected_widget_index < (item_list.size - 1)){
-			App.selected_widget_index++;
-			TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
-			tv_widget.get_selection().select_path(path);
-		}
+		TreeModel model;
+		TreeSelection selection = tv_widget.get_selection();
+		TreeIter iter;
+
+		if (selection.count_selected_rows() > 0){
+			selection.get_selected(out model, out iter);
+
+			if (model.iter_next(ref iter)){
+				selection.select_iter(iter);
+			}
+		}	
+
 		show_preview(selected_item());
 	}
 	
 	private void btn_start_clicked(){
-		ConkyConfigItem item = selected_item();
+		TreeModel model;
+		TreeStore store = (TreeStore) filterThemes.child_model;
+		TreeSelection selection = tv_widget.get_selection();
+		TreeIter iter, child_iter;
+		ConkyConfigItem item;
+
+		//check if selected
+		if (selection.count_selected_rows() == 0){ return; }
+
+		//get item
+		selection.get_selected(out model, out iter);
+		model.get(iter,1,out item,-1);
+
+		//show busy icon
+		gtk_set_busy(true, this);
+		gtk_do_events();
+		
+		//start item
 		item.start();
 		show_preview(item);
+
+		//hide busy icon
+		gtk_set_busy(false, this);
 		
-		TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
-		TreeIter iter;
-		bool enabled;
-		var model = get_tv_model();
-		model.get_iter(out iter, path);
-		model.get(iter, 0, out enabled, -1);
-		
-		//uncheck checkboxes for all other themes/widgets
+		//uncheck other items
 		if (item is ConkyTheme){
 			TreeIter iter2;
 			bool iterExists = model.get_iter_first (out iter2);
 			while (iterExists){
 				if (iter2 != iter){
-					model.set (iter2, 0, false);
+					//uncheck
+					filterThemes.convert_iter_to_child_iter(out child_iter, iter2);
+					store.set(child_iter, 0, false);
 				}
 				iterExists = model.iter_next (ref iter2);
 			}
 		}
 
-		//check checkbox for selected theme/widget
-		enabled = true;
-		model.set(iter, 0, enabled, -1);
+		//check item
+		filterThemes.convert_iter_to_child_iter(out child_iter, iter);
+		store.set(child_iter, 0, true, -1);
 	}
 	
 	private void btn_stop_clicked(){
-		ConkyConfigItem item  = selected_item();
+		TreeModel model = (TreeModel) filterThemes;
+		TreeStore store = (TreeStore) filterThemes.child_model;
+		TreeSelection selection = tv_widget.get_selection();
+		TreeIter iter, child_iter;
+		ConkyConfigItem item;
+		
+		//check if selected
+		if (selection.count_selected_rows() == 0){ return; }
+		
+		//get item
+		selection.get_selected(out model, out iter);
+		model.get(iter,1,out item,-1);
+
+		//show busy icon
+		gtk_set_busy(true, this);
+		gtk_do_events();
+		
+		//stop
 		item.stop();
 		show_preview(item);
 
-		TreePath path = new TreePath.from_string(App.selected_widget_index.to_string());
-		TreeIter iter;
-		bool enabled;
+		//hide busy icon
+		gtk_set_busy(false, this);
 		
-		var model = get_tv_model();
-		model.get_iter(out iter, path);
-		model.get(iter, 0, out enabled, -1);
-		enabled = false;
-		model.set(iter, 0, enabled, -1);
+		//uncheck item
+		filterThemes.convert_iter_to_child_iter(out child_iter, iter);
+		store.set(child_iter, 0, false, -1);
 	}
 	
 	private void btn_edit_gui_clicked(){
@@ -838,16 +883,13 @@ public class MainWindow : Window {
 	private void btn_kill_all_clicked(){
 		App.kill_all_conky();
 		
-		var model = get_tv_model();
+		TreeModel model = filterThemes;
+		TreeStore store = (TreeStore) filterThemes.child_model;
 		TreeIter iter;
-		bool enabled;
-		ConkyConfigItem item;
+
 		bool iterExists = model.get_iter_first (out iter);
 		while (iterExists){
-			model.get (iter, 0, out enabled, 1, out item, -1);
-			enabled = false;
-			model.set (iter, 0, enabled, -1);
-			
+			store.set (iter, 0, false, -1);
 			iterExists = model.iter_next (ref iter);
 		}
 	}
@@ -935,9 +977,9 @@ public class MainWindow : Window {
 		dialog.artists = null;
 		dialog.donations = null;
 		
-		dialog.program_name = "Conky Manager";
+		dialog.program_name = AppName;
 		dialog.comments = _("Utility for managing Conky configuration files");
-		dialog.copyright = "Copyright © 2014 Tony George (teejee2008@gmail.com)";
+		dialog.copyright = "Copyright © 2014 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = App.get_app_icon(128);
 
@@ -1072,35 +1114,25 @@ public class MainWindow : Window {
 	}
 	
 	private ConkyConfigItem? selected_item(){
-		var list = selected_list();
-		
-		if (App.selected_widget_index >= list.size){
-			App.selected_widget_index = 0;
-		}
-		
-		if (App.selected_widget_index < list.size){
-			return list[App.selected_widget_index];
-		}
+		TreeSelection selection = tv_widget.get_selection();
+		TreeModel model;
+		TreeIter iter;
+		ConkyConfigItem item;
+			
+		if (selection.count_selected_rows() > 0){
+			selection.get_selected(out model, out iter);
+			model.get(iter, 1, out item, -1);
+			return item;
+		}	
 		else{
 			return null;
 		}
 	}
 	
-	private Gee.ArrayList<ConkyConfigItem> selected_list(){
-		Gee.ArrayList<ConkyConfigItem> list = null;
-		if (cmb_type.active == 0){
-			list = App.conkyrc_list;
-		}
-		else{
-			list = App.conkytheme_list;
-		}
-		return list;
-	}
-	
 	//list view handlers
 
 	private void tv_widget_refresh(){
-		ListStore model = new ListStore(2, typeof(bool), typeof(ConkyConfigItem));
+		TreeStore model = new TreeStore(2, typeof(bool), typeof(ConkyConfigItem));
 		
 		Gee.ArrayList<ConkyConfigItem> list = null;
 		if (cmb_type.active == 0){
@@ -1118,7 +1150,7 @@ public class MainWindow : Window {
 			}
 			
 			TreeIter iter;
-			model.append(out iter);
+			model.append(out iter, null);
 			model.set(iter, 0, item.enabled);
 			model.set(iter, 1, item);
 		}
@@ -1159,65 +1191,30 @@ public class MainWindow : Window {
 	}
 	
 	private void tv_widget_row_activated (TreePath path, TreeViewColumn column){
-		TreeIter iter;
-		var model = get_tv_model();
-		bool enabled;
-		
-		ConkyConfigItem item;
-		model.get_iter (out iter, path);
-		model.get (iter, 0, out enabled, 1, out item, -1);
-
-		int index = -1;
-		foreach(ConkyConfigItem item2 in selected_list()){
-			index++;
-			if (item2.path == item.path){
-				break;
-			}
-		}
-		
-		App.selected_widget_index = index;
 		show_preview(selected_item());
 	}
 	
 	private void cell_widget_enable_toggled (string path){
+		TreeModel model = filterThemes;
 		TreeIter iter;
-		var model = get_tv_model();
 		bool enabled;
-		ConkyConfigItem item;
 		
+		//select clicked row if unselected
+		TreeSelection selection = tv_widget.get_selection();
+		selection.select_path(new TreePath.from_string(path));
+		
+		//get state
 		model.get_iter_from_string (out iter, path);
-		model.get (iter, 0, out enabled, 1, out item, -1);
+		model.get (iter, 0, out enabled, -1);
 		
-		//uncheck checkboxes for all other themes/widgets
-		if (item is ConkyTheme){
-			TreeIter iter2;
-			bool iterExists = model.get_iter_first (out iter2);
-			while (iterExists){
-				if (iter2 != iter){
-					model.set (iter2, 0, false);
-				}
-				iterExists = model.iter_next (ref iter2);
-			}
-		}
-
-		//toggle checkbox for selected theme/widget
+		//toggle
 		enabled = !enabled;
-		model.set (iter, 0, enabled);
 		
-		gtk_set_busy(true, this);
-		
-		//start or stop
 		if (enabled){
-			item.start();
+			btn_start_clicked();
 		}
 		else{
-			item.stop();
+			btn_stop_clicked();
 		}
-		
-		gtk_set_busy(false, this);
-	}
-
-	private ListStore get_tv_model(){
-		return (ListStore) ((TreeModelFilter)tv_widget.model).child_model;
 	}
 }

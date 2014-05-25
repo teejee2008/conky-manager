@@ -43,7 +43,9 @@ public class CreateThemeWindow : Dialog {
 	private ComboBox cmb_scaling;
     private FileChooserButton fcb_wallpaper;
 	public ConkyTheme th = null;
-
+	
+	private string[] bg_scaling = {"center","fill","max","scale","tile"};
+	
 	public CreateThemeWindow(ConkyTheme? _theme) {
 		
         window_position = WindowPosition.CENTER_ON_PARENT;
@@ -159,51 +161,23 @@ public class CreateThemeWindow : Dialog {
 		});
 		
 		store = new ListStore(1, typeof(string));
-		store.append(out iter);
-		store.set (iter, 0, "none");
-		store.append(out iter);
-		store.set (iter, 0, "wallpaper");
-		store.append(out iter);
-		store.set (iter, 0, "centered");
-		store.append(out iter);
-		store.set (iter, 0, "scaled");
-		store.append(out iter);
-		store.set (iter, 0, "stretched");
-		store.append(out iter);
-		store.set (iter, 0, "zoom");
-		store.append(out iter);
-		store.set (iter, 0, "spanned");
+		foreach(string option in bg_scaling){
+			store.append(out iter);
+			store.set (iter, 0, option);
+		}
 		cmb_scaling.set_model (store);
 		
 		if (th == null){
-			cmb_scaling.active = 3;
+			cmb_scaling.active = 2;
 		}
 		else{
-			switch (th.wallpaper_scaling){
-				case "none":
-					cmb_scaling.active = 0;
+			int index = -1;
+			foreach(string option in bg_scaling){
+				index++;
+				if (option == th.wallpaper_scaling){
+					cmb_scaling.active = index;
 					break;
-				case "wallpaper":
-					cmb_scaling.active = 1;
-					break;
-				case "centered":
-					cmb_scaling.active = 2;
-					break;
-				case "scaled":
-					cmb_scaling.active = 3;
-					break;
-				case "stretched":
-					cmb_scaling.active = 4;
-					break;
-				case "zoom":
-					cmb_scaling.active = 5;
-					break;
-				case "spanned":
-					cmb_scaling.active = 6;
-					break;
-				default:
-					cmb_scaling.active = 3;
-					break;
+				}
 			}
 		}
 
