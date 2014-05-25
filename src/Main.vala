@@ -1579,13 +1579,11 @@ public class ConkyTheme : ConkyConfigItem {
 			if (line.contains("wallpaper-scaling") && (line.split(":").length == 2)){
 				string val = line.split(":")[1].strip().down();
 				switch (val){
-					case "scaled":
-					case "centered":
-					case "stretched":
-					case "zoom":
-					case "spanned":
-					case "none":
-					case "wallpaper":
+					case "center":
+					case "fill":
+					case "max":
+					case "scale":
+					case "tile":
 						wallpaper_scaling = val;
 						continue;
 				}
