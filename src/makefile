@@ -21,7 +21,8 @@ install:
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/conky-manager
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
-
+	mkdir -p "$(DESTDIR)$(localedir)/cs_CZ/LC_MESSAGES"
+	
 	#binary
 	install -m 0755 conky-manager $(DESTDIR)$(bindir)
 	
