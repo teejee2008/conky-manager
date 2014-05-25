@@ -1055,7 +1055,7 @@ public class ConkyRC : ConkyConfigItem {
 					
 					string win_id = match.fetch(1).strip();
 					
-					image_path = dir + "/" + base_name + ".png";
+					image_path = dir + "/" + base_name + ".jpg";
 					string cmd = "import -window 0x%s '%s'".printf(win_id,image_path);
 					execute_command_sync(cmd);
 					
