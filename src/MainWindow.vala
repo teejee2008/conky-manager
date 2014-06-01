@@ -590,7 +590,7 @@ public class MainWindow : Window {
 	private void btn_add_theme_clicked(){
 		App.refresh_conkyrc_status();
 		
-		var dialog = new CreateThemeWindow(null);
+		var dialog = new EditThemeWindow(null);
 		dialog.set_transient_for (this);
 		dialog.show_all();
 		dialog.run();
@@ -709,7 +709,7 @@ public class MainWindow : Window {
 		ConkyConfigItem item = selected_item();
 		
 		if (item is ConkyRC){
-			var dialog = new EditWindow((ConkyRC) item);
+			var dialog = new EditWidgetWindow((ConkyRC) item);
 			dialog.set_transient_for(this);
 			dialog.show_all();
 			dialog.run();
@@ -718,7 +718,7 @@ public class MainWindow : Window {
 		else{
 			App.refresh_conkyrc_status();
 			
-			var dialog = new CreateThemeWindow((ConkyTheme)selected_item());
+			var dialog = new EditThemeWindow((ConkyTheme)selected_item());
 			dialog.set_transient_for (this);
 			dialog.show_all();
 			dialog.run();

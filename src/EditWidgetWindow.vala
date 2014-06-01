@@ -1,5 +1,5 @@
 /*
- * EditWindow.vala
+ * EditWidgetWindow.vala
  * 
  * Copyright 2012 Tony George <teejee2008@gmail.com>
  * 
@@ -31,7 +31,7 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
-public class EditWindow : Dialog {
+public class EditWidgetWindow : Dialog {
 	private Notebook tab_widget_properties;
 	private Label lbl_background_color;
 	private Label lbl_alignment;
@@ -60,7 +60,7 @@ public class EditWindow : Dialog {
 	private Button btn_cancel_changes;
 	private ConkyRC conkyrc;
 	
-	public EditWindow(ConkyRC conkyrc_edit) {
+	public EditWidgetWindow(ConkyRC conkyrc_edit) {
 		title = _("Edit Widget");
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);

@@ -51,6 +51,7 @@ public class Main : GLib.Object {
 	public string share_folder = "";
 	public string data_dir = "";
 	public string app_conf_path = "";
+	public string desktop = "gnome";
 	
 	public Gee.ArrayList<string> search_folders;
 	public Gee.ArrayList<ConkyRC> conkyrc_list;
@@ -69,6 +70,9 @@ public class Main : GLib.Object {
 	public int window_width = 600;
 	public int window_height = 500;
 
+	//public string[] bg_scaling = {"center","fill","max","scale","tile"};
+	public string[] bg_scaling = {"none","wallpaper","centered","scaled","stretched","zoom","spanned"};
+	
     public static int main(string[] args) {
 	
 		//set locale
@@ -125,6 +129,9 @@ public class Main : GLib.Object {
 			exit(0);
 		}
 		
+		//get dsktop ---------------
+		desktop = find_active_desktop();
+		
 		//install new theme packs and fonts ---------------
 		
 		init_directories();
@@ -156,7 +163,15 @@ public class Main : GLib.Object {
 			return true;
 		}
 	}
-
+	
+	public string find_active_desktop(){
+		int pid = get_pid_by_name("cinnamon");
+		if (pid > 0){
+			return "cinnamon";
+		}
+		return "gnome";
+	}
+	
 	public void save_app_config(){
 		var config = new Json.Object();
 		
@@ -1608,14 +1623,22 @@ public class ConkyTheme : ConkyConfigItem {
 			//read options
 			if (line.contains("wallpaper-scaling") && (line.split(":").length == 2)){
 				string val = line.split(":")[1].strip().down();
-				switch (val){
-					case "center":
-					case "fill":
-					case "max":
-					case "scale":
-					case "tile":
-						wallpaper_scaling = val;
-						continue;
+				
+				//check if option is valid
+				bool valid = false;
+				foreach(string option in App.bg_scaling){
+					if (val == option){
+						valid = true;
+						break;
+					}
+				}
+				
+				if (valid){
+					wallpaper_scaling = val;
+					continue;
+				}
+				else{
+					continue;
 				}
 			}
 			
@@ -1649,20 +1672,20 @@ public class ConkyTheme : ConkyConfigItem {
 	
 	public void set_wallpaper(){
 		if ((wallpaper_path.length > 0)&&(file_exists(wallpaper_path))){
-			//execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
-			//execute_command_sync("gsettings set org.gnome.desktop.background picture-options %s".printf(wallpaper_scaling));
+			execute_command_sync("gsettings set org.%s.desktop.background picture-uri 'file://%s'".printf(App.desktop, wallpaper_path));
+			execute_command_sync("gsettings set org.%s.desktop.background picture-options '%s'".printf(App.desktop, wallpaper_scaling));
 			
-			if (wallpaper_scaling.length > 0){
+			/*if (wallpaper_scaling.length > 0){
 				Posix.system("feh --bg-%s '%s'".printf(wallpaper_scaling,wallpaper_path));
 			}
 			else{
 				Posix.system("feh --bg-max '%s'".printf(wallpaper_path));
-			}
+			}*/
 		}
 	}
 	
 	public string get_current_wallpaper(){
-		string val = execute_command_sync_get_output("gsettings get org.gnome.desktop.background picture-uri");
+		string val = execute_command_sync_get_output("gsettings get org.%s.desktop.background picture-uri".printf(App.desktop));
 		val = val[1:val.length-2]; //remove quotes
 		val = val[7:val.length]; //remove prefix file://
 		return val.strip();

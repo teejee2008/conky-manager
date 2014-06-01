@@ -1,5 +1,5 @@
 /*
- * CreateThemeWindow.vala
+ * EditThemeWindow.vala
  * 
  * Copyright 2012 Tony George <teejee2008@gmail.com>
  * 
@@ -31,7 +31,7 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
-public class CreateThemeWindow : Dialog {
+public class EditThemeWindow : Dialog {
 	private Box vbox_main;
 	private Box hbox_action;
 	private Button btn_ok;
@@ -43,10 +43,8 @@ public class CreateThemeWindow : Dialog {
 	private ComboBox cmb_scaling;
     private FileChooserButton fcb_wallpaper;
 	public ConkyTheme th = null;
-	
-	private string[] bg_scaling = {"center","fill","max","scale","tile"};
-	
-	public CreateThemeWindow(ConkyTheme? _theme) {
+
+	public EditThemeWindow(ConkyTheme? _theme) {
 		
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
@@ -161,18 +159,18 @@ public class CreateThemeWindow : Dialog {
 		});
 		
 		store = new ListStore(1, typeof(string));
-		foreach(string option in bg_scaling){
+		foreach(string option in App.bg_scaling){
 			store.append(out iter);
 			store.set (iter, 0, option);
 		}
 		cmb_scaling.set_model (store);
 		
 		if (th == null){
-			cmb_scaling.active = 2;
+			cmb_scaling.active = 0;
 		}
 		else{
 			int index = -1;
-			foreach(string option in bg_scaling){
+			foreach(string option in App.bg_scaling){
 				index++;
 				if (option == th.wallpaper_scaling){
 					cmb_scaling.active = index;
