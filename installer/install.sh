@@ -15,7 +15,7 @@ if [ $? -eq 0 ]; then
 	echo "or by running the command: conky-manager"	
 	echo ""
 	echo "Following packages are required for this application to function correctly:"
-	echo "- libgtk-3 libgee2 realpath rsync p7zip-full feh imagemagick"
+	echo "- libgtk-3 libgee2 realpath rsync p7zip-full imagemagick"
 	echo "Please ensure that these packages are installed and up-to-date"
 else
 	echo "Installation failed!"
