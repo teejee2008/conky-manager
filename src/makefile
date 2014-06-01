@@ -1,6 +1,7 @@
 prefix = /usr
 bindir = $(prefix)/bin
 sharedir = $(prefix)/share
+localedir = $(sharedir)/locale
 launcherdir = $(sharedir)/applications
 mandir = $(sharedir)/man
 man1dir = $(mandir)/man1
