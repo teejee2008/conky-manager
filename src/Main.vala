@@ -71,7 +71,9 @@ public class Main : GLib.Object {
 	public int window_height = 500;
 
 	//public string[] bg_scaling = {"center","fill","max","scale","tile"};
-	public string[] bg_scaling = {"none","wallpaper","centered","scaled","stretched","zoom","spanned"};
+	public string[] bg_scaling = {"none","centered","tiled","stretched","scaled","zoomed"};
+	public string[] bg_scaling_gnome = {"none","centered","tiled","stretched","scaled","zoomed"};
+	public string[] bg_scaling_xfce = {"0","1","2","3","4","5"};
 	
     public static int main(string[] args) {
 	
@@ -130,7 +132,7 @@ public class Main : GLib.Object {
 		}
 		
 		//get dsktop ---------------
-		desktop = find_active_desktop();
+		desktop = get_desktop_name().down();
 		
 		//install new theme packs and fonts ---------------
 		
@@ -162,14 +164,6 @@ public class Main : GLib.Object {
 		else{
 			return true;
 		}
-	}
-	
-	public string find_active_desktop(){
-		int pid = get_pid_by_name("cinnamon");
-		if (pid > 0){
-			return "cinnamon";
-		}
-		return "gnome";
 	}
 	
 	public void save_app_config(){
@@ -1672,8 +1666,24 @@ public class ConkyTheme : ConkyConfigItem {
 	
 	public void set_wallpaper(){
 		if ((wallpaper_path.length > 0)&&(file_exists(wallpaper_path))){
-			execute_command_sync("gsettings set org.%s.desktop.background picture-uri 'file://%s'".printf(App.desktop, wallpaper_path));
-			execute_command_sync("gsettings set org.%s.desktop.background picture-options '%s'".printf(App.desktop, wallpaper_scaling));
+			
+			switch (App.desktop){
+				case "gnome":
+				case "cinnamon":
+					execute_command_sync("gsettings set org.%s.desktop.background picture-uri 'file://%s'".printf(App.desktop, wallpaper_path));
+					execute_command_sync("gsettings set org.%s.desktop.background picture-options '%s'".printf(App.desktop, get_scaling_value_for_desktop()));
+					break;
+				case "xfce":
+					execute_command_sync("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-path' --set '%s'".printf(wallpaper_path));
+					execute_command_sync("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-style' --set %s".printf(get_scaling_value_for_desktop()));
+					break;
+				default:
+					//try setting the gsettings property
+					execute_command_sync("gsettings set org.%s.desktop.background picture-uri 'file://%s'".printf(App.desktop, wallpaper_path));
+					execute_command_sync("gsettings set org.%s.desktop.background picture-options '%s'".printf(App.desktop, get_scaling_value_for_desktop()));
+					break;
+			}
+			
 			
 			/*if (wallpaper_scaling.length > 0){
 				Posix.system("feh --bg-%s '%s'".printf(wallpaper_scaling,wallpaper_path));
@@ -1684,11 +1694,46 @@ public class ConkyTheme : ConkyConfigItem {
 		}
 	}
 	
+	public string get_scaling_value_for_desktop(){
+		//get index
+		int index = 0;
+		foreach(string option in App.bg_scaling){
+			if (wallpaper_scaling == option){
+				break;
+			}
+			else{
+				index++;
+			}
+		}
+
+		//return mapped value
+		switch (App.desktop){
+			case "gnome":
+			case "cinnamon":
+				return App.bg_scaling_gnome[index];
+			case "xfce":
+				return App.bg_scaling_xfce[index];
+			default:
+				return "none";
+		}
+		
+	}
+	
 	public string get_current_wallpaper(){
-		string val = execute_command_sync_get_output("gsettings get org.%s.desktop.background picture-uri".printf(App.desktop));
-		val = val[1:val.length-2]; //remove quotes
-		val = val[7:val.length]; //remove prefix file://
-		return val.strip();
+		
+		switch (App.desktop){
+			case "gnome":
+			case "cinnamon":
+				string val = execute_command_sync_get_output("gsettings get org.%s.desktop.background picture-uri".printf(App.desktop));
+				val = val[1:val.length-2]; //remove quotes
+				val = val[7:val.length]; //remove prefix file://
+				return val.strip();
+			case "xfce":
+				string val = execute_command_sync_get_output("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-path'");
+				return val.strip();
+			default:
+				return "none";
+		}
 	}
 
 	public string save_current_wallpaper(){

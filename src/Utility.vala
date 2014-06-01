@@ -994,24 +994,36 @@ namespace TeeJee.System{
 				
 		/* Return the names of the current Desktop environment */
 		
-		string s = execute_command_sync_get_output("ps -C xfdesktop");
-		if (s.split("\n").length > 2) {
-			return "Xfce";
-		}
+		int pid = -1;
 		
-		s = execute_command_sync_get_output("ps -C wingpanel");
-		if (s.split("\n").length > 2) {
-			return "Elementary";
-		}
-		
-		s = execute_command_sync_get_output("ps -C cinnamon");
-		if (s.split("\n").length > 2) {
+		pid = get_pid_by_name("cinnamon");
+		if (pid > 0){
 			return "Cinnamon";
 		}
 		
-		s = execute_command_sync_get_output("ps -C unity-panel-service");
-		if (s.split("\n").length > 2) {
+		pid = get_pid_by_name("xfdesktop");
+		if (pid > 0){
+			return "Xfce";
+		}
+
+		pid = get_pid_by_name("gnome-shell");
+		if (pid > 0){
+			return "Gnome";
+		}
+		
+		pid = get_pid_by_name("wingpanel");
+		if (pid > 0){
+			return "Elementary";
+		}
+		
+		pid = get_pid_by_name("unity-panel-service");
+		if (pid > 0){
 			return "Unity";
+		}
+
+		pid = get_pid_by_name("plasma-desktop");
+		if (pid > 0){
+			return "KDE";
 		}
 		
 		return "Unknown";
