@@ -965,18 +965,7 @@ public class MainWindow : Window {
 		};
 
 		dialog.translators = {
-			"Herve Robin",
-			"Harald H.",
-			"Jonatan Zeidler",
-			"Jiri Grönroos",
-			"Aleksey Kabanov",
-			"Саша Петровић",
-			"Stuartlittle1970@gmail.com",
-			"Litty",
-			"Kenichi Ito",
-			"gogo",
-			"Kondrashyn Artem",
-			"Tobias Bannert"
+			"Radek Otáhal (Czech):radek.otahal@email.cz"
 		}; 
 
 		dialog.documenters = null; 

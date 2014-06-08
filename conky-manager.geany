@@ -23,12 +23,12 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=5
+current_page=2
 FILE_NAME_0=8571;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
-FILE_NAME_1=2120;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_2=20327;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+FILE_NAME_1=17181;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_2=26900;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
 FILE_NAME_3=345;None;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
-FILE_NAME_4=312;Make;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
+FILE_NAME_4=1627;Make;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
 FILE_NAME_5=642;Conf;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fcontrol;0;4
 FILE_NAME_6=5409;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Ftimeshift%2Fsrc%2FMain.vala;0;4
 FILE_NAME_7=4822;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FSettingsWindow.vala;0;4
