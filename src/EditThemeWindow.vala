@@ -112,10 +112,17 @@ public class EditThemeWindow : Dialog {
 		store.append(out iter);
 		store.set (iter, 0, _("None"));
 		store.append(out iter);
-		store.set (iter, 0, _("Current Wallpaper"));
-		store.append(out iter);
 		store.set (iter, 0, _("Custom Wallpaper"));
 		cmb_wallpaper.set_model (store);
+		switch (App.desktop){
+			case "cinnamon":	
+			case "gnome":
+			case "unity":	
+			case "xfce":		
+				store.set (iter, 0, _("Current Wallpaper"));
+				store.append(out iter);
+				break;
+		}
 		cmb_wallpaper.active = 0;
 
 		//lbl_custom_wallpaper
@@ -135,7 +142,7 @@ public class EditThemeWindow : Dialog {
 
 		if (th != null){
 			if (th.wallpaper_path.length > 0){
-				cmb_wallpaper.active = 2;
+				cmb_wallpaper.active = 1;
 				fcb_wallpaper.select_filename(th.wallpaper_path);
 			}
 		}
@@ -181,10 +188,10 @@ public class EditThemeWindow : Dialog {
 
 		//set initial state
 		cmb_wallpaper.changed.connect(()=>{
-			fcb_wallpaper.sensitive = (cmb_wallpaper.active == 2);
+			fcb_wallpaper.sensitive = (cmb_wallpaper.active == 1);
 			cmb_scaling.sensitive = (cmb_wallpaper.active != 0);
 		});
-		fcb_wallpaper.sensitive = (cmb_wallpaper.active == 2);
+		fcb_wallpaper.sensitive = (cmb_wallpaper.active == 1);
 		cmb_scaling.sensitive = (cmb_wallpaper.active != 0);
 		
 		tv_widget_refresh();
@@ -369,14 +376,14 @@ public class EditThemeWindow : Dialog {
 			th.wallpaper_path = "";
 			th.wallpaper_scaling = "";
 		}
-		else if (cmb_wallpaper.active == 1){
+		else if (cmb_wallpaper.active == 2){
 			th.wallpaper_path = th.save_current_wallpaper();
 			th.wallpaper_scaling = gtk_combobox_get_value(cmb_scaling,0,"");
 			
 			txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~") + "\n";
 			txt += "wallpaper-scaling:" + th.wallpaper_scaling + "\n";
 		}
-		else if ((cmb_wallpaper.active == 2)&&(file_exists(fcb_wallpaper.get_filename()))){
+		else if ((cmb_wallpaper.active == 1)&&(file_exists(fcb_wallpaper.get_filename()))){
 			if (fcb_wallpaper.get_filename() != th.wallpaper_path){
 				th.wallpaper_path = th.save_wallpaper(fcb_wallpaper.get_filename());
 			}

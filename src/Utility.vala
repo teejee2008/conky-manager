@@ -1006,6 +1006,11 @@ namespace TeeJee.System{
 			return "Xfce";
 		}
 
+		pid = get_pid_by_name("lxsession");
+		if (pid > 0){
+			return "LXDE";
+		}
+
 		pid = get_pid_by_name("gnome-shell");
 		if (pid > 0){
 			return "Gnome";
