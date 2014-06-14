@@ -970,7 +970,22 @@ public class MainWindow : Window {
 
 		dialog.documenters = null; 
 		dialog.artists = null;
-		dialog.donations = null;
+		dialog.donations = {
+			"Adam Simmons",
+			"Dan Raymond",
+			"Flaviu Dan",
+			"Gus Chavez",
+			"Jan Sandberg",
+			"Jesse Avalos",
+			"John Cruz",
+			"Nicola Jelmorini",
+			"Radek Otahal",
+			"Raymond Shaffer",
+			"Steven Klausmeier",
+			"Umut Baris Demir",
+			"Will Hartley",
+			"William Keller"
+		};
 		
 		dialog.program_name = AppName;
 		dialog.comments = _("Utility for managing Conky configuration files");

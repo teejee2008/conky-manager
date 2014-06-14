@@ -11,12 +11,11 @@ sudo cp -dpr --no-preserve=ownership -t / ./*
 if [ $? -eq 0 ]; then
 	echo "Installed successfully."
 	echo ""
-	echo "Start Conky Manager using the shortcut in the application menu"
-	echo "or by running the command: conky-manager"	
+	echo "Start Conky Manager by running the command: conky-manager"	
 	echo ""
-	echo "Following packages are required for this application to function correctly:"
-	echo "- libgtk-3 libgee2 realpath rsync p7zip-full imagemagick"
-	echo "Please ensure that these packages are installed and up-to-date"
+	echo "Following packages are required by this application to run:"
+	echo "- conky rsync p7zip imagemagick libgtk-3 libgee2"
+	echo "Please check and install these packages"
 else
 	echo "Installation failed!"
 	exit 1

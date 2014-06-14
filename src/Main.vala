@@ -119,7 +119,7 @@ public class Main : GLib.Object {
 		data_dir = home + "/.conky";
 		app_conf_path = home + "/.config/conky-manager.json";
 		search_folders = new Gee.ArrayList<string>();
-		
+
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
 		conkytheme_list = new Gee.ArrayList<ConkyTheme>();
 
@@ -134,6 +134,7 @@ public class Main : GLib.Object {
 		
 		//get dsktop ---------------
 		desktop = get_desktop_name().down();
+		log_msg("Desktop: %s".printf(desktop));
 		
 		//install new theme packs and fonts ---------------
 		
@@ -146,7 +147,7 @@ public class Main : GLib.Object {
 	public bool check_dependencies(out string msg){
 		msg = "";
 		
-		string[] dependencies = { "rsync","killall","cp","rm","touch","7z","import" };
+		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7z","import" };
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -1670,12 +1671,34 @@ public class ConkyTheme : ConkyConfigItem {
 			
 			switch (App.desktop){
 				case "cinnamon":
-					execute_command_sync("gsettings set org.cinnamon.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
-					execute_command_sync("gsettings set org.cinnamon.desktop.background picture-options '%s'".printf(get_scaling_value_for_desktop()));
+					//2.0
+					if (execute_command_sync("gsettings get org.cinnamon.desktop.background picture-uri") == 0){
+						execute_command_sync("gsettings set org.cinnamon.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
+					}
+					if (execute_command_sync("gsettings get org.cinnamon.desktop.background picture-options") == 0){
+						execute_command_sync("gsettings set org.cinnamon.desktop.background picture-options '%s'".printf(get_scaling_value_for_desktop()));
+					}
+					//1.8
+					if (execute_command_sync("gsettings get org.cinnamon.background picture-uri") == 0){
+						execute_command_sync("gsettings set org.cinnamon.background picture-uri 'file://%s'".printf(wallpaper_path));
+					}
+					if (execute_command_sync("gsettings get org.cinnamon.background picture-options") == 0){
+						execute_command_sync("gsettings set org.cinnamon.background picture-options '%s'".printf(get_scaling_value_for_desktop()));
+					}
 					break;
 				case "xfce":
-					execute_command_sync("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-path' --set '%s'".printf(wallpaper_path));
-					execute_command_sync("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-style' --set %s".printf(get_scaling_value_for_desktop()));
+					//execute_command_sync("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-path' --set '%s'".printf(wallpaper_path));
+					//execute_command_sync("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-style' --set %s".printf(get_scaling_value_for_desktop()));
+					string std_out, std_err;
+					execute_command_script_sync("""xfconf-query -c xfce4-desktop -p /backdrop -l|egrep -e "screen.*/monitor.*image-path$" -e "screen.*/monitor.*/last-image$"""",out std_out, out std_err);
+					foreach(string property in std_out.split("\n")){
+						string cmd = "";
+						cmd += "xfconf-query -c xfce4-desktop -p '%s' -n -t string -s ''\n".printf(property.strip());
+						cmd += "xfconf-query -c xfce4-desktop -p '%s' -s ''\n".printf(property.strip());
+						cmd += "xfconf-query -c xfce4-desktop -p '%s' -s '%s'".printf(property.strip(), wallpaper_path);
+						string std_out2, std_err2;
+						execute_command_script_sync(cmd, out std_out2, out std_err2);
+					}	
 					break;
 				case "lxde": //limited support - wallpaper changes after logout and login
 					execute_command_sync("pcmanfm --set-wallpaper '%s'".printf(wallpaper_path));
@@ -1683,10 +1706,19 @@ public class ConkyTheme : ConkyConfigItem {
 						execute_command_sync("pcmanfm --wallpaper-mode '%s'".printf(get_scaling_value_for_desktop()));
 					}
 					break;
-				default: //"gnome","unity", others
-					//try setting the gsettings property
-					execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
-					execute_command_sync("gsettings set org.gnome.desktop.background picture-options '%s'".printf(get_scaling_value_for_desktop()));
+				case "gnome": 
+				case "unity":
+					if (execute_command_sync("gsettings get org.gnome.desktop.background picture-uri") == 0){
+						execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
+					}
+				
+					if (execute_command_sync("gsettings get org.gnome.desktop.background picture-options") == 0){
+						execute_command_sync("gsettings set org.gnome.desktop.background picture-options '%s'".printf(get_scaling_value_for_desktop()));
+					}
+					
+					if (execute_command_sync("gsettings get com.canonical.unity-greeter background") == 0){
+						execute_command_sync("gsettings set com.canonical.unity-greeter background '%s'".printf(wallpaper_path));
+					}
 					break;
 			}
 			
@@ -1737,7 +1769,13 @@ public class ConkyTheme : ConkyConfigItem {
 				val = val[7:val.length]; //remove prefix file://
 				return val.strip();
 			case "xfce":
-				string val = execute_command_sync_get_output("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/image-path'");
+				string val = execute_command_sync_get_output("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/workspace0/last-image'");
+				return val.strip();
+			case "lxde":
+				string val = execute_command_sync_get_output("grep wallpaper=/ ~/.config/pcmanfm/lubuntu/pcmanfm.conf | sed -e 's/wallpaper=//g'");
+				if (val.strip() == ""){
+					val = execute_command_sync_get_output("grep wallpaper=/ ~/.config/pcmanfm/lubuntu/desktop-items-0.conf | sed -e 's/wallpaper=//g'");
+				}
 				return val.strip();
 			default:
 				return "";

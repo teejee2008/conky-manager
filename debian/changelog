@@ -1,15 +1,5 @@
-conky-manager (1.2.0.1) saucy; urgency=low
+conky-manager (2.0.0.0) saucy; urgency=low
 
-  * Rev:58, 2013-07-14
-  
-  * Updated editing options
-  
-  * Added options for changing time format and network interface
+  * New UI
 
-  * Sort themes and widgets by name
-    
-  * Added application icon and new themes
-
-  * Bug-fixes
-  
- -- Tony George <tony.george.kol@gmail.com>  Sun, 14 Jul 2013 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Mon, 09 Jun 2014 10:00:00 +0530

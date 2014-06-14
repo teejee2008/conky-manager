@@ -23,18 +23,18 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=2
-FILE_NAME_0=8571;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
-FILE_NAME_1=17181;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
-FILE_NAME_2=26900;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
-FILE_NAME_3=345;None;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
+current_page=1
+FILE_NAME_0=22967;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FUtility.vala;0;4
+FILE_NAME_1=41783;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMain.vala;0;4
+FILE_NAME_2=27489;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FMainWindow.vala;0;4
+FILE_NAME_3=133;None;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fchangelog;0;4
 FILE_NAME_4=1627;Make;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2Fmakefile;0;4
-FILE_NAME_5=642;Conf;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fcontrol;0;4
-FILE_NAME_6=5409;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Ftimeshift%2Fsrc%2FMain.vala;0;4
-FILE_NAME_7=4822;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FSettingsWindow.vala;0;4
-FILE_NAME_8=4078;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FGeneratePreviewWindow.vala;0;4
-FILE_NAME_9=1028;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FEditThemeWindow.vala;0;4
-FILE_NAME_10=22;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FEditWidgetWindow.vala;0;4
+FILE_NAME_5=355;Conf;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fdebian%2Fcontrol;0;4
+FILE_NAME_6=4822;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FSettingsWindow.vala;0;4
+FILE_NAME_7=4078;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FGeneratePreviewWindow.vala;0;4
+FILE_NAME_8=10858;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FEditThemeWindow.vala;0;4
+FILE_NAME_9=825;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Fsrc%2FEditWidgetWindow.vala;0;4
+FILE_NAME_10=633;Sh;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Fconky-manager%2Finstaller%2Finstall.sh;0;4
 
 [VTE]
 last_dir=/home/teejee

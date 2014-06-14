@@ -333,7 +333,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (donations.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Donors")));
+			add_line("<b>%s</b>\n".printf(_("Donations")));
 			foreach(string name in donations){
 				add_line("%s\n".printf(name));
 			}

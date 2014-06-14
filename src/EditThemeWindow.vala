@@ -118,7 +118,8 @@ public class EditThemeWindow : Dialog {
 			case "cinnamon":	
 			case "gnome":
 			case "unity":	
-			case "xfce":		
+			case "xfce":	
+			case "lxde":	
 				store.set (iter, 0, _("Current Wallpaper"));
 				store.append(out iter);
 				break;
