@@ -1,0 +1,5 @@
+./installer/conky-manager-latest-i386.run
+./installer/conky-manager-latest-amd64.run
+./installer/amd64
+./installer/i386
+./src/conky-manager
