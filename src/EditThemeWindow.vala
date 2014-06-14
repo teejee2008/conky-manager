@@ -113,17 +113,17 @@ public class EditThemeWindow : Dialog {
 		store.set (iter, 0, _("None"));
 		store.append(out iter);
 		store.set (iter, 0, _("Custom Wallpaper"));
-		cmb_wallpaper.set_model (store);
 		switch (App.desktop){
 			case "cinnamon":	
 			case "gnome":
 			case "unity":	
 			case "xfce":	
 			case "lxde":	
-				store.set (iter, 0, _("Current Wallpaper"));
 				store.append(out iter);
+				store.set (iter, 0, _("Current Wallpaper"));
 				break;
 		}
+		cmb_wallpaper.set_model (store);
 		cmb_wallpaper.active = 0;
 
 		//lbl_custom_wallpaper
