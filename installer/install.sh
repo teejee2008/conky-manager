@@ -13,9 +13,9 @@ if [ $? -eq 0 ]; then
 	echo ""
 	echo "Start Conky Manager by running the command: conky-manager"	
 	echo ""
-	echo "Following packages are required by this application to run:"
-	echo "- conky rsync p7zip imagemagick libgtk-3 libgee2"
-	echo "Please check and install these packages"
+	echo "Following packages are required by Conky Manager:"
+	echo "- conky rsync p7zip imagemagick libgtk-3 libgee2 libjson-glib"
+	echo "Please ensure that these packages are installed and up-to-date"
 else
 	echo "Installation failed!"
 	exit 1
