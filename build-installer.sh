@@ -44,6 +44,8 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
+cp -p --no-preserve=ownership ./${arch}/conky-manager*.deb ./conky-manager-latest-${arch}.deb 
+
 done
 
 cd "$backup"
