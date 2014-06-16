@@ -31,13 +31,16 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 /*
-public const string AppName = "UtilityLibrary";
-public const string AppVersion = "1.3";
+extern void exit(int exit_code);
+
+public Main App;
+public const string AppName = "Selene Media Encoder";
+public const string AppShortName = "selene";
+public const string AppVersion = "2.3";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
-
-
-extern void exit(int exit_code);
+public const bool LogTimestamp = true;
+public bool UseConsoleColors = false;
 */
 
 namespace TeeJee.Logging{
@@ -384,12 +387,12 @@ namespace TeeJee.ProcessManagement{
     public static void init_tmp(){
 		string std_out, std_err;
 		
-		TEMP_DIR = Environment.get_tmp_dir() + "/conky-manager";
+		TEMP_DIR = Environment.get_tmp_dir() + "/" + AppShortName;
 		create_dir(TEMP_DIR);
 		
 		execute_command_script_sync("echo 'ok'",out std_out,out std_err);
 		if ((std_out == null)||(std_out.strip() != "ok")){
-			TEMP_DIR = Environment.get_home_dir() + "/.temp/conky-manager";
+			TEMP_DIR = Environment.get_home_dir() + "/.temp/" + AppShortName;
 			execute_command_sync("rm -rf '%s'".printf(TEMP_DIR));
 			create_dir(TEMP_DIR);
 		}
@@ -1151,6 +1154,30 @@ namespace TeeJee.System{
 		return false;
 	}
 
+	public bool exo_open_url (string url){
+				
+		/* Tries to open the given text file in a text editor */
+		
+		string path;
+		
+		path = get_cmd_path ("exo-open");
+		if ((path != null)&&(path != "")){
+			return execute_command_script_async ("exo-open \"" + url + "\"");
+		}
+
+		path = get_cmd_path ("firefox");
+		if ((path != null)&&(path != "")){
+			return execute_command_script_async ("firefox \"" + url + "\"");
+		}
+
+		path = get_cmd_path ("chromium-browser");
+		if ((path != null)&&(path != "")){
+			return execute_command_script_async ("chromium-browser \"" + url + "\"");
+		}
+		
+		return false;
+	}
+	
 	public int notify_send (string title, string message, int durationMillis, string urgency){
 				
 		/* Displays notification bubble on the desktop */
@@ -1158,7 +1185,6 @@ namespace TeeJee.System{
 		string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\"".printf(durationMillis, urgency, "gtk-dialog-info", title, message);
 		return execute_command_sync (s);
 	}
-
 }
 
 namespace TeeJee.Misc {

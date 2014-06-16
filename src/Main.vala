@@ -36,6 +36,7 @@ using TeeJee.Misc;
 
 public Main App;
 public const string AppName = "Conky Manager";
+public const string AppShortName = "conky-manager";
 public const string AppVersion = "2.0.2";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
@@ -84,29 +85,30 @@ public class Main : GLib.Object {
 		Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
 		Intl.bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
 
-		//initialize
+		//init GTK
 		Gtk.init (ref args);
 		
-		//set TMP_DIR path
+		//init TMP
 		init_tmp();
-
-		App = new Main(args);
-		var window = new MainWindow();
 		
-		//connect destroy event
+		//init app
+		App = new Main(args);
+		
+		//show window
+		var window = new MainWindow();
+		//quit app when window is closed
 		window.destroy.connect(()=>{
 			App.exit_app();
 			Gtk.main_quit();
 		});
-		
 		//save window size when closed
 		window.delete_event.connect((event)=>{
 			window.get_size(out App.window_width,out App.window_height);
 			return false;
 		});
-		
 		window.show_all();
-
+		
+		//run main loop
 	    Gtk.main();
 
         return 0;
