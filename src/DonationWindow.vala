@@ -39,7 +39,7 @@ public class DonationWindow : Dialog {
 		set_modal (true);
         skip_taskbar_hint = false;
         set_default_size (400, 20);	
-		icon = App.get_app_icon(16);
+		icon = get_app_icon(16);
 		
 		//vbox_main
 	    Box vbox_main = get_content_area();

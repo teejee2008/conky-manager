@@ -67,7 +67,7 @@ public class EditWidgetWindow : Dialog {
 		set_modal (true);
         skip_taskbar_hint = true;
         set_default_size (400, 20);	
-		icon = App.get_app_icon(16);
+		icon = get_app_icon(16);
 		
 		conkyrc = conkyrc_edit;
 

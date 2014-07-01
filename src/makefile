@@ -22,8 +22,7 @@ install:
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/conky-manager
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
-	mkdir -p "$(DESTDIR)$(localedir)/cs_CZ/LC_MESSAGES"
-	
+
 	#binary
 	install -m 0755 conky-manager $(DESTDIR)$(bindir)
 	
@@ -38,6 +37,7 @@ install:
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/conky-manager/*
 	
 	#translations
+	mkdir -p "$(DESTDIR)$(localedir)/cs_CZ/LC_MESSAGES"
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/cs_CZ/LC_MESSAGES/conky-manager.mo" ../po/conky-manager-cs.po
 	
 uninstall:

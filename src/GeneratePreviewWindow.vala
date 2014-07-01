@@ -47,7 +47,7 @@ public class GeneratePreviewWindow : Dialog {
 		set_modal (true);
         skip_taskbar_hint = false;
         set_default_size (350, 300);	
-		icon = App.get_app_icon(16);
+		icon = get_app_icon(16);
 		
 	    Box vbox_main = get_content_area();
 		vbox_main.margin = 6;

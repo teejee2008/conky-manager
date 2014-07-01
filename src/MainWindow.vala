@@ -95,7 +95,7 @@ public class MainWindow : Window {
         window_position = WindowPosition.CENTER;
         modal = true;
         set_default_size(App.window_width, App.window_height);
-		icon = App.get_app_icon(16);
+		icon = get_app_icon(16);
 
 		Gtk.drag_dest_set (this,Gtk.DestDefaults.ALL, targets, Gdk.DragAction.COPY);
 		drag_data_received.connect(on_drag_data_received);
@@ -170,14 +170,14 @@ public class MainWindow : Window {
 		//btn_preview
 		btn_preview = new ToggleButton.with_label("");
 		btn_preview.active = App.show_preview;
-		btn_preview.set_image(App.get_shared_icon("","view-preview.svg",16));
+		btn_preview.set_image(get_shared_icon("","view-preview.svg",16));
 		btn_preview.set_tooltip_text(_("Toggle Preview"));
 		hbox_widget.pack_start (btn_preview, false, true, 0);
 
 		//btn_list
 		btn_list = new ToggleButton.with_label("");
 		btn_list.active = App.show_list;
-		btn_list.set_image(App.get_shared_icon("","view-list.svg",16));
+		btn_list.set_image(get_shared_icon("","view-list.svg",16));
 		btn_list.set_tooltip_text(_("Toggle List"));
 		hbox_widget.pack_start (btn_list, false, true, 0);
 
@@ -352,7 +352,7 @@ public class MainWindow : Window {
 		btn_generate_preview.set_tooltip_text (_("Generate preview images"));
         toolbar.add(btn_generate_preview);
 
-		btn_generate_preview.icon_widget = App.get_shared_icon("","image-generate24x24.png",24);
+		btn_generate_preview.icon_widget = get_shared_icon("","image-generate24x24.png",24);
 		
         btn_generate_preview.clicked.connect(btn_generate_preview_clicked);
 
@@ -392,7 +392,7 @@ public class MainWindow : Window {
         //btn_donate
 		btn_donate = new Gtk.ToolButton.from_stock ("gtk-dialog-info");
 		btn_donate.is_important = false;
-		btn_donate.icon_widget = App.get_shared_icon("donate","donate.svg",32);
+		btn_donate.icon_widget = get_shared_icon("donate","donate.svg",32);
 		btn_donate.label = _("Donate");
 		btn_donate.set_tooltip_text (_("Donate"));
         toolbar.add(btn_donate);
@@ -991,7 +991,7 @@ public class MainWindow : Window {
 		dialog.comments = _("Utility for managing Conky configuration files");
 		dialog.copyright = "Copyright © 2014 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
-		dialog.logo = App.get_app_icon(128);
+		dialog.logo = get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.website = "http://teejeetech.in";

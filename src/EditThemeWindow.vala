@@ -51,7 +51,7 @@ public class EditThemeWindow : Dialog {
 		set_modal (true);
         skip_taskbar_hint = false;
         set_default_size (450, 400);	
-		icon = App.get_app_icon(16);
+		icon = get_app_icon(16);
 		
 		th = _theme;
 		title = (th == null) ? _("Save Theme") : _("Edit Theme");

@@ -1,5 +1,5 @@
 conky-manager (2.0.2) saucy; urgency=low
 
-  * New UI
+  * Removed hard-coded icon references
 
- -- Tony George <tony.george.kol@gmail.com>  Sat, 14 Jun 2014 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Tue, 01 Jul 2014 10:00:00 +0530

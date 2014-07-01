@@ -50,7 +50,7 @@ public class SettingsWindow : Dialog {
 		set_modal (true);
         skip_taskbar_hint = false;
         set_default_size (400, 20);	
-		icon = App.get_app_icon(16);
+		icon = get_app_icon(16);
 		
 	    folder_list_user = new Gee.ArrayList<string>();
 	    foreach(string path in App.search_folders){
