@@ -1,5 +1,5 @@
-conky-manager (2.0.2) saucy; urgency=low
+conky-manager (2.0.3) saucy; urgency=low
 
-  * Removed hard-coded icon references
+  * Removed hard-coded icon reference in .desktop file
 
  -- Tony George <tony.george.kol@gmail.com>  Tue, 01 Jul 2014 10:00:00 +0530
