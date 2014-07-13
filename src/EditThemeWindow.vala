@@ -230,7 +230,6 @@ public class EditThemeWindow : Dialog {
 		tv_widget = new TreeView();
 		tv_widget.get_selection().mode = SelectionMode.SINGLE;
 		tv_widget.headers_visible = false;
-		tv_widget.activate_on_single_click = true;
 		tv_widget.set_rules_hint (true);
 		
 		sw_widget = new ScrolledWindow(null, null);

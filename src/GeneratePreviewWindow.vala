@@ -59,7 +59,7 @@ public class GeneratePreviewWindow : Dialog {
 		lbl_header.margin_bottom = 6;
 		vbox_main.add(lbl_header);
 		
-		optGenerateCurrent = new RadioButton.with_label_from_widget (null, _("Selected Widget"));
+		optGenerateCurrent = new RadioButton.with_label (null, _("Selected Widget"));
 		vbox_main.add(optGenerateCurrent);
 		
 		optGenerateMissing = new RadioButton.with_label_from_widget (optGenerateCurrent, _("All Widgets with Missing Previews"));

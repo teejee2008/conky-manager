@@ -414,7 +414,6 @@ public class MainWindow : Window {
 		tv_widget = new TreeView();
 		tv_widget.get_selection().mode = SelectionMode.SINGLE;
 		tv_widget.headers_visible = false;
-		tv_widget.activate_on_single_click = true;
 		tv_widget.set_rules_hint (true);
 		
 		sw_widget = new ScrolledWindow(null, null);
@@ -448,7 +447,10 @@ public class MainWindow : Window {
 			(cell as Gtk.CellRendererText).text = rc.name;
 		});
 		
-		tv_widget.row_activated.connect(tv_widget_row_activated);
+		TreeSelection sel = tv_widget.get_selection();
+		sel.changed.connect(()=>{
+			show_preview(selected_item());
+		});
 	}
 	
 	private void init_preview_area(){
@@ -463,7 +465,7 @@ public class MainWindow : Window {
 		img_preview = new Image();
 		ebox_preview = new EventBox();
 		ebox_preview.add(img_preview);
-		sw_preview.add(ebox_preview);
+		sw_preview.add_with_viewport(ebox_preview);
 	}
 	
 	private void init_keyboard_shortcuts(){
@@ -1199,11 +1201,7 @@ public class MainWindow : Window {
 			return false;
 		}
 	}
-	
-	private void tv_widget_row_activated (TreePath path, TreeViewColumn column){
-		show_preview(selected_item());
-	}
-	
+
 	private void cell_widget_enable_toggled (string path){
 		TreeModel model = filterThemes;
 		TreeIter iter;

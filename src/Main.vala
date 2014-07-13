@@ -302,7 +302,7 @@ public class Main : GLib.Object {
 			File fShare = File.parse_name (sharePath);
 				
 			if (dir_exists(sharePath)){
-				enumerator = fShare.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+				enumerator = fShare.enumerate_children ("standard::*", 0);
 		
 				while ((file = enumerator.next_file ()) != null) {
 					

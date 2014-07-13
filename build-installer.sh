@@ -9,8 +9,8 @@ cd installer
 
 echo "Building installer..."
 
-tgz="/home/teejee/projects/pbuilder/"
-dsc="/home/teejee/projects/builds/conky-manager*.dsc"
+tgz="../../pbuilder/"
+dsc="../../builds/conky-manager*.dsc"
 
 chmod u+x ./install.sh
 
