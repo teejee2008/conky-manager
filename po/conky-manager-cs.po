@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager 1.0\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-05-07 12:22+0530\n"
-"PO-Revision-Date: 2014-05-20 06:51+0100\n"
+"Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
+"POT-Creation-Date: 2014-07-13 23:32+0530\n"
+"PO-Revision-Date: 2014-07-13 23:45+0530\n"
 "Last-Translator: Radek Otáhal <radek.otahal@email.cz>\n"
 "Language-Team: Czech\n"
 "Language: cs\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: src/EditWindow.vala:384
+#: src/EditWidgetWindow.vala:384
 msgid "12 Hour"
 msgstr "12 hodin"
 
-#: src/EditWindow.vala:386
+#: src/EditWidgetWindow.vala:386
 msgid "24 Hour"
 msgstr "24 hodin"
 
-#: src/MainWindow.vala:402 src/MainWindow.vala:403
+#: src/MainWindow.vala:405 src/MainWindow.vala:406
 msgid "About"
 msgstr "O aplikaci"
 
@@ -37,7 +37,7 @@ msgstr "Přidat"
 msgid "Additional locations to search for Conky themes"
 msgstr "Další umístění pro vyhledávání Conky motivů"
 
-#: src/EditWindow.vala:104
+#: src/EditWidgetWindow.vala:104
 msgid "Alignment"
 msgstr "Zarovnání"
 
@@ -49,23 +49,23 @@ msgstr "Všechny Widgety (přepsat stávající obrázek)"
 msgid "All Widgets with Missing Previews"
 msgstr "Všechny Widgety s chybějícími náhledy"
 
-#: src/Main.vala:210
+#: src/Main.vala:254
 msgid "App config loaded"
 msgstr "Konfigurace aplikací načtena"
 
-#: src/Main.vala:162
+#: src/Main.vala:207
 msgid "App config saved"
 msgstr "Konfigurace aplikací uložena"
 
-#: src/MainWindow.vala:384 src/SettingsWindow.vala:47
+#: src/MainWindow.vala:387 src/SettingsWindow.vala:47
 msgid "Application Settings"
 msgstr "Nastavení aplikace"
 
-#: src/EditWindow.vala:445
+#: src/EditWidgetWindow.vala:445
 msgid "Apply"
 msgstr "Použít"
 
-#: src/EditWindow.vala:448
+#: src/EditWidgetWindow.vala:448
 msgid "Apply Changes"
 msgstr "Uplatnit změny"
 
@@ -83,21 +83,21 @@ msgstr "Autoři"
 msgid "Back"
 msgstr "Zpět"
 
-#: src/EditWindow.vala:312
+#: src/EditWidgetWindow.vala:312
 msgid "Background Color"
 msgstr "Barva pozadí"
 
-#: src/EditWindow.vala:125
+#: src/EditWidgetWindow.vala:125
 msgid "Bottom Left"
-msgstr "Dolů doleva"
+msgstr "Dole vlevo"
 
-#: src/EditWindow.vala:129
+#: src/EditWidgetWindow.vala:129
 msgid "Bottom Middle"
-msgstr "Dolů nastřed"
+msgstr "Dole na střed"
 
-#: src/EditWindow.vala:127
+#: src/EditWidgetWindow.vala:127
 msgid "Bottom Right"
-msgstr "Dolů doprava"
+msgstr "Dole vpravo"
 
 #: src/MainWindow.vala:136
 msgid ""
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Browse:"
 msgstr "Procházet:"
 
-#: src/CreateThemeWindow.vala:232 src/GeneratePreviewWindow.vala:126
+#: src/EditThemeWindow.vala:212 src/GeneratePreviewWindow.vala:126
 #: src/SettingsWindow.vala:221
 msgid "Cancel"
 msgstr "Zrušit"
@@ -124,44 +124,48 @@ msgstr "Zrušit"
 msgid "Capture Desktop Background"
 msgstr "Zachytit pozadí pracovní plochy"
 
-#: src/CreateThemeWindow.vala:122
+#: src/EditThemeWindow.vala:130
 msgid "Choose File"
 msgstr "Výběr souboru"
 
-#: src/AboutWindow.vala:285 src/EditWindow.vala:461
+#: src/AboutWindow.vala:285 src/EditWidgetWindow.vala:461
 msgid "Close"
 msgstr "Zavřít"
 
-#: src/Main.vala:604
-msgid "Copy files: "
-msgstr "Kopírovat soubory:"
+#: src/Main.vala:163
+msgid "Commands listed below are not available"
+msgstr ""
 
-#: src/AboutWindow.vala:262 src/AboutWindow.vala:279 src/MainWindow.vala:233
+#: src/AboutWindow.vala:262 src/AboutWindow.vala:279 src/MainWindow.vala:236
 msgid "Credits"
 msgstr "Zásluhy"
 
-#: src/CreateThemeWindow.vala:115
+#: src/EditThemeWindow.vala:123
 msgid "Current Wallpaper"
 msgstr "Aktuální tapeta"
 
-#: src/CreateThemeWindow.vala:117
+#: src/EditThemeWindow.vala:115
 msgid "Custom Wallpaper"
 msgstr "Uživatelská tapeta"
 
-#: src/DonationWindow.vala:54
+#: src/DonationWindow.vala:53
+#, fuzzy
 msgid ""
 "Did you find this software useful?\n"
 "\n"
-"Please consider making a donation to show your support.\n"
+"You can buy me a coffee or make a donation via PayPal to show your support. "
+"Or just drop me an email and say Hi.\n"
 "\n"
 "This application is completely free and will continue to remain that way. "
-"Your contributions will help in keeping this project alive and developing it "
-"further.\n"
+"Your contributions will help in developing it further and making it more "
+"awesome!\n"
 "\n"
-"Feel free to mail me if you find any issues or if you need any changes in "
-"this application. I can be reached at teejeetech@gmail.com.\n"
+"Feel free to drop me a mail if you find any issues or if you have "
+"suggestions for improvement.\n"
 "\n"
-"~ Tony George"
+"Regards,\n"
+"Tony George\n"
+"teejeetech@gmail.com"
 msgstr ""
 "Shledali jste tento software užitečným?\n"
 "\n"
@@ -173,13 +177,13 @@ msgstr ""
 "Napište mi mail pokud naleznete chybu nebo budete mít námět na vylepšení "
 "této  aplikace. Jsem k zastižení na teejeetech@gmail.com.\n"
 "\n"
-"~Tony George"
+"~ Tony George"
 
-#: src/Main.vala:219 src/Main.vala:225 src/Main.vala:231 src/Main.vala:237
+#: src/Main.vala:263 src/Main.vala:269 src/Main.vala:275
 msgid "Directory Created"
 msgstr "Adresář vytvořen"
 
-#: src/EditWindow.vala:464
+#: src/EditWidgetWindow.vala:464
 msgid "Discard Changes"
 msgstr "Zrušit změny"
 
@@ -188,7 +192,7 @@ msgstr "Zrušit změny"
 msgid "Documenters"
 msgstr "Dukumentátoři"
 
-#: src/DonationWindow.vala:36 src/MainWindow.vala:393 src/MainWindow.vala:394
+#: src/DonationWindow.vala:36 src/MainWindow.vala:396 src/MainWindow.vala:397
 msgid "Donate"
 msgstr "Darovat"
 
@@ -197,31 +201,31 @@ msgid "Donate via PayPal"
 msgstr "Darovat přes PayPal"
 
 #: src/AboutWindow.vala:336
-#, c-format
-msgid "Donors"
-msgstr "Dárci"
+#, fuzzy, c-format
+msgid "Donations"
+msgstr "Umístění"
 
-#: src/MainWindow.vala:307
+#: src/MainWindow.vala:310
 msgid "Edit"
 msgstr "Upravit"
 
-#: src/CreateThemeWindow.vala:57
+#: src/EditThemeWindow.vala:57
 msgid "Edit Theme"
 msgstr "Upravit motiv"
 
-#: src/EditWindow.vala:64 src/MainWindow.vala:308
+#: src/EditWidgetWindow.vala:64 src/MainWindow.vala:311
 msgid "Edit Widget"
 msgstr "Upravit Widget"
 
-#: src/MainWindow.vala:317
+#: src/MainWindow.vala:320
 msgid "Edit file manually in a text editor"
 msgstr "Upravit soubor ručně v textovém editoru"
 
-#: src/MainWindow.vala:424
+#: src/MainWindow.vala:426
 msgid "Enable"
 msgstr "Povolit"
 
-#: src/MainWindow.vala:158
+#: src/MainWindow.vala:161
 msgid ""
 "Enter name or path to filter.\n"
 "Enter '0' to list running widgets"
@@ -229,11 +233,16 @@ msgstr ""
 "Zadejte název nebo cestu pro filtr.\n"
 "Zadejte '0' pro seznam běžících widgetů"
 
-#: src/Utility.vala:103
+#: src/MainWindow.vala:941 src/Utility.vala:106
 msgid "Error"
 msgstr "Chyba"
 
-#: src/Main.vala:515
+#: src/MainWindow.vala:941
+#, fuzzy
+msgid "Failed to import themes"
+msgstr "Selhalo rozbalení souborů z balíčku motivu"
+
+#: src/Main.vala:368
 msgid "Failed to unzip files from theme pack"
 msgstr "Selhalo rozbalení souborů z balíčku motivu"
 
@@ -241,19 +250,15 @@ msgstr "Selhalo rozbalení souborů z balíčku motivu"
 msgid "Filter"
 msgstr "Filtr"
 
-#: src/Main.vala:465
+#: src/Main.vala:557
 msgid "Font Copied: "
 msgstr "Font zkopírován:"
 
-#: src/Main.vala:576
-msgid "Font copied"
-msgstr "Font zkopírován"
-
-#: src/Main.vala:277
+#: src/Main.vala:316
 msgid "Found theme pack [installed]"
 msgstr "Nalezený balík s motivy [instalovaný]"
 
-#: src/Main.vala:285
+#: src/Main.vala:324
 msgid "Found theme pack [new]"
 msgstr "Nalezený balík s motivy [nový]"
 
@@ -261,11 +266,11 @@ msgstr "Nalezený balík s motivy [nový]"
 msgid "General"
 msgstr "Obecné"
 
-#: src/GeneratePreviewWindow.vala:44 src/MainWindow.vala:348
+#: src/GeneratePreviewWindow.vala:44 src/MainWindow.vala:351
 msgid "Generate Preview"
 msgstr "Vytvořit náhled"
 
-#: src/MainWindow.vala:349
+#: src/MainWindow.vala:352
 msgid "Generate preview images"
 msgstr "Vytvořit obrázky s náhledy"
 
@@ -273,15 +278,15 @@ msgstr "Vytvořit obrázky s náhledy"
 msgid "Generate preview images for"
 msgstr "Vytvořit obrázky s náhledy pro"
 
-#: src/MainWindow.vala:740 src/MainWindow.vala:814
+#: src/MainWindow.vala:784 src/MainWindow.vala:858
 msgid "Generating Previews"
 msgstr "Vytvářejí se náhledy"
 
-#: src/EditWindow.vala:213
+#: src/EditWidgetWindow.vala:213
 msgid "Height Padding"
 msgstr "Přizpůsobení výšky"
 
-#: src/EditWindow.vala:195
+#: src/EditWidgetWindow.vala:195
 msgid ""
 "Height should be larger than the size of window contents,\n"
 "otherwise this setting will not have any effect"
@@ -289,31 +294,36 @@ msgstr ""
 "Výška by měla být větší než velikost obsahu okna,\n"
 "jinak toto nastavení nebude mít žádný efekt"
 
-#: src/EditWindow.vala:139
+#: src/EditWidgetWindow.vala:139
 msgid "Horizontal Gap"
 msgstr "Horizontálně"
 
-#: src/MainWindow.vala:368
+#: src/MainWindow.vala:371
 msgid "Import"
 msgstr "Import"
 
-#: src/MainWindow.vala:856
+#: src/MainWindow.vala:897
 msgid "Import Theme Pack"
 msgstr "Importovat balík s motivy"
 
-#: src/MainWindow.vala:369
+#: src/MainWindow.vala:372
 msgid "Import Theme Pack (*.cmtp.7z)"
 msgstr "Import balíčku s motivy (*.cmtp.7z)"
 
-#: src/CreateThemeWindow.vala:80
+#: src/Main.vala:360
+#, fuzzy
+msgid "Importing"
+msgstr "Import"
+
+#: src/EditThemeWindow.vala:80
 msgid "Include desktop wallpaper in theme"
 msgstr "Zahrnout pozadí plochy do motivu"
 
-#: src/CreateThemeWindow.vala:242 src/CreateThemeWindow.vala:243
+#: src/EditThemeWindow.vala:222 src/EditThemeWindow.vala:223
 msgid "Include running widgets in theme"
 msgstr "Zahrnout běžící widgety do motivu"
 
-#: src/EditWindow.vala:210
+#: src/EditWidgetWindow.vala:210
 msgid ""
 "Increases the window height by adding empty lines at the end of the Conky "
 "config file"
@@ -321,23 +331,19 @@ msgstr ""
 "Zvětší výšku okna přidáním prázdných řádků na konec Conky konfiguračního "
 "souboru"
 
-#: src/Main.vala:508
-msgid "Installing"
-msgstr "Instaluji"
-
-#: src/EditWindow.vala:406
+#: src/EditWidgetWindow.vala:406
 msgid "Interface"
 msgstr "Interface"
 
-#: src/EditWindow.vala:425
+#: src/EditWidgetWindow.vala:425
 msgid "LAN"
 msgstr "LAN"
 
-#: src/EditWindow.vala:475
+#: src/EditWidgetWindow.vala:475
 msgid "Loading"
 msgstr "Načítá se"
 
-#: src/EditWindow.vala:88 src/SettingsWindow.vala:173
+#: src/EditWidgetWindow.vala:88 src/SettingsWindow.vala:173
 msgid "Location"
 msgstr "Umístění"
 
@@ -345,84 +351,88 @@ msgstr "Umístění"
 msgid "Locations"
 msgstr "Umístění"
 
-#: src/MainWindow.vala:316
+#: src/MainWindow.vala:319
 msgid "Manual Edit"
 msgstr "Upravit"
 
-#: src/EditWindow.vala:131
+#: src/EditWidgetWindow.vala:131
 msgid "Middle Left"
-msgstr "Nastřed doleva"
+msgstr "Uprostřed vlevo"
 
-#: src/EditWindow.vala:135
+#: src/EditWidgetWindow.vala:135
 msgid "Middle Middle"
-msgstr "Nastřed nastřed"
+msgstr "Uprostřed na střed"
 
-#: src/EditWindow.vala:133
+#: src/EditWidgetWindow.vala:133
 msgid "Middle Right"
-msgstr "Nastřed doprava"
+msgstr "Uprostřed vpravo"
 
-#: src/EditWindow.vala:198
+#: src/EditWidgetWindow.vala:198
 msgid "Minimum Height"
 msgstr "Minimální výška"
 
-#: src/EditWindow.vala:182
+#: src/EditWidgetWindow.vala:182
 msgid "Minimum Width"
 msgstr "Minimální šířka"
 
-#: src/Main.vala:751
+#: src/Main.vala:132
+msgid "Missing Dependencies"
+msgstr ""
+
+#: src/Utility.vala:1000
 msgid "Missing Icon"
 msgstr "Chybějící ikona"
 
-#: src/MainWindow.vala:993
+#: src/MainWindow.vala:1047
 msgid "N/A"
 msgstr "N/A"
 
-#: src/CreateThemeWindow.vala:349
+#: src/EditThemeWindow.vala:328
 msgid "Name Required"
 msgstr "Požadován název"
 
-#: src/EditWindow.vala:390
+#: src/EditWidgetWindow.vala:390
 msgid "Network"
 msgstr "Síť"
 
-#: src/EditWindow.vala:522
+#: src/EditWidgetWindow.vala:522
 msgid "Network interface cannot be changed for selected widget"
-msgstr "Síťový interface nemůže být změněn pro zvolená widget"
+msgstr "Síťový interface nemůže být změněn pro zvolený widget"
 
-#: src/MainWindow.vala:275
+#: src/MainWindow.vala:278
 msgid "Next"
 msgstr "Následující"
 
-#: src/MainWindow.vala:276
+#: src/MainWindow.vala:279
 msgid "Next Widget"
 msgstr "Následující Widget"
 
-#: src/CreateThemeWindow.vala:362
+#: src/EditThemeWindow.vala:341
 msgid "No Widgets Selected"
 msgstr "Není vybrán žádný Widget "
 
-#: src/CreateThemeWindow.vala:113
+#: src/EditThemeWindow.vala:113
 msgid "None"
 msgstr "Nic"
 
-#: src/CreateThemeWindow.vala:225 src/GeneratePreviewWindow.vala:103
+#: src/EditThemeWindow.vala:205 src/GeneratePreviewWindow.vala:103
 #: src/SettingsWindow.vala:215
 msgid "OK"
 msgstr "OK"
 
-#: src/EditWindow.vala:298
+#: src/EditWidgetWindow.vala:298
 msgid "Opacity (%)"
 msgstr "Průhlednost (%)"
 
-#: src/EditWindow.vala:286
+#: src/EditWidgetWindow.vala:286
 msgid "Opaque"
 msgstr "Neprůhledné"
 
-#: src/MainWindow.vala:325
+#: src/MainWindow.vala:328
 msgid "Open Folder"
 msgstr "Otevřít složku"
 
-#: src/MainWindow.vala:326
+#: src/MainWindow.vala:329
 msgid "Open Theme Folder"
 msgstr "Otevřít složku s motivy"
 
@@ -430,23 +440,27 @@ msgstr "Otevřít složku s motivy"
 msgid "Options"
 msgstr "Volby"
 
-#: src/CreateThemeWindow.vala:350
+#: src/EditThemeWindow.vala:329
 msgid "Please enter theme name"
 msgstr "Zadejte prosím název motivu"
 
-#: src/MainWindow.vala:266
+#: src/Main.vala:164
+msgid "Please install required packages and try running it again"
+msgstr ""
+
+#: src/MainWindow.vala:269
 msgid "Previous"
 msgstr "Předchozí"
 
-#: src/MainWindow.vala:267
+#: src/MainWindow.vala:270
 msgid "Previous Widget"
 msgstr "Předchozí Widget"
 
-#: src/EditWindow.vala:290
+#: src/EditWidgetWindow.vala:290
 msgid "Pseudo-Transparent"
 msgstr "Pseudo-transparentní"
 
-#: src/MainWindow.vala:339
+#: src/MainWindow.vala:342
 msgid "Refresh"
 msgstr "Obnovit"
 
@@ -454,11 +468,11 @@ msgstr "Obnovit"
 msgid "Remove"
 msgstr "Odebrat"
 
-#: src/EditWindow.vala:453
+#: src/EditWidgetWindow.vala:453
 msgid "Reset"
 msgstr "Reset"
 
-#: src/EditWindow.vala:456
+#: src/EditWidgetWindow.vala:456
 msgid "Reset Changes"
 msgstr "Zrušit změny"
 
@@ -466,11 +480,11 @@ msgstr "Zrušit změny"
 msgid "Run Conky at system startup"
 msgstr "Spustit Conky při startu systému"
 
-#: src/CreateThemeWindow.vala:57
+#: src/EditThemeWindow.vala:57
 msgid "Save Theme"
 msgstr "Uložit motiv"
 
-#: src/Main.vala:1042
+#: src/Main.vala:940
 msgid "Saved"
 msgstr "Uloženo"
 
@@ -478,24 +492,24 @@ msgstr "Uloženo"
 msgid "Saving running widgets as new theme"
 msgstr "Spuštěné widgety se ukládají jako nový motiv"
 
-#: src/CreateThemeWindow.vala:144
+#: src/EditThemeWindow.vala:152
 msgid "Scaling"
 msgstr "Přizpůsobení"
 
-#: src/MainWindow.vala:340
+#: src/MainWindow.vala:343
 msgid "Search for new themes"
 msgstr "Hledat nové motivy"
 
-#: src/MainWindow.vala:1005
+#: src/MainWindow.vala:1059
 msgid "Searching directories..."
 msgstr "Prohledávání adresářů..."
 
-#: src/Main.vala:312
+#: src/Main.vala:404
 #, c-format
 msgid "Searching for conkyrc files... %d found"
 msgstr "Vyhledávání conkyrc souborů... %d nalezeno"
 
-#: src/CreateThemeWindow.vala:127
+#: src/EditThemeWindow.vala:135
 msgid "Select Wallpaper"
 msgstr "Vybrat tapetu"
 
@@ -503,7 +517,7 @@ msgstr "Vybrat tapetu"
 msgid "Select directory"
 msgstr "Vybrat adresář"
 
-#: src/CreateThemeWindow.vala:363
+#: src/EditThemeWindow.vala:342
 msgid "Select the widgets to include in theme"
 msgstr "Výběr widgetů obsažených v motivu"
 
@@ -511,7 +525,7 @@ msgstr "Výběr widgetů obsažených v motivu"
 msgid "Selected Widget"
 msgstr "Vybraný Widget"
 
-#: src/EditWindow.vala:292
+#: src/EditWidgetWindow.vala:292
 msgid "Semi-Transparent"
 msgstr "Semi-transparentní"
 
@@ -519,7 +533,7 @@ msgstr "Semi-transparentní"
 msgid "Send Email"
 msgstr "Odeslat email"
 
-#: src/EditWindow.vala:240
+#: src/EditWidgetWindow.vala:240
 msgid ""
 "Setting Type to \"Opaque\" (from the transparency tab) will make it easier "
 "to see the changes"
@@ -527,7 +541,7 @@ msgstr ""
 "Při nastavení \"Neprůhledné\" (v záložce Průhlednost) bude změny snadněji "
 "viditelné"
 
-#: src/EditWindow.vala:335
+#: src/EditWidgetWindow.vala:335
 msgid ""
 "Setting Type to \"Pseudo-Transparent\" will make the window transparent but "
 "the window will have a shadow. The shadow can be disabled by configuring "
@@ -536,7 +550,7 @@ msgstr ""
 "Při nastavení \"Pseudo-transparentní\" bude celé okno průhledné, ale okno "
 "bude mít stín. Stín můžete zakázat konfigurací vašeho správce oken."
 
-#: src/EditWindow.vala:325
+#: src/EditWidgetWindow.vala:325
 msgid ""
 "Setting Type to \"Transparent\" will make the whole window transparent "
 "(including any images). Use \"Pseudo-Transparent\" if you want the images to "
@@ -545,55 +559,55 @@ msgstr ""
 "Při nastavení \"Průhledné\" bude celé okno průhledné (včetně všech obrázků). "
 "Použijte \"Pseudo-transparentní\" aby obrázky byly neprůhledné."
 
-#: src/MainWindow.vala:383
+#: src/MainWindow.vala:386
 msgid "Settings"
 msgstr "Nastavení"
 
-#: src/EditWindow.vala:164
+#: src/EditWidgetWindow.vala:164
 msgid "Size"
 msgstr "Velikost"
 
-#: src/MainWindow.vala:223
+#: src/MainWindow.vala:226
 msgid "Source"
 msgstr "Zdroj"
 
-#: src/MainWindow.vala:284 src/MainWindow.vala:293
+#: src/MainWindow.vala:287 src/MainWindow.vala:296
 msgid "Start"
 msgstr "Start"
 
-#: src/MainWindow.vala:285
+#: src/MainWindow.vala:288
 msgid "Start/Restart Widget"
 msgstr "Spustit/restartovat Widget"
 
-#: src/Main.vala:953
+#: src/Main.vala:851
 msgid "Started"
 msgstr "Spuštěno"
 
 #: src/SettingsWindow.vala:105
 msgid "Startup Delay (seconds)"
-msgstr "Zpoždění při startu (secondy)"
+msgstr "Zpoždění při startu (vteřiny)"
 
-#: src/MainWindow.vala:205 src/MainWindow.vala:207
+#: src/MainWindow.vala:208 src/MainWindow.vala:210
 msgid "Stop"
 msgstr "Stop"
 
-#: src/MainWindow.vala:359
+#: src/MainWindow.vala:362
 msgid "Stop All Widgets"
 msgstr "Zastavit všechny Widgety"
 
-#: src/MainWindow.vala:294
+#: src/MainWindow.vala:297
 msgid "Stop Widget"
 msgstr "Zastavit Widget"
 
-#: src/MainWindow.vala:360
+#: src/MainWindow.vala:363
 msgid "Stop all running widgets"
-msgstr "Zastavit všechny běžící widgety"
+msgstr "Zastavit všechny běžící Widgety"
 
-#: src/Main.vala:979 src/Utility.vala:710
+#: src/Main.vala:877 src/Utility.vala:728
 msgid "Stopped"
 msgstr "Zastaveno"
 
-#: src/EditWindow.vala:230
+#: src/EditWidgetWindow.vala:230
 msgid ""
 "The minimum width & height must be more than the size of the window "
 "contents, otherwise the setting will not have any effect."
@@ -605,76 +619,77 @@ msgstr ""
 msgid "Theme Directory"
 msgstr "Adresář s motivy"
 
-#: src/CreateThemeWindow.vala:67
+#: src/EditThemeWindow.vala:67
 msgid "Theme Name"
 msgstr "Název motivu"
 
-#: src/Main.vala:547
-msgid "Theme copied"
-msgstr "Motiv zkopírován"
-
-#: src/MainWindow.vala:578
+#: src/MainWindow.vala:579
 msgid "Themes"
 msgstr "Motivy"
 
-#: src/MainWindow.vala:550 src/MainWindow.vala:892
+#: src/MainWindow.vala:938
 msgid "Themes Imported"
 msgstr "Motivy importovány"
 
-#: src/EditWindow.vala:346
+#: src/MainWindow.vala:938
+#, fuzzy
+msgid "Themes imported successfully"
+msgstr "nové motivy naimportovány úspěšně"
+
+#: src/EditWidgetWindow.vala:346
 msgid "Time"
 msgstr "Čas"
 
-#: src/EditWindow.vala:362
+#: src/EditWidgetWindow.vala:362
 msgid "Time Format"
 msgstr "Formát času"
 
-#: src/EditWindow.vala:506
+#: src/EditWidgetWindow.vala:506
 msgid "Time format cannot be changed for selected widget"
 msgstr "Formát času nemůže být změněn pro zvolený widget"
 
-#: src/MainWindow.vala:178
+#: src/MainWindow.vala:181
 msgid "Toggle List"
 msgstr "Přepnout seznam"
 
-#: src/MainWindow.vala:171
+#: src/MainWindow.vala:174
 msgid "Toggle Preview"
 msgstr "Přepnout náhled"
 
-#: src/EditWindow.vala:119
+#: src/EditWidgetWindow.vala:119
 msgid "Top Left"
-msgstr "Nahoru doleva"
+msgstr "Nahoře vlevo"
 
-#: src/EditWindow.vala:123
+#: src/EditWidgetWindow.vala:123
 msgid "Top Middle"
-msgstr "Nahoru nastřed"
+msgstr "Nahoře na střed"
 
-#: src/EditWindow.vala:121
+#: src/EditWidgetWindow.vala:121
 msgid "Top Right"
-msgstr "Nahoru doprava"
+msgstr "Nahoře vpravo"
 
 #: src/AboutWindow.vala:320
 #, c-format
 msgid "Translators"
 msgstr "Překladatelé"
 
-#: src/EditWindow.vala:251
+#: src/EditWidgetWindow.vala:251
 msgid "Transparency"
 msgstr "Průhlednost"
 
-#: src/EditWindow.vala:268
+#: src/EditWidgetWindow.vala:268
 msgid "Transparency Type"
 msgstr "Typ průhlednosti"
 
-#: src/EditWindow.vala:288
+#: src/EditWidgetWindow.vala:288
 msgid "Transparent"
 msgstr "Průhledné"
 
-#: src/EditWindow.vala:545
+#: src/EditWidgetWindow.vala:545
 msgid "Updating theme"
 msgstr "Aktualizace motivu"
 
-#: src/MainWindow.vala:457
+#: src/MainWindow.vala:462
 msgid ""
 "Use the keyboard arrow keys to browse.\n"
 "Press ENTER to start and stop."
@@ -682,11 +697,11 @@ msgstr ""
 "Pro procházení použijte šipky.\n"
 "Stiskněte ENTER pro spuštění a zastavení."
 
-#: src/MainWindow.vala:939
+#: src/MainWindow.vala:993
 msgid "Utility for managing Conky configuration files"
 msgstr "Nástroj pro správu konfiguračních souborů Conky"
 
-#: src/EditWindow.vala:151
+#: src/EditWidgetWindow.vala:151
 msgid "Vertical Gap"
 msgstr "Vertikálně"
 
@@ -694,15 +709,15 @@ msgstr "Vertikálně"
 msgid "Visit Website"
 msgstr "Navštívit webovou stránku"
 
-#: src/CreateThemeWindow.vala:80 src/CreateThemeWindow.vala:93
+#: src/EditThemeWindow.vala:80 src/EditThemeWindow.vala:93
 msgid "Wallpaper"
 msgstr "Tapeta"
 
-#: src/Main.vala:1747 src/Main.vala:1755
+#: src/Main.vala:1750 src/Main.vala:1758
 msgid "Wallpaper saved"
 msgstr "Tapeta uložena"
 
-#: src/Utility.vala:103
+#: src/Utility.vala:106
 msgid "Warning"
 msgstr "Varování"
 
@@ -715,19 +730,19 @@ msgstr ""
 "Pokud je povoleno, bude mít vygenerovaný obrázek totéž pozadí jako používaná "
 "tapeta. Pokud není povoleno, bude pozadí jednobarevné (barva pozadí widgetu)."
 
-#: src/EditWindow.vala:416
+#: src/EditWidgetWindow.vala:416
 msgid "WiFi"
 msgstr "WiFi"
 
-#: src/EditWindow.vala:421
+#: src/EditWidgetWindow.vala:421
 msgid "WiFi Network"
 msgstr "WiFi síť"
 
-#: src/CreateThemeWindow.vala:242 src/MainWindow.vala:576
+#: src/EditThemeWindow.vala:222 src/MainWindow.vala:577
 msgid "Widgets"
 msgstr "Widgety"
 
-#: src/EditWindow.vala:179
+#: src/EditWidgetWindow.vala:179
 msgid ""
 "Width should be larger than the size of window contents,\n"
 "otherwise this setting will not have any effect"
@@ -735,7 +750,7 @@ msgstr ""
 "Šířka by měla být větší než velikost obsahu okna,\n"
 "jinak toto nastavení nebude mít žádný efekt"
 
-#: src/EditWindow.vala:295
+#: src/EditWidgetWindow.vala:295
 msgid ""
 "Window Opacity\n"
 "\n"
@@ -745,25 +760,35 @@ msgstr ""
 "\n"
 "0 = Zcela průhledné, 100 = Zcela neprůhledné"
 
-#: src/EditWindow.vala:430
+#: src/EditWidgetWindow.vala:430
 msgid "Wired LAN Network"
 msgstr "Drátová LAN síť"
 
-#: src/EditWindow.vala:140
+#: src/EditWidgetWindow.vala:140
 msgid "[GAP_X] Horizontal distance from window border (in pixels)"
 msgstr "[GAP_X] Horizontální distance od okraje okna (v pixelech)"
 
-#: src/EditWindow.vala:152
+#: src/EditWidgetWindow.vala:152
 msgid "[GAP_Y] Vertical distance from window border (in pixels)"
 msgstr "[GAP_Y] Vertikální distance od okraje okna (v pixelech)"
 
-#: src/MainWindow.vala:892
-msgid "new themes imported successfully"
-msgstr "nové motivy naimportovány úspěšně"
+#~ msgid "Copy files: "
+#~ msgstr "Kopírovat soubory:"
 
-#: src/MainWindow.vala:550
-msgid "new themes were imported"
-msgstr "nové motivy byly naimportovány"
+#~ msgid "Donors"
+#~ msgstr "Dárci"
+
+#~ msgid "Font copied"
+#~ msgstr "Font zkopírován"
+
+#~ msgid "Installing"
+#~ msgstr "Instaluji"
+
+#~ msgid "Theme copied"
+#~ msgstr "Motiv zkopírován"
+
+#~ msgid "new themes were imported"
+#~ msgstr "nové motivy byly naimportovány"
 
 #, fuzzy
 #~ msgid "Commands"

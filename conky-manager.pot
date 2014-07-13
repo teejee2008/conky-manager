@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2014-07-08 20:33+0530\n"
+"POT-Creation-Date: 2014-07-13 23:32+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -205,7 +205,7 @@ msgstr ""
 msgid "Edit file manually in a text editor"
 msgstr ""
 
-#: src/MainWindow.vala:427
+#: src/MainWindow.vala:426
 msgid "Enable"
 msgstr ""
 
@@ -215,11 +215,11 @@ msgid ""
 "Enter '0' to list running widgets"
 msgstr ""
 
-#: src/MainWindow.vala:939 src/Utility.vala:106
+#: src/MainWindow.vala:941 src/Utility.vala:106
 msgid "Error"
 msgstr ""
 
-#: src/MainWindow.vala:939
+#: src/MainWindow.vala:941
 msgid "Failed to import themes"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Generate preview images for"
 msgstr ""
 
-#: src/MainWindow.vala:782 src/MainWindow.vala:856
+#: src/MainWindow.vala:784 src/MainWindow.vala:858
 msgid "Generating Previews"
 msgstr ""
 
@@ -281,7 +281,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: src/MainWindow.vala:895
+#: src/MainWindow.vala:897
 msgid "Import Theme Pack"
 msgstr ""
 
@@ -359,11 +359,11 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: src/MainWindow.vala:1045
+#: src/MainWindow.vala:1047
 msgid "N/A"
 msgstr ""
 
-#: src/EditThemeWindow.vala:329
+#: src/EditThemeWindow.vala:328
 msgid "Name Required"
 msgstr ""
 
@@ -383,7 +383,7 @@ msgstr ""
 msgid "Next Widget"
 msgstr ""
 
-#: src/EditThemeWindow.vala:342
+#: src/EditThemeWindow.vala:341
 msgid "No Widgets Selected"
 msgstr ""
 
@@ -416,7 +416,7 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
-#: src/EditThemeWindow.vala:330
+#: src/EditThemeWindow.vala:329
 msgid "Please enter theme name"
 msgstr ""
 
@@ -476,7 +476,7 @@ msgstr ""
 msgid "Search for new themes"
 msgstr ""
 
-#: src/MainWindow.vala:1057
+#: src/MainWindow.vala:1059
 msgid "Searching directories..."
 msgstr ""
 
@@ -493,7 +493,7 @@ msgstr ""
 msgid "Select directory"
 msgstr ""
 
-#: src/EditThemeWindow.vala:343
+#: src/EditThemeWindow.vala:342
 msgid "Select the widgets to include in theme"
 msgstr ""
 
@@ -591,15 +591,15 @@ msgstr ""
 msgid "Theme Name"
 msgstr ""
 
-#: src/MainWindow.vala:577
+#: src/MainWindow.vala:579
 msgid "Themes"
 msgstr ""
 
-#: src/MainWindow.vala:936
+#: src/MainWindow.vala:938
 msgid "Themes Imported"
 msgstr ""
 
-#: src/MainWindow.vala:936
+#: src/MainWindow.vala:938
 msgid "Themes imported successfully"
 msgstr ""
 
@@ -656,13 +656,13 @@ msgstr ""
 msgid "Updating theme"
 msgstr ""
 
-#: src/MainWindow.vala:460
+#: src/MainWindow.vala:462
 msgid ""
 "Use the keyboard arrow keys to browse.\n"
 "Press ENTER to start and stop."
 msgstr ""
 
-#: src/MainWindow.vala:991
+#: src/MainWindow.vala:993
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 
@@ -701,7 +701,7 @@ msgstr ""
 msgid "WiFi Network"
 msgstr ""
 
-#: src/EditThemeWindow.vala:222 src/MainWindow.vala:575
+#: src/EditThemeWindow.vala:222 src/MainWindow.vala:577
 msgid "Widgets"
 msgstr ""
 
