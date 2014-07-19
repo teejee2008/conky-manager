@@ -17,8 +17,6 @@ install:
 	mkdir -p $(DESTDIR)
 	mkdir -p $(DESTDIR)$(bindir)
 	mkdir -p $(DESTDIR)$(sharedir)
-	mkdir -p $(DESTDIR)$(mandir)
-	mkdir -p $(DESTDIR)$(man1dir)
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/conky-manager
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
@@ -52,6 +50,6 @@ uninstall:
 	
 	#shared files
 	rm -rf $(DESTDIR)$(sharedir)/conky-manager
-    
+
     #translations
 	rm -f "$(DESTDIR)$(localedir)/*/LC_MESSAGES/conky-manager.mo"
