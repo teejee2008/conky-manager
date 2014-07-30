@@ -150,7 +150,7 @@ public class Main : GLib.Object {
 	public bool check_dependencies(out string msg){
 		msg = "";
 		
-		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7z","import" };
+		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","import" };
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -364,7 +364,7 @@ public class Main : GLib.Object {
 		
 		//unzip
 		cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "7z x \"" + pkgPath + "\">nul\n";
+		cmd += "7za x \"" + pkgPath + "\">nul\n";
 	
 		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 		if (ret_val != 0){
