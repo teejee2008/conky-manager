@@ -4,9 +4,21 @@ backup=`pwd`
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd "$DIR"
 
-echo "Installing files..."
+echo "Expanding directories..."
+for f in `find ./ -type d -exec echo {} \;`; do
+    directory=`echo "$f" | sed -r 's/^.{2}//'`
+    sudo mkdir -p -m 755 "/$directory"
+    echo "/$directory"
+done
+echo ""
 
-sudo cp -dpr --no-preserve=ownership -t / ./*
+echo "Installing files..."
+for f in `find ./ -type f \( ! -iname "install.sh" \) -exec echo {} \;`; do
+    file=`echo "$f" | sed -r 's/^.{2}//'`
+    sudo install -m 0755 "./$file" "/$file"
+    echo "/$file"
+done
+echo ""
 
 if [ $? -eq 0 ]; then
 	echo "Installed successfully."

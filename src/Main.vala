@@ -63,6 +63,7 @@ public class Main : GLib.Object {
 
 	public int startup_delay = 20;
 	public bool capture_background = false;
+	public bool generate_png = true;
 	//public int selected_widget_index = 0;
 	public bool show_preview = true;
 	public bool show_list = true;
@@ -176,6 +177,7 @@ public class Main : GLib.Object {
 		string home = Environment.get_home_dir();
 		
 		config.set_string_member("capture_background", capture_background.to_string());
+		config.set_string_member("generate_png", generate_png.to_string());
 		config.set_string_member("show_preview", show_preview.to_string());
 		config.set_string_member("show_list", show_list.to_string());
 		config.set_string_member("pane_position", pane_position.to_string());
@@ -221,6 +223,7 @@ public class Main : GLib.Object {
         var config = node.get_object();
 
 		capture_background = json_get_bool(config,"capture_background",false);
+		generate_png = json_get_bool(config,"generate_png",true);
 		show_preview = json_get_bool(config,"show_preview",show_preview);
 		show_list = json_get_bool(config,"show_list",show_list);
 		pane_position = json_get_int(config,"pane_position",pane_position);
@@ -1025,9 +1028,17 @@ public class ConkyRC : ConkyConfigItem {
 					Thread.usleep ((ulong) wait_interval * 1000000);
 					
 					string win_id = match.fetch(1).strip();
+					string cmd = "";
 					
-					image_path = dir + "/" + base_name + ".jpg";
-					string cmd = "import -window 0x%s '%s'".printf(win_id,image_path);
+					if (App.generate_png){
+						image_path = dir + "/" + base_name + ".png";
+						cmd = "import -window 0x%s '%s'".printf(win_id,image_path);
+					}
+					else{
+						image_path = dir + "/" + base_name + ".jpg";
+						cmd = "import -window 0x%s -quality 90 '%s'".printf(win_id,image_path);
+					}
+ 
 					execute_command_sync(cmd);
 					
 					Thread.usleep ((ulong) 100000); //wait 100ms before killing conky

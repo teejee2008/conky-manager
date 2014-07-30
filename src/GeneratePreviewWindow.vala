@@ -39,6 +39,7 @@ public class GeneratePreviewWindow : Dialog {
 	public RadioButton optGenerateMissing;
 	public RadioButton optGenerateAll;
 	private Switch switch_capture_bg;
+	private Switch switch_png;
 	
 	public GeneratePreviewWindow() {
 		title = _("Generate Preview");
@@ -93,6 +94,27 @@ public class GeneratePreviewWindow : Dialog {
 		
 		switch_capture_bg.notify["active"].connect(()=>{
 			App.capture_background = switch_capture_bg.active;
+		});
+		
+		
+		//png images
+		Box hbox_png = new Box (Gtk.Orientation.HORIZONTAL, 6);
+        vbox_main.add (hbox_png);
+        
+		Label lbl_png = new Gtk.Label(_("High quality images (PNG)") );
+		lbl_png.hexpand = true;
+		lbl_png.xalign = (float) 0.0;
+		lbl_png.valign = Align.CENTER;
+		lbl_png.set_tooltip_text(_("Generate preview images in PNG format instead of JPEG"));
+		hbox_png.add(lbl_png);
+
+        switch_png = new Gtk.Switch();
+        switch_png.set_size_request(100,20);
+        switch_png.active =  App.generate_png;
+        hbox_png.pack_end(switch_png,false,false,0);
+		
+		switch_png.notify["active"].connect(()=>{
+			App.generate_png = switch_png.active;
 		});
 		
 		//hbox_commands --------------------------------------------------
