@@ -1,11 +1,11 @@
-prefix = /usr
-bindir = $(prefix)/bin
-sharedir = $(prefix)/share
-localedir = $(sharedir)/locale
-launcherdir = $(sharedir)/applications
-mandir = $(sharedir)/man
-man1dir = $(mandir)/man1
-CFLAGS = --std=c99
+prefix=/usr
+bindir=$(prefix)/bin
+sharedir=$(prefix)/share
+localedir=$(sharedir)/locale
+launcherdir=$(sharedir)/applications
+mandir=$(sharedir)/man
+man1dir=$(mandir)/man1
+CFLAGS=--std=c99
 
 all:
 	valac -X -D'GETTEXT_PACKAGE="conky-manager"' --Xcc="-lm" "Main.vala" "MainWindow.vala" "EditWidgetWindow.vala" "EditThemeWindow.vala" "SettingsWindow.vala" "DonationWindow.vala" "GeneratePreviewWindow.vala" "AboutWindow.vala" "Utility.vala" -o conky-manager --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 --pkg libsoup-2.4 --pkg json-glib-1.0 
@@ -14,7 +14,6 @@ clean:
 	rm -rf *.o conky-manager
 	
 install:
-	mkdir -p $(DESTDIR)
 	mkdir -p $(DESTDIR)$(bindir)
 	mkdir -p $(DESTDIR)$(sharedir)
 	mkdir -p $(DESTDIR)$(launcherdir)
@@ -23,6 +22,7 @@ install:
 
 	#binary
 	install -m 0755 conky-manager $(DESTDIR)$(bindir)
+	install -m 0755 conky-manager-uninstall $(DESTDIR)$(bindir)
 	
 	#launcher
 	install -m 0755 conky-manager.desktop $(DESTDIR)$(launcherdir)
@@ -41,6 +41,7 @@ install:
 uninstall:
 	#binary
 	rm -f $(DESTDIR)$(bindir)/conky-manager
+	rm -f $(DESTDIR)$(bindir)/conky-manager-uninstall
 	
 	#launcher
 	rm -f $(DESTDIR)$(launcherdir)/conky-manager.desktop

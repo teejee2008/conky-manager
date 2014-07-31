@@ -1,6 +1,21 @@
+#!/bin/bash
+
+backup=`pwd`
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+cd "$DIR"
+
 sudo rm -f  "/usr/bin/conky-manager"
 sudo rm -f  "/usr/share/applications/conky-manager.desktop"
 sudo rm -f  "/usr/share/pixmaps/conky-manager.png"
 sudo rm -rf "/usr/share/conky-manager"
 sudo rm -rf "/usr/share/doc/conky-manager"
 sudo rm -f  "/usr/share/locale/*/LC_MESSAGES/conky-manager.mo"
+
+if [ $? -eq 0 ]; then
+	echo "Conky Manager was uninstalled successfully."
+else
+	echo "Uninstalled completed (some files could not be removed)"
+	exit 1
+fi
+
+cd "$backup"

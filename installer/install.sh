@@ -23,7 +23,7 @@ echo ""
 if [ -f /etc/debian_version ]; then
 	if command -v apt-get >/dev/null 2>&1; then
 		echo "Installing debian packages..."
-		for i in conky p7zip-full imagemagick rsync libgee2 libjson-glib-1.0-0; do
+		for i in conky-all p7zip-full imagemagick rsync libgee2 libjson-glib-1.0-0; do
 		  sudo apt-get -y install $i
 		done
 	fi
