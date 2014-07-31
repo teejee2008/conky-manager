@@ -965,6 +965,7 @@ public class MainWindow : Window {
 		};
 
 		dialog.translators = {
+			"gogo (Croatian):launchpad.net/~trebelnik-stefina",
 			"Radek Otáhal (Czech):radek.otahal@email.cz"
 		}; 
 
@@ -972,7 +973,9 @@ public class MainWindow : Window {
 		dialog.artists = null;
 		dialog.donations = {
 			"Adam Simmons",
+			"Andre Strobach",
 			"Dan Raymond",
+			"Edwin Pallens",
 			"Flaviu Dan",
 			"Gus Chavez",
 			"Jan Sandberg",
@@ -981,6 +984,7 @@ public class MainWindow : Window {
 			"Nicola Jelmorini",
 			"Radek Otahal",
 			"Raymond Shaffer",
+			"Steven Dudek",
 			"Steven Klausmeier",
 			"Umut Baris Demir",
 			"Will Hartley",

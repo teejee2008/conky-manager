@@ -38,6 +38,9 @@ install:
 	mkdir -p "$(DESTDIR)$(localedir)/cs_CZ/LC_MESSAGES"
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/cs_CZ/LC_MESSAGES/conky-manager.mo" ../po/conky-manager-cs.po
 	
+	mkdir -p "$(DESTDIR)$(localedir)/hr_HR/LC_MESSAGES"
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/hr_HR/LC_MESSAGES/conky-manager.mo" ../po/conky-manager-hr.po
+	
 uninstall:
 	#binary
 	rm -f $(DESTDIR)$(bindir)/conky-manager
