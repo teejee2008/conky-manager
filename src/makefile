@@ -21,14 +21,14 @@ install:
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
 
 	#binary
-	install -m 0755 conky-manager $(DESTDIR)$(bindir)
-	install -m 0755 conky-manager-uninstall $(DESTDIR)$(bindir)
+	install -m 0755 conky-manager "$(DESTDIR)$(bindir)"
+	install -m 0755 conky-manager-uninstall "$(DESTDIR)$(bindir)"
 	
 	#launcher
-	install -m 0755 conky-manager.desktop $(DESTDIR)$(launcherdir)
+	install -m 0755 conky-manager.desktop "$(DESTDIR)$(launcherdir)"
 	
 	#app icon
-	install -m 0755 share/pixmaps/conky-manager.png $(DESTDIR)$(sharedir)/pixmaps
+	install -m 0755 share/pixmaps/conky-manager.png "$(DESTDIR)$(sharedir)/pixmaps"
 	
 	#shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/conky-manager" ./share/conky-manager/*
@@ -43,17 +43,17 @@ install:
 	
 uninstall:
 	#binary
-	rm -f $(DESTDIR)$(bindir)/conky-manager
-	rm -f $(DESTDIR)$(bindir)/conky-manager-uninstall
+	rm -f "$(DESTDIR)$(bindir)/conky-manager"
+	rm -f "$(DESTDIR)$(bindir)/conky-manager-uninstall"
 	
 	#launcher
-	rm -f $(DESTDIR)$(launcherdir)/conky-manager.desktop
+	rm -f "$(DESTDIR)$(launcherdir)/conky-manager.desktop"
 	
 	#app icon
-	rm -f $(DESTDIR)$(sharedir)/pixmaps/conky-manager.png
+	rm -f "$(DESTDIR)$(sharedir)/pixmaps/conky-manager.png"
 	
 	#shared files
-	rm -rf $(DESTDIR)$(sharedir)/conky-manager
+	rm -rf "$(DESTDIR)$(sharedir)/conky-manager"
 
     #translations
-	rm -f "$(DESTDIR)$(localedir)/*/LC_MESSAGES/conky-manager.mo"
+	rm -f $(DESTDIR)$(localedir)/*/LC_MESSAGES/conky-manager.mo

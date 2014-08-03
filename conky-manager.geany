@@ -23,7 +23,7 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=11
+current_page=0
 FILE_NAME_0=3993;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Flinux%2Fconky-manager%2Fsrc%2FGeneratePreviewWindow.vala;0;4
 FILE_NAME_1=0;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Flinux%2Fconky-manager%2Fsrc%2FAboutWindow.vala;0;4
 FILE_NAME_2=1999;Vala;0;EUTF-8;1;1;0;%2Fhome%2Fteejee%2Fprojects%2Flinux%2Fconky-manager%2Fsrc%2FDonationWindow.vala;0;4
