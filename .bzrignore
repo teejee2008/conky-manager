@@ -1,7 +1,5 @@
-./installer/conky-manager-latest-i386.run
-./installer/conky-manager-latest-amd64.run
-./installer/conky-manager-latest-i386.deb
-./installer/conky-manager-latest-amd64.deb
-./installer/amd64
-./installer/i386
-./src/conky-manager
+src/conky-manager
+installer/amd64
+installer/i386
+installer/*.deb
+installer/*.run

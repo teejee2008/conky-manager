@@ -1,5 +1,5 @@
-conky-manager (2.1) saucy; urgency=low
+conky-manager (2.1) trusty; urgency=low
 
   * Fixed build issues on Ubuntu 12.04 LTS
 
- -- Tony George <tony.george.kol@gmail.com>  Sat, 13 Jul 2014 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Thu, 31 Jul 2014 10:00:00 +0530
