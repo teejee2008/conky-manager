@@ -18,26 +18,41 @@ CHECK_COLOR_SUPPORT() {
 }
 
 MSG_INFO() {
+	add_newline=''
+	if [ "$2" == 0 ]; then
+		add_newline='-n'
+	fi
+	
 	if [ $COLORS_SUPPORTED -eq 0 ]; then
-        echo -e "[${Yellow}*${Reset}] ${Green}$1${Reset}"
+        echo -e ${add_newline} "[${Yellow}*${Reset}] ${Green}$1${Reset}"
     else
-        echo -e "[*] $1"
+        echo -e ${add_newline} "[*] $1"
     fi
 }
 
 MSG_WARNING() {
+	add_newline=''
+	if [ "$2" == 0 ]; then
+		add_newline='-n'
+	fi
+	
 	if [ $COLORS_SUPPORTED -eq 0 ]; then
-        echo -e "[${Red}!${Reset}] ${Yellow}$1${Reset}"
+        echo -e ${add_newline} "[${Red}!${Reset}] ${Yellow}$1${Reset}"
     else
-        echo -e "[!] $1"
+        echo -e ${add_newline} "[!] $1"
     fi
 }
 
 MSG_ERROR() {
+	add_newline=''
+	if [ "$2" == 0 ]; then
+		add_newline='-n'
+	fi
+	
     if [ $COLORS_SUPPORTED -eq 0 ]; then
-        echo -e "[${Red}X${Reset}] ${Yellow}$1${Reset}"
+        echo -e ${add_newline} "[${Red}X${Reset}] ${Yellow}$1${Reset}"
     else
-        echo -e "[X] $1"
+        echo -e ${add_newline} "[X] $1"
     fi
 }
 
