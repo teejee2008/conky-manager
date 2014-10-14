@@ -3,10 +3,10 @@
 app_name='conky-manager'
 app_fullname='Conky Manager'
 
-generic_depends=(conky p7zip imagemagick rsync libgee json-glib)
-debian_depends=(conky p7zip-full imagemagick rsync libgee2 libjson-glib-1.0-0)
-redhat_depends=(conky p7zip ImageMagick rsync libgee json-glib)
-arch_depends=(conky p7zip imagemagick rsync libgee06 json-glib)
+generic_depends=(conky p7zip imagemagick rsync)
+debian_depends=(conky p7zip-full imagemagick rsync)
+redhat_depends=(conky p7zip ImageMagick rsync)
+arch_depends=(conky p7zip imagemagick rsync)
 
 generic_recommends=()
 debian_recommends=()

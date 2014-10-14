@@ -968,7 +968,15 @@ public class MainWindow : Window {
 			"gogo (Croatian):launchpad.net/~trebelnik-stefina",
 			"Radek Otáhal (Czech):radek.otahal@email.cz"
 		}; 
-
+		
+		dialog.third_party = {
+			"Conky Manager is powered by the following tools and components. Please visit the links for more information.",
+			"Conky by Brenden Matthews:http://conky.sourceforge.net/",
+			"ImageMagick by ImageMagick Studio LLC:http://imagemagick.org/",
+			"7-Zip by Igor Pavlov:http://www.7-zip.org/",
+			"Themes by various authors from DeviantArt.com:http://www.deviantart.com/browse/all/customization/skins/?q=conky"
+		}; 
+		
 		dialog.documenters = null; 
 		dialog.artists = null;
 		dialog.donations = {

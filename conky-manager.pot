@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2014-09-21 17:50+0530\n"
+"POT-Creation-Date: 2014-10-14 21:45+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,17 +69,17 @@ msgstr ""
 msgid "Apply Changes"
 msgstr ""
 
-#: AboutWindow.vala:312
+#: AboutWindow.vala:330
 #, c-format
 msgid "Artists"
 msgstr ""
 
-#: AboutWindow.vala:304
+#: AboutWindow.vala:314
 #, c-format
 msgid "Authors"
 msgstr ""
 
-#: AboutWindow.vala:275
+#: AboutWindow.vala:285
 msgid "Back"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid "Choose File"
 msgstr ""
 
-#: AboutWindow.vala:285 EditWidgetWindow.vala:461
+#: AboutWindow.vala:295 EditWidgetWindow.vala:461
 msgid "Close"
 msgstr ""
 
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Commands listed below are not available"
 msgstr ""
 
-#: AboutWindow.vala:262 AboutWindow.vala:279 MainWindow.vala:234
+#: AboutWindow.vala:272 AboutWindow.vala:289 MainWindow.vala:234
 msgid "Credits"
 msgstr ""
 
@@ -171,7 +171,7 @@ msgstr ""
 msgid "Discard Changes"
 msgstr ""
 
-#: AboutWindow.vala:328
+#: AboutWindow.vala:346
 #, c-format
 msgid "Documenters"
 msgstr ""
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Donate via PayPal"
 msgstr ""
 
-#: AboutWindow.vala:336
+#: AboutWindow.vala:354
 #, c-format
 msgid "Donations"
 msgstr ""
@@ -375,7 +375,7 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: MainWindow.vala:1049
+#: MainWindow.vala:1057
 msgid "N/A"
 msgstr ""
 
@@ -496,7 +496,7 @@ msgstr ""
 msgid "Search for new themes"
 msgstr ""
 
-#: MainWindow.vala:1061
+#: MainWindow.vala:1069
 msgid "Searching directories..."
 msgstr ""
 
@@ -623,6 +623,11 @@ msgstr ""
 msgid "Themes imported successfully"
 msgstr ""
 
+#: AboutWindow.vala:322
+#, c-format
+msgid "Third Party Tools"
+msgstr ""
+
 #: EditWidgetWindow.vala:346
 msgid "Time"
 msgstr ""
@@ -655,7 +660,7 @@ msgstr ""
 msgid "Top Right"
 msgstr ""
 
-#: AboutWindow.vala:320
+#: AboutWindow.vala:338
 #, c-format
 msgid "Translators"
 msgstr ""
@@ -682,7 +687,7 @@ msgid ""
 "Press ENTER to start and stop."
 msgstr ""
 
-#: MainWindow.vala:995
+#: MainWindow.vala:1003
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 
