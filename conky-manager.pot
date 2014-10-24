@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2014-10-14 21:45+0530\n"
+"POT-Creation-Date: 2014-10-19 11:06+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -223,7 +223,7 @@ msgstr ""
 msgid "Failed to import themes"
 msgstr ""
 
-#: Utility.vala:1294
+#: Utility.vala:1293
 msgid "Failed to set ownership"
 msgstr ""
 
@@ -371,7 +371,7 @@ msgstr ""
 msgid "Missing Dependencies"
 msgstr ""
 
-#: Utility.vala:1024
+#: Utility.vala:1023
 msgid "Missing Icon"
 msgstr ""
 
@@ -593,7 +593,7 @@ msgstr ""
 msgid "Stop all running widgets"
 msgstr ""
 
-#: Main.vala:880 Utility.vala:752
+#: Main.vala:880 Utility.vala:751
 msgid "Stopped"
 msgstr ""
 

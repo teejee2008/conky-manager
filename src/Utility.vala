@@ -653,9 +653,8 @@ namespace TeeJee.ProcessManagement{
 		
 		return -1;
 	}
-	
+
 	public bool process_is_running(long pid){
-				
 		/* Checks if given process is running */
 		
 		string cmd = "";
