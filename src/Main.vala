@@ -606,6 +606,8 @@ public class Main : GLib.Object {
 	public void update_startup_script(){
 		string startupScript = data_dir + "/conky-startup.sh";
 		
+		bool atleast_one_widget_enabled = false;
+		
 		string txt = "";
 		txt += "sleep %ds\n".printf(startup_delay);
 		txt += "killall conky\n";
@@ -613,10 +615,20 @@ public class Main : GLib.Object {
 			if (conf.enabled){
 				txt += "cd \"" + conf.dir + "\"\n";
 				txt += "conky -c \"" + conf.path + "\" &\n";
+				atleast_one_widget_enabled = true;
 			}
 		}
-
-		write_file(startupScript, txt);
+		
+		if (file_exists(startupScript)){
+			file_delete(startupScript);
+		}
+		
+		if (atleast_one_widget_enabled){
+			write_file(startupScript, txt);
+		}
+		else{
+			write_file(startupScript, "# No widgets enabled!\n\nexit 0"); //write empty script
+		}
 	}
 	
 	public bool check_startup(){
