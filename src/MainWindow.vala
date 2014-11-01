@@ -32,8 +32,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class MainWindow : Window {
-	
-	private ComboBox cmb_type;
+
 	private Image img_preview;
 	private Box vbox_main;
 	private Box vbox_status;
@@ -41,9 +40,12 @@ public class MainWindow : Window {
 	private TreeView tv_widget;
 	private ScrolledWindow sw_widget;
 	private Button btn_add_theme;
+	private ToggleButton btn_show_widgets;
+	private ToggleButton btn_show_themes;
 	private ToggleButton btn_preview;
 	private ToggleButton btn_list;
 	private Gtk.Paned pane;
+	private Label lblSaveThemeSeparator;
 	private Label lblFilter;
 	private Entry txtFilter;
 	private TreeModelFilter filterThemes;
@@ -118,24 +120,41 @@ public class MainWindow : Window {
 		//lbl_type
 		Label lbl_type = new Label (_("Browse:"));
 		hbox_widget.add(lbl_type);
-
-		//cmb_type
-		cmb_type = new ComboBox();
-		hbox_widget.pack_start (cmb_type, false, true, 0);
-
-		CellRendererText cell_type = new CellRendererText();
-        cmb_type.pack_start(cell_type, false );
-        cmb_type.set_cell_data_func (cell_type, (cell_type, cell, model, iter) => {
-			string type;
-			model.get (iter, 0, out type,-1);
-			(cell as Gtk.CellRendererText).text = type;
+		
+		//btn_show_widgets
+		btn_show_widgets = new ToggleButton.with_label(_("Widgets"));
+		hbox_widget.pack_start (btn_show_widgets, false, true, 0);
+		
+		//btn_show_themes
+		btn_show_themes = new ToggleButton.with_label(_("Themes"));
+		hbox_widget.pack_start (btn_show_themes, false, true, 0);
+		
+		btn_show_widgets.toggled.connect(()=>{
+			if (btn_show_widgets.active){
+				btn_show_themes.active = false;
+				btn_add_theme.visible = false;
+				btn_generate_preview.visible = true;
+				
+				lblSaveThemeSeparator.visible = btn_add_theme.visible;
+				txtFilter.text = "";
+				reload_themes();
+			}
 		});
 		
-		cmb_type.changed.connect(cmb_type_changed);
+		btn_show_themes.toggled.connect(()=>{
+			if (btn_show_themes.active){
+				btn_show_widgets.active = false;
+				btn_add_theme.visible = true;
+				btn_generate_preview.visible = false;
+				
+				lblSaveThemeSeparator.visible = btn_add_theme.visible;
+				txtFilter.text = "";
+				reload_themes();
+			}
+		});
 
-		tt = _("Browse widgets or themes.\n\nWidgets are Conky configuration files (conkyrc files)\nThemes are a set of Widgets along with wallpaper (cmtheme files)");
-		lbl_type.set_tooltip_text(tt);
-		cmb_type.set_tooltip_text(tt);
+		//separator
+		hbox_widget.add(new Label(" | "));
 		
 		//add theme button
 		btn_add_theme = new Button.with_label(_("Save Theme"));
@@ -146,6 +165,10 @@ public class MainWindow : Window {
 		hbox_widget.pack_start (btn_add_theme, false, true, 0);
 		
 		btn_add_theme.clicked.connect(btn_add_theme_clicked);
+		
+		//separator
+		lblSaveThemeSeparator = new Label(" | ");
+		hbox_widget.add(lblSaveThemeSeparator);
 		
 		//filter
 		lblFilter = new Label(_("Filter"));
@@ -242,9 +265,6 @@ public class MainWindow : Window {
 		
 		//preview_area
 		init_preview_area();
-
-		//combo boxes
-		cmb_type_refresh();
 
 		//keyboard_shortcuts
 		init_keyboard_shortcuts();
@@ -499,13 +519,8 @@ public class MainWindow : Window {
 		//call handlers
 		btn_preview_toggled();
 		btn_list_toggled();
-		cmb_type_changed();
-		
-		/*//scan for themes on first run
-		if (App.conkyrc_list.size == 0){
-			
-		}*/
-		
+		btn_show_widgets.active = true;
+
 		btn_scan_clicked();
 		
 		return true;
@@ -565,26 +580,6 @@ public class MainWindow : Window {
 		if ((!btn_list.active)&&(!btn_preview.active)){
 			btn_preview.active = true;
 		}
-	}
-
-	private void cmb_type_refresh(){
-		ListStore store = new ListStore(1, typeof(string));
-
-		TreeIter iter;
-		store.append(out iter);
-		store.set (iter, 0, _("Widgets"));
-		store.append(out iter);
-		store.set (iter, 0, _("Themes"));
-			
-		cmb_type.set_model (store);
-		cmb_type.active = 0;
-	}
-
-	private void cmb_type_changed(){
-		btn_add_theme.visible = (cmb_type.active == 1);
-		btn_generate_preview.visible = (cmb_type.active == 0);
-		txtFilter.text = "";
-		reload_themes();
 	}
 
 	private void btn_add_theme_clicked(){
@@ -1157,7 +1152,7 @@ public class MainWindow : Window {
 		TreeStore model = new TreeStore(2, typeof(bool), typeof(ConkyConfigItem));
 		
 		Gee.ArrayList<ConkyConfigItem> list = null;
-		if (cmb_type.active == 0){
+		if (btn_show_widgets.active){
 			list = App.conkyrc_list;
 		}
 		else{
@@ -1165,7 +1160,7 @@ public class MainWindow : Window {
 		}
 		
 		foreach(ConkyConfigItem item in list){
-			if ((cmb_type.active == 0)&&(App.show_active)){
+			if ((btn_show_widgets.active) && (App.show_active)){
 				if (!item.enabled) { 
 					continue; 
 				}
