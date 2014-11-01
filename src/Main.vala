@@ -135,7 +135,7 @@ public class Main : GLib.Object {
 			exit(0);
 		}
 		
-		//get dsktop ---------------
+		//get desktop ---------------
 		desktop = get_desktop_name().down();
 		log_msg("Desktop: %s".printf(desktop));
 		
@@ -805,7 +805,7 @@ public class ConkyRC : ConkyConfigItem {
 	private DataInputStream dis_out;
 	private DataInputStream dis_err;
 	private bool thread_is_running = false;
-	private int wait_interval = 0;
+	private int wait_interval = 1;
 	private uint timer_stop;
 	
 	public ConkyRC(string rc_file_path) {

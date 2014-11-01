@@ -138,11 +138,11 @@ public class MainWindow : Window {
 		cmb_type.set_tooltip_text(tt);
 		
 		//add theme button
-		btn_add_theme = new Button.with_label("");
+		btn_add_theme = new Button.with_label(_("Save Theme"));
 		btn_add_theme.set_size_request(10,-1);
 		btn_add_theme.set_image(new Image.from_stock ("gtk-add", IconSize.MENU));
 		btn_add_theme.no_show_all = true;
-		btn_add_theme.set_tooltip_text(_("Saving running widgets as new theme"));
+		btn_add_theme.set_tooltip_text(_("Save running widgets and current desktop wallpaper as new theme"));
 		hbox_widget.pack_start (btn_add_theme, false, true, 0);
 		
 		btn_add_theme.clicked.connect(btn_add_theme_clicked);
@@ -812,7 +812,7 @@ public class MainWindow : Window {
 		btn_preview.active = show_preview;
 		btn_list.active = show_list;
 		
-		reload_themes();
+		//reload_themes();
 	}
 	
 	private void btn_generate_preview_clicked_thread(){

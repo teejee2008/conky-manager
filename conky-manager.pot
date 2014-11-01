@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2014-10-19 11:06+0530\n"
+"POT-Creation-Date: 2014-11-01 16:04+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -476,16 +476,16 @@ msgstr ""
 msgid "Run Conky at system startup"
 msgstr ""
 
-#: EditThemeWindow.vala:57
+#: EditThemeWindow.vala:57 MainWindow.vala:141
 msgid "Save Theme"
+msgstr ""
+
+#: MainWindow.vala:145
+msgid "Save running widgets and current desktop wallpaper as new theme"
 msgstr ""
 
 #: Main.vala:943
 msgid "Saved"
-msgstr ""
-
-#: MainWindow.vala:145
-msgid "Saving running widgets as new theme"
 msgstr ""
 
 #: EditThemeWindow.vala:152
