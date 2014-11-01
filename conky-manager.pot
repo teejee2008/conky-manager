@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2014-11-01 16:44+0530\n"
+"POT-Creation-Date: 2014-11-01 16:53+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -207,11 +207,11 @@ msgid ""
 "Enter '0' to list running widgets"
 msgstr ""
 
-#: MainWindow.vala:934 Utility.vala:107
+#: MainWindow.vala:945 Utility.vala:107
 msgid "Error"
 msgstr ""
 
-#: MainWindow.vala:934
+#: MainWindow.vala:945
 msgid "Failed to import themes"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Generate preview images in PNG format instead of JPEG"
 msgstr ""
 
-#: MainWindow.vala:777 MainWindow.vala:851
+#: MainWindow.vala:788 MainWindow.vala:862
 msgid "Generating Previews"
 msgstr ""
 
@@ -285,7 +285,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: MainWindow.vala:890
+#: MainWindow.vala:901
 msgid "Import Theme Pack"
 msgstr ""
 
@@ -367,7 +367,7 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: MainWindow.vala:1052
+#: MainWindow.vala:1063
 msgid "N/A"
 msgstr ""
 
@@ -488,7 +488,7 @@ msgstr ""
 msgid "Search for new themes"
 msgstr ""
 
-#: MainWindow.vala:1064
+#: MainWindow.vala:1075
 msgid "Searching directories..."
 msgstr ""
 
@@ -607,11 +607,11 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: MainWindow.vala:931
+#: MainWindow.vala:942
 msgid "Themes Imported"
 msgstr ""
 
-#: MainWindow.vala:931
+#: MainWindow.vala:942
 msgid "Themes imported successfully"
 msgstr ""
 
@@ -679,7 +679,7 @@ msgid ""
 "Press ENTER to start and stop."
 msgstr ""
 
-#: MainWindow.vala:998
+#: MainWindow.vala:1009
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 

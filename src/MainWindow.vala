@@ -758,6 +758,17 @@ public class MainWindow : Window {
 					break;
 				case "missing":
 					foreach(ConkyRC rc in App.conkyrc_list){
+						//check if image file is a "default" image
+						string[] ext_list = {".png",".jpg",".jpeg"};
+						foreach(string ext in ext_list){
+							string image_name = "preview" + ext;
+							if (rc.image_path.has_suffix(image_name)){ 
+								rclist_generate.add(rc);
+								continue;
+							}
+						}
+						
+						//check if image file is missing
 						if (!file_exists(rc.image_path)){
 							rclist_generate.add(rc);
 						}
