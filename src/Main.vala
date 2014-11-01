@@ -74,7 +74,7 @@ public class Main : GLib.Object {
 
 	//public string[] bg_scaling = {"center","fill","max","scale","tile"};
 	public string[] bg_scaling = {"none","centered","tiled","stretched","scaled","zoomed"};
-	public string[] bg_scaling_gnome = {"none","centered","tiled","stretched","scaled","zoomed"};
+	public string[] bg_scaling_gnome = {"stretched","centered","tiled","stretched","scaled","zoomed"};
 	public string[] bg_scaling_xfce = {"0","1","2","3","4","5"};
 	public string[] bg_scaling_lxde = {"","center","tile","stretch","fit","crop"};
 	
@@ -1651,7 +1651,6 @@ public class ConkyTheme : ConkyConfigItem {
 	
 	public void set_wallpaper(){
 		if ((wallpaper_path.length > 0)&&(file_exists(wallpaper_path))){
-			
 			switch (App.desktop){
 				case "cinnamon":
 					//2.0
@@ -1750,16 +1749,16 @@ public class ConkyTheme : ConkyConfigItem {
 				string val = execute_command_sync_get_output("gsettings get org.%s.desktop.background picture-uri".printf(App.desktop));
 				val = val[1:val.length-2]; //remove quotes
 				val = val[7:val.length]; //remove prefix file://
-				return val.strip();
+				return uri_decode(val.strip());
 			case "xfce":
 				string val = execute_command_sync_get_output("xfconf-query --channel xfce4-desktop --property '/backdrop/screen0/monitor0/workspace0/last-image'");
-				return val.strip();
+				return uri_decode(val.strip());
 			case "lxde":
 				string val = execute_command_sync_get_output("grep wallpaper=/ ~/.config/pcmanfm/lubuntu/pcmanfm.conf | sed -e 's/wallpaper=//g'");
 				if (val.strip() == ""){
 					val = execute_command_sync_get_output("grep wallpaper=/ ~/.config/pcmanfm/lubuntu/desktop-items-0.conf | sed -e 's/wallpaper=//g'");
 				}
-				return val.strip();
+				return uri_decode(val.strip());
 			default:
 				return "";
 		}
@@ -1767,6 +1766,7 @@ public class ConkyTheme : ConkyConfigItem {
 
 	public string save_current_wallpaper(){
 		string path = get_current_wallpaper();
+		log_msg(_("Current wallpaper source path") + ": '%s'".printf(path));
 		int ext_index = path.last_index_of(".");
 		wallpaper_path = dir + "/wallpaper" + path[ext_index: path.length].strip();
 		file_copy(path,wallpaper_path);

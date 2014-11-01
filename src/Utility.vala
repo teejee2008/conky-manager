@@ -428,7 +428,7 @@ namespace TeeJee.ProcessManagement{
 		
 		/* Executes single command synchronously and returns exit code 
 		 * Pipes and multiple commands are not supported */
-		
+
 		try {
 			int exitCode;
 			Process.spawn_command_line_sync(cmd, null, null, out exitCode);
@@ -1559,6 +1559,14 @@ namespace TeeJee.Misc {
 		.replace("&lt;","<")
 		.replace("&gt;",">")
 		;
+	}
+	
+	public string uri_encode(string unescaped_string){
+		return GLib.Uri.escape_string(unescaped_string);
+	}
+	
+	public string uri_decode(string escaped_string){
+		return GLib.Uri.unescape_string(escaped_string);
 	}
 }
 
