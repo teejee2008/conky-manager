@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2013 First Lastname <your@email.com> -->
+<application>
+ <id type="desktop">conky-manager.desktop</id>
+ <metadata_license>CC0-1.0</metadata_license>
+ <project_license>GPL-2.0+</project_license>
+ <name>Conky Manager</name>
+ <summary>Theme manager for Conky widgets</summary>
+ <description>
+  <p>
+   Conky Manager is a GTK front-end for managing Conky configuration files. It provides options to start, stop, browse and edit Conky widgets installed on the system.
+  </p>
+ </description>
+ <screenshots>
+  <screenshot type="default">http://3.bp.blogspot.com/-yMD0kUDgILw/U5Xadq66u8I/AAAAAAAABXs/BVgaUw4jgCU/s1600/main_window.png</screenshot>
+  <screenshot>http://2.bp.blogspot.com/-_Yn1LATJgkQ/U7LCluIpAUI/AAAAAAAABYk/khKkKuNeZLg/s1600/Edit+Theme.png</screenshot>
+  <screenshot>http://3.bp.blogspot.com/-4TJr5oeGy1s/U7LCl32j_vI/AAAAAAAABYo/wLjS74jXQWE/s1600/Edit+Widget.png</screenshot>
+ </screenshots>
+ <url type="homepage">http://www.teejeetech.in/p/conky-manager.html</url>
+ <updatecontact>teejeetech_at_gmail.com</updatecontact>
+ <project_group>GNOME</project_group>
+</application>

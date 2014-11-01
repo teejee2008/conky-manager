@@ -25,7 +25,8 @@ install:
 	mkdir -p $(DESTDIR)$(launcherdir)
 	mkdir -p $(DESTDIR)$(sharedir)/${app_name}
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
-
+	mkdir -p $(DESTDIR)$(sharedir)/appdata
+	
 	#binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-uninstall "$(DESTDIR)$(bindir)"
@@ -35,6 +36,9 @@ install:
 	
 	#app icon
 	install -m 0755 share/pixmaps/${app_name}.png "$(DESTDIR)$(sharedir)/pixmaps"
+	
+	#appdata.xml
+	install -m 0755 ${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata"
 	
 	#shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/${app_name}" ./share/${app_name}/*
@@ -57,6 +61,9 @@ uninstall:
 	
 	#app icon
 	rm -f "$(DESTDIR)$(sharedir)/pixmaps/${app_name}.png"
+
+	#appdata.xml
+	rm -f "$(DESTDIR)$(sharedir)/appdata/${app_name}.appdata.xml"
 	
 	#shared files
 	rm -rf "$(DESTDIR)$(sharedir)/${app_name}"
