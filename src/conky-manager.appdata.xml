@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2013 First Lastname <your@email.com> -->
+<!-- Copyright 2014 Tony George <teejeetech@gmail.com> -->
 <application>
  <id type="desktop">conky-manager.desktop</id>
  <metadata_license>CC0-1.0</metadata_license>
@@ -18,5 +18,5 @@
  </screenshots>
  <url type="homepage">http://www.teejeetech.in/p/conky-manager.html</url>
  <updatecontact>teejeetech_at_gmail.com</updatecontact>
- <project_group>GNOME</project_group>
+ <project_group></project_group>
 </application>
