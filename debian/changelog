@@ -1,9 +1,15 @@
-conky-manager (2.3.1) trusty; urgency=low
+conky-manager (2.3.2) trusty; urgency=low
 
-  * Updated build and install scripts
+  * Added appdata.xml file
   
-  * Some shared libs are now included with the installer
+  * Fixed: Applying wallpaper to Cinnamon desktop with scaling option 'none' can result in an empty/black background
 
-  * Changed dependency 'conky-all' to 'conky'
+  * Fixed: Create empty startup script if widgets are not enabled
   
- -- Tony George <tony.george.kol@gmail.com>  Fri, 24 Oct 2014 10:00:00 +0530
+  * While generating previews for all 'missing' cases, generate previews for those widgets also which have common 'preview.xxx' file
+  
+  * Combo for switching between Widget List and Theme List is replaced by toggle buttons for single-click switching
+  
+  * Fixed: After generating preview, selected list item will remain selected instead of reloading the list
+  
+ -- Tony George <tony.george.kol@gmail.com>  Fri, 6 Nov 2014 10:00:00 +0530
