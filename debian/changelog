@@ -1,15 +1,7 @@
-conky-manager (2.3.3) trusty; urgency=low
+conky-manager (2.3.4) trusty; urgency=low
 
-  * Added appdata.xml file
-  
-  * Fixed: Applying wallpaper to Cinnamon desktop with scaling option 'none' can result in an empty/black background
+  * Fixed ambiguous references to Gtk.ListStore
 
-  * Fixed: Create empty startup script if widgets are not enabled
+  * Use libgee-0.8 and valac-0.26
   
-  * While generating previews for all 'missing' cases, generate previews for those widgets also which have common 'preview.xxx' file
-  
-  * Combo for switching between Widget List and Theme List is replaced by toggle buttons for single-click switching
-  
-  * Fixed: After generating preview, selected list item will remain selected instead of reloading the list
-  
- -- Tony George <tony.george.kol@gmail.com>  Fri, 6 Nov 2014 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Fri, 14 Aug 2015 10:00:00 +0530
