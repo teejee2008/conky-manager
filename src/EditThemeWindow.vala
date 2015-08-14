@@ -107,7 +107,7 @@ public class EditThemeWindow : Dialog {
 			(cell as Gtk.CellRendererText).text = type;
 		});
 		
-		ListStore store = new ListStore(1, typeof(string));
+		var store = new Gtk.ListStore(1, typeof(string));
 		TreeIter iter;
 		store.append(out iter);
 		store.set (iter, 0, _("None"));
@@ -166,7 +166,7 @@ public class EditThemeWindow : Dialog {
 			(cell as Gtk.CellRendererText).text = type;
 		});
 		
-		store = new ListStore(1, typeof(string));
+		store = new Gtk.ListStore(1, typeof(string));
 		foreach(string option in App.bg_scaling){
 			store.append(out iter);
 			store.set (iter, 0, option);
@@ -266,7 +266,7 @@ public class EditThemeWindow : Dialog {
 
 	private void cell_widget_enable_toggled (string path){
 		TreeIter iter;
-		ListStore model = (ListStore)tv_widget.model;
+		var model = (Gtk.ListStore)tv_widget.model;
 		bool enabled;
 
 		model.get_iter_from_string (out iter, path);
@@ -276,7 +276,7 @@ public class EditThemeWindow : Dialog {
 	}
 	
 	private void tv_widget_refresh(){
-		ListStore model = new ListStore(2, typeof(bool), typeof(ConkyRC));
+		var model = new Gtk.ListStore(2, typeof(bool), typeof(ConkyRC));
 		
 		var list = new Gee.ArrayList<string>();
 		
@@ -357,7 +357,7 @@ public class EditThemeWindow : Dialog {
 		
 		string txt = "";
 		
-		ListStore model = (ListStore)tv_widget.model;
+		var model = (Gtk.ListStore)tv_widget.model;
 		TreeIter iter;
 		bool enabled;
 		ConkyRC rc;

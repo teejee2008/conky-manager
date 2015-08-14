@@ -114,7 +114,7 @@ public class EditWidgetWindow : Dialog {
 		
 		//populate
 		TreeIter iter;
-		ListStore model = new Gtk.ListStore (2, typeof (string), typeof (string));
+		var model = new Gtk.ListStore (2, typeof (string), typeof (string));
 		model.append (out iter);
 		model.set (iter,0,_("Top Left"),1,"top_left");
 		model.append (out iter);

@@ -227,7 +227,7 @@ public class SettingsWindow : Dialog {
 	}
 
 	private void tv_folders_refresh(){
-		ListStore model = new ListStore(1, typeof(string));
+		var model = new Gtk.ListStore(1, typeof(string));
 		TreeIter iter;
 		foreach	(string path in folder_list_user){
 			model.append(out iter);

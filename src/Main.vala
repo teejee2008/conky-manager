@@ -421,10 +421,10 @@ public class Main : GLib.Object {
 				find_conkyrc_files_in_path(path);
 			}
 		}
-		CompareFunc<ConkyConfigItem> func = (a, b) => {
+		CompareDataFunc<ConkyConfigItem> func = (a, b) => {
 			return strcmp(a.name,b.name);
 		};
-		conkyrc_list.sort(func);
+		conkyrc_list.sort((owned) func);
 	}
 	
 	public void find_conkyrc_files_in_path(string path){
@@ -470,10 +470,10 @@ public class Main : GLib.Object {
 			}
 		}
 
-		CompareFunc<ConkyConfigItem> func = (a, b) => {
+		CompareDataFunc<ConkyConfigItem> func = (a, b) => {
 			return strcmp(a.name,b.name);
 		};
-		conkytheme_list.sort(func);
+		conkytheme_list.sort((owned) func);
 	}
 
     public void find_conkytheme_files_in_path(string path){
