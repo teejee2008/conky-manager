@@ -1,7 +1,5 @@
-conky-manager (2.3.4) trusty; urgency=low
+conky-manager (2.4) trusty; urgency=low
 
-  * Fixed ambiguous references to Gtk.ListStore
-
-  * Use libgee-0.8 and valac-0.26
+  * Minor changes
   
- -- Tony George <tony.george.kol@gmail.com>  Fri, 14 Aug 2015 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Wed, 21 Oct 2015 10:00:00 +0530
