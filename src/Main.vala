@@ -1,26 +1,26 @@
 /*
  * Main.vala
- * 
+ *
  * Copyright 2013 Tony George <teejee@teejee-pc>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
- 
+
 using GLib;
 using Gtk;
 using Gee;
@@ -47,17 +47,17 @@ const string LOCALE_DIR = "/usr/share/locale";
 extern void exit(int exit_code);
 
 public class Main : GLib.Object {
-	
+
 	public string app_path = "";
 	public string share_folder = "";
 	public string data_dir = "";
 	public string app_conf_path = "";
 	public string desktop = "gnome";
-	
+
 	public Gee.ArrayList<string> search_folders;
 	public Gee.ArrayList<ConkyRC> conkyrc_list;
 	public Gee.ArrayList<ConkyTheme> conkytheme_list;
-	
+
 	public bool is_aborted;
 	public string last_cmd;
 
@@ -77,9 +77,9 @@ public class Main : GLib.Object {
 	public string[] bg_scaling_gnome = {"stretched","centered","tiled","stretched","scaled","zoomed"};
 	public string[] bg_scaling_xfce = {"0","1","2","3","4","5"};
 	public string[] bg_scaling_lxde = {"","center","tile","stretch","fit","crop"};
-	
+
     public static int main(string[] args) {
-	
+
 		//set locale
 		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "");
 		Intl.textdomain(GETTEXT_PACKAGE);
@@ -88,13 +88,13 @@ public class Main : GLib.Object {
 
 		//init GTK
 		Gtk.init (ref args);
-		
+
 		//init TMP
 		init_tmp();
-		
+
 		//init app
 		App = new Main(args);
-		
+
 		//show window
 		var window = new MainWindow();
 		//quit app when window is closed
@@ -108,7 +108,7 @@ public class Main : GLib.Object {
 			return false;
 		});
 		window.show_all();
-		
+
 		//run main loop
 	    Gtk.main();
 
@@ -127,20 +127,20 @@ public class Main : GLib.Object {
 		conkytheme_list = new Gee.ArrayList<ConkyTheme>();
 
 		//check dependencies ---------------------
-		
+
 		string message;
 		if (!check_dependencies(out message)){
 			string title = _("Missing Dependencies");
 			gtk_messagebox(title, message, null, true);
 			exit(0);
 		}
-		
+
 		//get desktop ---------------
 		desktop = get_desktop_name().down();
 		log_msg("Desktop: %s".printf(desktop));
-		
+
 		//install new theme packs and fonts ---------------
-		
+
 		init_directories();
 		init_theme_packs();
 
@@ -149,7 +149,7 @@ public class Main : GLib.Object {
 
 	public bool check_dependencies(out string msg){
 		msg = "";
-		
+
 		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","import" };
 
 		string path;
@@ -159,7 +159,7 @@ public class Main : GLib.Object {
 				msg += " * " + cmd_tool + "\n";
 			}
 		}
-		
+
 		if (msg.length > 0){
 			msg = _("Commands listed below are not available") + ":\n\n" + msg + "\n";
 			msg += _("Please install required packages and try running it again");
@@ -170,12 +170,12 @@ public class Main : GLib.Object {
 			return true;
 		}
 	}
-	
+
 	public void save_app_config(){
 		var config = new Json.Object();
 		
 		string home = Environment.get_home_dir();
-		
+
 		config.set_string_member("capture_background", capture_background.to_string());
 		config.set_string_member("generate_png", generate_png.to_string());
 		config.set_string_member("show_preview", show_preview.to_string());
@@ -199,20 +199,20 @@ public class Main : GLib.Object {
 		var node = new Json.Node(NodeType.OBJECT);
 		node.set_object(config);
 		json.set_root(node);
-		
+
 		try{
 			json.to_file(this.app_conf_path);
 		} catch (Error e) {
 	        log_error (e.message);
 	    }
-	    
+
 	    log_msg(_("App config saved") + ": '%s'".printf(app_conf_path));
 	}
-	
+
 	public void load_app_config(){
 		var f = File.new_for_path(app_conf_path);
 		if (!f.query_exists()) { return; }
-		
+
 		var parser = new Json.Parser();
         try{
 			parser.load_from_file(this.app_conf_path);
@@ -232,11 +232,11 @@ public class Main : GLib.Object {
 		startup_delay = json_get_int(config,"startup_delay",startup_delay);
 
 		// search folders -------------------
-		
+
 		search_folders.clear();
-		
+
 		string home = Environment.get_home_dir();
-		
+
 		//default locations: look for other folders in addition to "~/.conky"
 		foreach(string path in new string[]{ home + "/.Conky", home + "/.config/conky", home + "/.config/Conky"}){
 			if (!search_folders.contains(path) && dir_exists(path)){
@@ -256,11 +256,11 @@ public class Main : GLib.Object {
 
 		log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
 	}
-	
+
 	public void init_directories(){
 		string path = data_dir;
 		string home = Environment.get_home_dir ();
-		
+
 		if (dir_exists(path) == false){
 			create_dir(path);
 			log_debug(_("Directory Created") + ": " + path);
@@ -271,21 +271,21 @@ public class Main : GLib.Object {
 			create_dir(path);
 			log_debug(_("Directory Created") + ": " + path);
 		}
-		
+
 		path = home + "/.config/autostart";
 		if (dir_exists(path) == false){
 			create_dir(path);
 			log_debug(_("Directory Created") + ": " + path);
 		}
 	}
-	
+
 	public void init_theme_packs(){
 		string sharePath = "/usr/share/conky-manager/themepacks";
 		string config_file = data_dir + "/.themepacks";
-		
+
 		//create empty config file if missing
-		if (file_exists(config_file) == false) { 
-			Posix.system("touch \"" + config_file + "\""); 
+		if (file_exists(config_file) == false) {
+			Posix.system("touch \"" + config_file + "\"");
 		}
 
 		//read config file
@@ -294,21 +294,21 @@ public class Main : GLib.Object {
 		foreach(string item in txt.split("\n")){
 			filenames.add(item);
 		}
-		
+
 		//skip import of theme packs installed by previous versions of conky manager
 		filenames.add("default-themes-1.1.cmtp.7z");
 		filenames.add("default-themes-1.2.cmtp.7z");
-								
+
 		try{
 			FileEnumerator enumerator;
 			FileInfo file;
 			File fShare = File.parse_name (sharePath);
-				
+
 			if (dir_exists(sharePath)){
 				enumerator = fShare.enumerate_children ("standard::*", 0);
-		
+
 				while ((file = enumerator.next_file ()) != null) {
-					
+
 					string filePath = sharePath + "/" + file.get_name();
 					if (file_exists(filePath) == false) { continue; }
 					if (filePath.has_suffix(".cmtp.7z") == false) { continue; }
@@ -321,14 +321,14 @@ public class Main : GLib.Object {
 							break;
 						}
 					}
-					
+
 					if (!is_installed){
 						log_msg("-----------------------------------------------------");
 						log_msg(_("Found theme pack [new]") + ": " + filePath);
 						install_theme_pack(filePath);
 						filenames.add(file.get_name());
 						log_msg("-----------------------------------------------------");
-						
+
 						string list = "";
 						foreach(string filename in filenames){
 							list += filename + "\n";
@@ -336,7 +336,7 @@ public class Main : GLib.Object {
 						list += file.get_name() + "\n";
 						write_file(config_file,list);
 					}
-				} 
+				}
 			}
 		}
         catch(Error e){
@@ -349,42 +349,42 @@ public class Main : GLib.Object {
 		string std_out;
 		string std_err;
 		int ret_val;
-		
+
 		//create temp dir
 		string temp_dir = TEMP_DIR;
 		temp_dir = temp_dir + "/" + timestamp2();
 		create_dir(temp_dir);
-		
+
 		//check and create ~/.conky
 		if (dir_exists(data_dir) == false){
 			create_dir(data_dir);
 		}
-		
+
 		log_msg(_("Importing") + ": " + pkgPath);
-		
+
 		//unzip
 		cmd = "cd \"" + temp_dir + "\"\n";
 		cmd += "7za x \"" + pkgPath + "\">nul\n";
-	
+
 		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 		if (ret_val != 0){
 			log_error(_("Failed to unzip files from theme pack"));
 			log_error (std_err);
 			return false;
 		}
-		
+
 		//install
 		foreach(string dirname in new string[]{".conky",".Conky",".fonts",".config/conky",".config/Conky"}){
 			string src_path = temp_dir + "/" + dirname;
 			string dst_path = Environment.get_home_dir() + "/" + dirname;
-			
+
 			if (dir_exists(src_path)){
-				
+
 				//create destination
 				if (!dir_exists(dst_path)){
 					create_dir(dst_path);
 				}
-				
+
 				//rsync folder
 				execute_command_sync("rsync -ai --numeric-ids '%s/' '%s'".printf(src_path,dst_path));
 			}
@@ -392,18 +392,18 @@ public class Main : GLib.Object {
 
 		//delete temp files
 		Posix.system("rm -rf \"" + temp_dir + "\"");
-		
+
 		return true;
 	}
-	
+
 	public void load_themes_and_widgets() {
 		is_aborted = false;
-		
+
 		find_conkyrc_files();
 		find_conkytheme_files();
 		find_and_install_fonts();
 		refresh_conkyrc_status();
-		
+
 		log_msg(_("Searching for conkyrc files... %d found").printf(conkyrc_list.size));
 	}
 
@@ -411,7 +411,7 @@ public class Main : GLib.Object {
 		is_aborted = true;
 		command_kill("grep",last_cmd);
 	}
-	
+
 	public void find_conkyrc_files(){
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
 
@@ -426,25 +426,25 @@ public class Main : GLib.Object {
 		};
 		conkyrc_list.sort((owned) func);
 	}
-	
+
 	public void find_conkyrc_files_in_path(string path){
 		string std_out = "";
 		string std_err = "";
 		string cmd = "grep -r \"^[[:blank:]]*TEXT[[:blank:]]*$\" \"%s\"".printf(path);
 		last_cmd = cmd;
 		int exit_code = execute_command_script_sync(cmd, out std_out, out std_err);
-		
-		if (exit_code != 0){ 
+
+		if (exit_code != 0){
 			//no files found
 			return;
 		}
-		
+
 		string file_path;
 		foreach(string line in std_out.split("\n")){
 			if (line.index_of(":") > -1){
 				file_path = line.split(":")[0].strip();
 				if (file_path.strip().has_suffix("~")){ continue; }
-				
+
 				bool found = false;
 				foreach(ConkyConfigItem item in conkyrc_list){
 					if (item.path == file_path){
@@ -459,7 +459,7 @@ public class Main : GLib.Object {
 			}
 		}
 	}
-	
+
 	public void find_conkytheme_files(){
 		conkytheme_list = new Gee.ArrayList<ConkyTheme>();
 
@@ -491,13 +491,13 @@ public class Main : GLib.Object {
 		foreach(string line in std_out.split("\n")){
 			if (line == null){ continue; }
 			if (line.length == 0){ continue; }
-			
+
 			file_path = line.strip();
 			if (file_path.has_suffix("~")){ continue; }
 			if (!file_path.has_suffix(".cmtheme")){ continue; }
 			if (file_path.split(" ").length < 2){ continue; }
 			file_path = path + "/" + file_path[file_path.index_of(" ") + 1:file_path.length].strip();
-			
+
 			bool found = false;
 			foreach(ConkyConfigItem item in conkytheme_list){
 				if (item.path == file_path){
@@ -511,7 +511,7 @@ public class Main : GLib.Object {
 			}
 		}
 	}
-    
+
     public void find_and_install_fonts(){
 		find_and_install_fonts_in_path(data_dir);
 		foreach(string path in search_folders){
@@ -520,7 +520,7 @@ public class Main : GLib.Object {
 			}
 		}
 	}
-	
+
     public void find_and_install_fonts_in_path(string path){
 		string std_out = "";
 		string std_err = "";
@@ -540,7 +540,7 @@ public class Main : GLib.Object {
 			file_path = line.strip();
 			if (file_path.has_suffix("~")){ continue; }
 			if (file_path.split(" ").length < 2){ continue; }
-			
+
 			if (file_path.has_suffix(".ttf")||file_path.has_suffix(".TTF")||file_path.has_suffix(".otf")||file_path.has_suffix(".OTF")){
 				//ok
 			}
@@ -549,12 +549,12 @@ public class Main : GLib.Object {
 			}
 
 			file_path = path + "/" + file_path[file_path.index_of(" ") + 1:file_path.length].strip();
-			
+
 			File font_file = File.new_for_path (file_path);
 			string file_name = font_file.get_basename();
 			string home = Environment.get_home_dir ();
 			string target_file = home + "/.fonts/" + file_name;
-			
+
 			if (file_exists(target_file) == false){
 				copy_file(file_path, target_file);
 				log_msg(_("Font Copied: ") + target_file);
@@ -566,16 +566,16 @@ public class Main : GLib.Object {
 		Gee.ArrayList<string> active_list = new Gee.ArrayList<string>();
 
 		string cmd = "conky -c "; //without double-quotes
-		string txt = execute_command_sync_get_output ("ps w -C conky"); 
+		string txt = execute_command_sync_get_output ("ps w -C conky");
 		//use 'ps ew -C conky' for all users
-	
+
 		foreach(string line in txt.split("\n")){
 			if (line.index_of(cmd) != -1){
 				string conf = line.substring(line.index_of(cmd) + 8).strip();
 				active_list.add(conf);
 			}
 		}
-		
+
 		foreach(ConkyRC rc in conkyrc_list){
 			bool active = false;
 			foreach(string path in active_list){
@@ -586,28 +586,28 @@ public class Main : GLib.Object {
 			rc.enabled = active;
 		}
 	}
-	
+
 	private void exit_app(){
 		update_startup_script();
-		
+
 		save_app_config();
-		
+
 		if (check_startup()){
 			autostart(true); //overwrite the startup entry
 		}
 	}
-	
+
 	public void run_startup_script(){
 		execute_command_sync("sh \"" + data_dir + "/conky-startup.sh\"");
 		Posix.usleep(500000);//microseconds
 		//refresh_status();
 	}
-	
+
 	public void update_startup_script(){
 		string startupScript = data_dir + "/conky-startup.sh";
-		
+
 		bool atleast_one_widget_enabled = false;
-		
+
 		string txt = "";
 		txt += "sleep %ds\n".printf(startup_delay);
 		txt += "killall conky\n";
@@ -618,11 +618,11 @@ public class Main : GLib.Object {
 				atleast_one_widget_enabled = true;
 			}
 		}
-		
+
 		if (file_exists(startupScript)){
 			file_delete(startupScript);
 		}
-		
+
 		if (atleast_one_widget_enabled){
 			write_file(startupScript, txt);
 		}
@@ -630,19 +630,19 @@ public class Main : GLib.Object {
 			write_file(startupScript, "# No widgets enabled!\n\nexit 0"); //write empty script
 		}
 	}
-	
+
 	public bool check_startup(){
 		string home = Environment.get_home_dir ();
 		string startupFile = home + "/.config/autostart/conky.desktop";
-		return file_exists(startupFile);	
+		return file_exists(startupFile);
 	}
-	
+
 	public void autostart(bool autostart){
 		string home = Environment.get_home_dir ();
 		string startupFile = home + "/.config/autostart/conky.desktop";
-		
+
 		if (autostart){
-			string txt = 
+			string txt =
 """[Desktop Entry]
 Type=Application
 Exec={command}
@@ -655,14 +655,14 @@ Comment[en_IN]=
 Comment=
 """;
 			txt = txt.replace("{command}", "sh \"" + data_dir + "/conky-startup.sh\"");
-			
+
 			write_file(startupFile, txt);
 		}
 		else{
-			file_delete(startupFile);			
+			file_delete(startupFile);
 		}
 	}
-	
+
 	public void kill_all_conky(){
 		Posix.system("killall conky");
 		foreach(ConkyRC rc in conkyrc_list){
@@ -681,10 +681,10 @@ public abstract class ConkyConfigItem: GLib.Object{
 	private bool _enabled = false;
 	private string _url = "";
 	private string _credits = "";
-	
+
 	public abstract void start();
 	public abstract void stop();
-	
+
 	public void init_path(string theme_file_path){
 		path = theme_file_path;
 		var f = File.new_for_path (theme_file_path);
@@ -692,17 +692,17 @@ public abstract class ConkyConfigItem: GLib.Object{
 		base_name = f.get_basename();
 		dir = f.get_parent().get_path();
 	}
-	
+
 	public void init_image_path(){
-		
+
 		string[] ext_list = {".png",".jpg",".jpeg"};
-		
+
 		//search using base name
 		foreach(string ext in ext_list){
 			image_path = dir + "/" + base_name + ext;
 			if (file_exists(image_path)){ return; }
 		}
-		
+
 		//search without basename extension
 		if (base_name.split(".").length == 2){
 			foreach(string ext in ext_list){
@@ -710,13 +710,13 @@ public abstract class ConkyConfigItem: GLib.Object{
 				if (file_exists(image_path)){ return; }
 			}
 		}
-		
+
 		//search using fixed names
 		foreach(string ext in ext_list){
 			image_path = dir + "/preview" + ext;
 			if (file_exists(image_path)){ return; }
 		}
-		
+
 		image_path = ""; //clear if not found
 	}
 
@@ -731,7 +731,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 			credits = TeeJee.FileSystem.read_file(credits_file).replace("\n","");
 		}
 	}
-	
+
 	public string name{
 		get{
 			return _name;
@@ -740,7 +740,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 			_name = value;
 		}
 	}
-	
+
 	public string path{
 		get{
 			return _path;
@@ -758,7 +758,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 			_dir = value;
 		}
 	}
-	
+
 	public string image_path{
 		get{
 			return _image_path;
@@ -767,7 +767,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 			_image_path = value;
 		}
 	}
-	
+
 	public bool enabled{
 		get{
 			return _enabled;
@@ -794,7 +794,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 			_url = value;
 		}
 	}
-	
+
 	public string credits{
 		get{
 			return _credits;
@@ -803,15 +803,15 @@ public abstract class ConkyConfigItem: GLib.Object{
 			_credits = value;
 		}
 	}
-	
+
 }
 
 public class ConkyRC : ConkyConfigItem {
 	public string text = "";
-	
+
 	private Regex rex_conky_win;
 	private MatchInfo match;
-	
+
 	private string err_line;
 	private string out_line;
 	private DataInputStream dis_out;
@@ -819,7 +819,7 @@ public class ConkyRC : ConkyConfigItem {
 	private bool thread_is_running = false;
 	private int wait_interval = 1;
 	private uint timer_stop;
-	
+
 	public ConkyRC(string rc_file_path) {
 		init_path(rc_file_path);
 		init_image_path();
@@ -832,12 +832,12 @@ public class ConkyRC : ConkyConfigItem {
 			log_error (e.message);
 		}
 	}
-	
+
 	public bool is_running(){
 		string cmd = "conky -c " + path; //without double-quotes
-		string txt = execute_command_sync_get_output ("ps w -C conky"); 
+		string txt = execute_command_sync_get_output ("ps w -C conky");
 		//use 'ps ew -C conky' for all users
-		
+
 		bool active = false;
 		foreach(string line in txt.split("\n")){
 			if (line.index_of(cmd) != -1){
@@ -847,16 +847,16 @@ public class ConkyRC : ConkyConfigItem {
 		}
 		return active;
 	}
-	
+
 	public override void start(){
 		string cmd;
 
 		if (is_running()){
 			stop();
 		}
-		
+
 		//Theme.install();
-		
+
 		cmd = "cd \"" + dir + "\"\n";
 		cmd += "conky -c \"" + path + "\"\n";
 
@@ -864,26 +864,26 @@ public class ConkyRC : ConkyConfigItem {
 
 		Thread.usleep((ulong)1000000);
 		log_debug(_("Started") + ": " + path);
-		
+
 		//set the flag for immediate effect
 		//will be updated by the refresh_status() timer
-		enabled = true; 
+		enabled = true;
 	}
 
 	public bool stop_handler(){
 		stop();
 		return true;
 	}
-	
+
 	public override void stop(){
-		
+
 		//Note: There may be more than one running instance of the same config
 		//We need to kill all instances
-		
+
 		string cmd = "conky -c " + path; //without double-quotes
 		string txt = execute_command_sync_get_output ("ps w -C conky");
 		//use 'ps ew -C conky' for all users
-		
+
 		string pid = "";
 		foreach(string line in txt.split("\n")){
 			if (line.index_of(cmd) != -1){
@@ -892,17 +892,17 @@ public class ConkyRC : ConkyConfigItem {
 				log_debug(_("Stopped") + ": [PID=" + pid + "] " + path);
 			}
 		}
-		
+
 		//set the flag for immediate effect
 		//will be updated by the refresh_status() timer
-		enabled = false; 
+		enabled = false;
 	}
-	
+
 	public void read_file(){
 		log_debug("Read config file from disk");
 		this.text = TeeJee.FileSystem.read_file(this.path);
 	}
-	
+
 	public void save_file(){
 		log_debug("Saved config file changes to disk");
 		write_file(this.path, text);
@@ -911,11 +911,11 @@ public class ConkyRC : ConkyConfigItem {
 	public void save_file_temp(){
 		write_file(this.path + "~temp~", text);
 	}
-	
+
 	public void delete_file_temp(){
 		file_delete(this.path + "~temp~");
 	}
-	
+
 	public bool generate_preview(){
 		stop();
 		read_file();
@@ -927,7 +927,7 @@ public class ConkyRC : ConkyConfigItem {
 		}
 		delete_file_temp();
 		save_file_temp();
-		
+
 		read_file();
 		wait_interval = 3;
 		foreach(string line in text.split("\n")){
@@ -936,7 +936,7 @@ public class ConkyRC : ConkyConfigItem {
 				break;
 			}
 		}
-		
+
 		try {
 			thread_is_running = true;
 			Thread.create<void> (generate_preview_thread, true);
@@ -960,14 +960,14 @@ public class ConkyRC : ConkyConfigItem {
 			return false;
 		}
 	}
-	
+
 	public void generate_preview_thread (){
 		string cmd = "cd \"" + dir + "\"\n";
 		cmd += "conky -c \"" + path + "~temp~\" 2>&1 \n";
 
 		string[] argv = new string[1];
 		argv[0] = create_temp_bash_script(cmd);
-		
+
 		Pid child_pid;
 		int input_fd;
 		int output_fd;
@@ -985,11 +985,11 @@ public class ConkyRC : ConkyConfigItem {
 			    out input_fd,
 			    out output_fd,
 			    out error_fd);
-			
+
 			thread_is_running = true;
-			
+
 			timer_stop = Timeout.add (10 * 1000, stop_handler);
-			
+
 			//create stream readers
 			UnixInputStream uis_out = new UnixInputStream(output_fd, false);
 			UnixInputStream uis_err = new UnixInputStream(error_fd, false);
@@ -997,14 +997,14 @@ public class ConkyRC : ConkyConfigItem {
 			dis_err = new DataInputStream(uis_err);
 			dis_out.newline_type = DataStreamNewlineType.ANY;
 			dis_err.newline_type = DataStreamNewlineType.ANY;
-			
+
         	try {
 				//start thread for reading output stream
 			    Thread.create<void> (conky_read_output_line, true);
 		    } catch (Error e) {
 		        log_error (e.message);
 		    }
-		    
+
 		    try {
 				//start thread for reading error stream
 			    Thread.create<void> (conky_read_error_line, true);
@@ -1027,21 +1027,21 @@ public class ConkyRC : ConkyConfigItem {
 		}
 		catch (Error e) {
 			log_error (e.message);
-		}	
+		}
 	}
-	
+
 	private void conky_read_output_line(){
 		try{
 			out_line = dis_out.read_line (null);
 		    while (out_line != null) {
 				if (rex_conky_win.match (out_line, 0, out match)){
-					
+
 					//wait for one second till window is displayed on screen
 					Thread.usleep ((ulong) wait_interval * 1000000);
-					
+
 					string win_id = match.fetch(1).strip();
 					string cmd = "";
-					
+
 					if (App.generate_png){
 						image_path = dir + "/" + base_name + ".png";
 						cmd = "import -window 0x%s '%s'".printf(win_id,image_path);
@@ -1050,11 +1050,11 @@ public class ConkyRC : ConkyConfigItem {
 						image_path = dir + "/" + base_name + ".jpg";
 						cmd = "import -window 0x%s -quality 90 '%s'".printf(win_id,image_path);
 					}
- 
+
 					execute_command_sync(cmd);
-					
+
 					Thread.usleep ((ulong) 100000); //wait 100ms before killing conky
-					
+
 					if (timer_stop > 0){
 						Source.remove(timer_stop);
 						timer_stop = 0;
@@ -1069,13 +1069,13 @@ public class ConkyRC : ConkyConfigItem {
 		}
 		catch (Error e) {
 			log_error (e.message);
-		}	
+		}
 	}
 
 	public string alignment{
 		owned get{
 			string s = get_value("alignment");
-			
+
 			switch(s){
 				case "tl":
 					s = "top_left";
@@ -1120,7 +1120,7 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: alignment " + value);
 		}
 	}
-	
+
 	public string gap_x{
 		owned get{
 			string s = get_value("gap_x");
@@ -1135,7 +1135,7 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: gap_x " + value);
 		}
 	}
-	
+
 	public string gap_y{
 		owned get{
 			string s = get_value("gap_y");
@@ -1150,7 +1150,7 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: gap_y " + value);
 		}
 	}
-	
+
 	public string own_window_transparent{
 		owned get{
 			string s = get_value("own_window_transparent");
@@ -1165,7 +1165,7 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: own_window_transparent " + value);
 		}
 	}
-	
+
 	public string own_window_argb_visual{
 		owned get{
 			string s = get_value("own_window_argb_visual");
@@ -1180,7 +1180,7 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: own_window_argb_visual " + value);
 		}
 	}
-	
+
 	public string own_window_argb_value{
 		owned get{
 			string s = get_value("own_window_argb_value");
@@ -1195,7 +1195,7 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: own_window_argb_value " + value);
 		}
 	}
-	
+
 	public string own_window_colour{
 		owned get{
 			string s = get_value("own_window_colour");
@@ -1209,7 +1209,7 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: own_window_colour " + value.up());
 		}
 	}
-	
+
 	public string transparency{
 		owned get{
 			string s = "trans";
@@ -1248,9 +1248,9 @@ public class ConkyRC : ConkyConfigItem {
 			else{
 				s = "opaque";
 			}
-			
+
 			log_debug("Get: transparency " + s);
-			
+
 			return s;
 		}
 		set{
@@ -1274,11 +1274,11 @@ public class ConkyRC : ConkyConfigItem {
 					own_window_argb_visual = "yes";
 					break;
 			}
-		
+
 			log_debug("Set: transparency " + value.down());
 		}
 	}
-	
+
 	public string minimum_size{
 		owned get{
 			string s = get_value("minimum_size");
@@ -1293,12 +1293,12 @@ public class ConkyRC : ConkyConfigItem {
 			log_debug("Set: minimum_size " + value);
 		}
 	}
-	
+
 	public int height_padding{
 		get{
 			string[] arr = this.text.split("\n");
 			int count = 0;
-			
+
 			//count empty lines at end of the file
 			for(int k = arr.length - 1; k >= 0; k--){
 				if (arr[k].strip() == ""){
@@ -1308,11 +1308,11 @@ public class ConkyRC : ConkyConfigItem {
 					break;
 				}
 			}
-			
+
 			count--;
-			
+
 			log_debug("Get: height_padding " + count.to_string());
-			
+
 			return count;
 		}
 		set
@@ -1320,7 +1320,7 @@ public class ConkyRC : ConkyConfigItem {
 			string newText = "";
 			string[] arr = this.text.split("\n");
 			int count = 0;
-			
+
 			//count empty lines at end of the file
 			for(int k = arr.length - 1; k >= 0; k--){
 				if (arr[k].strip() == ""){
@@ -1330,31 +1330,31 @@ public class ConkyRC : ConkyConfigItem {
 					break;
 				}
 			}
-			
+
 			int lastLineNumber = arr.length - count;
-			
+
 			//remove all empty lines from end of text
 			for(int k = 0; k < lastLineNumber; k++){
 				newText += arr[k] + "\n";
 			}
 			//remove extra newline from end of text
 			//newText = newText[0:newText.length-1];
-			
+
 			//add empty lines at end of text
 			for(int k = 1; k <= value; k++){
 				newText += "\n";
 			}
-			
+
 			log_debug("Set: height_padding " + value.to_string());
-			
+
 			this.text = newText;
 		}
 	}
-	
+
 	public string time_format{
 		owned get{
 			string val = "";
-			
+
 			if (search("""\${(time|TIME) [^}]*H[^}]*}""") != ""){
 				val = "24";
 				log_debug("Get: time format = 24-hour");
@@ -1369,7 +1369,7 @@ public class ConkyRC : ConkyConfigItem {
 		set
 		{
 			if (value == "") { return; }
-			
+
 			switch(value){
 				case "12":
 					if (replace("""\${(time|TIME) [^}]*(H)[^}]*}""", 2, "I")){
@@ -1380,76 +1380,76 @@ public class ConkyRC : ConkyConfigItem {
 					if (replace("""\${(time|TIME) [^}]*(I)[^}]*}""", 2, "H")){
 						log_debug("Set: time format = 24-hour");
 					}
-					break;	
+					break;
 			}
 		}
 	}
-	
+
 	public string network_device{
 		owned get{
 			string var1 = "totaldown|totalup|upspeed|upspeedf|downspeed|downspeedf|wireless_ap|wireless_bitrate|wireless_essid|wireless_link_qual|wireless_link_qual_max|wireless_link_qual_perc|wireless_mode";
 			var1 = """\${(""" + var1 + "|" + var1.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*}""";
-			
+
 			string var2 = "upspeedgraph|downspeedgraph";
 			var2 = """\${(""" + var2 + "|" + var2.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*.*}""";
-			
+
 			string var3 = "wireless_link_bar";
 			var3 = """\${(""" + var3 + "|" + var3.up() + """)[ \t]*[0-9]+[ \t]*,[0-9+][ \t]*([A-Za-z0-9]+)[ \t]*}""";
 
 			string net = search(var1, 2);
-			
+
 			if (net != ""){
 				log_debug("Get: network interface = " + net);
 				return net;
 			}
-			
+
 			net = search(var2, 2);
-			
+
 			if (net != ""){
 				log_debug("Get: network interface = " + net);
 				return net;
 			}
-			
+
 			net = search(var3, 2);
-			
+
 			if (net != ""){
 				log_debug("Get: network interface = " + net);
 				return net;
 			}
-			
+
 			return "";
 		}
 		set
 		{
 			if (value == "") { return; }
-			
+
 			string var1 = "totaldown|totalup|upspeed|upspeedf|downspeed|downspeedf|wireless_ap|wireless_bitrate|wireless_essid|wireless_link_qual|wireless_link_qual_max|wireless_link_qual_perc|wireless_mode";
 			var1 = """\${(""" + var1 + "|" + var1.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*}""";
-			
+
 			string var2 = "upspeedgraph|downspeedgraph";
 			var2 = """\${(""" + var2 + "|" + var2.up() + """)[ \t]*([A-Za-z0-9]+)[ \t]*.*}""";
-			
+
 			string var3 = "wireless_link_bar";
 			var3 = """\${(""" + var3 + "|" + var3.up() + """)[ \t]*[0-9]+[ \t]*,[0-9+][ \t]*([A-Za-z0-9]+)[ \t]*}""";
 
 			string net = search(var1, 2);
-			
+
 			if (net != ""){
 				if (replace(var1, 2, value)){
 					log_debug("Set: network interface = " + value);
 				}
 			}
-			
+
 			net = search(var2, 2);
-			
+
 			if (net != ""){
 				if (replace(var2, 2, value)){
 					log_debug("Set: network interface = " + value);
 				}
 			}
-			
+
 			net = search(var3, 2);
-			
+
 			if (net != ""){
 				if (replace(var3, 2, value)){
 					log_debug("Set: network interface = " + value);
@@ -1457,7 +1457,7 @@ public class ConkyRC : ConkyConfigItem {
 			}
 		}
 	}
-	
+
 	public string get_value(string param){
 		foreach(string line in this.text.split("\n")){
 			string s = line.down().strip();
@@ -1470,15 +1470,15 @@ public class ConkyRC : ConkyConfigItem {
 				}
 			}
 		}
-		
+
 		return "";
 	}
-	
+
 	public void set_value(string param, string newLine){
 		string newText = "";
 		bool found = false;
 		bool remove = (newLine.strip() == param);
-		
+
 		foreach(string line in this.text.split("\n")){
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
@@ -1500,13 +1500,13 @@ public class ConkyRC : ConkyConfigItem {
 				newText += line + "\n";
 			}
 		}
-		
+
 		//remove extra newline from end of text
 		newText = newText[0:newText.length-1];
-		
+
 		this.text = newText;
 	}
-	
+
 	public string search(string search_string, int bracket_num = 0){
 		foreach(string line in this.text.split("\n")){
 			string s = line.strip();
@@ -1521,26 +1521,26 @@ public class ConkyRC : ConkyConfigItem {
 				log_error (e.message);
 			}
 		}
-		
+
 		return "";
 	}
-	
+
 	public bool replace(string search_string, int bracket_num, string replace_string){
 		bool found = false;
 		string new_text = "";
 		string old_match = "";
 		string new_match = "";
 		string new_line = "";
-		
+
 		foreach(string line in this.text.split("\n")){
 			try{
 				Regex regx = new Regex(search_string);
 				MatchInfo match;
 				if (regx.match(line, 0, out match)){
-					
+
 					bool matchExists = true;
 					new_line = line;
-					
+
 					while (matchExists){
 						old_match = match.fetch(0);
 						new_match = old_match.replace(match.fetch(bracket_num),replace_string);
@@ -1548,7 +1548,7 @@ public class ConkyRC : ConkyConfigItem {
 						new_line = new_line.replace(old_match, new_match);
 						matchExists = match.next();
 					}
-					
+
 					new_text += new_line + "\n";
 					found = true;
 				}
@@ -1560,12 +1560,12 @@ public class ConkyRC : ConkyConfigItem {
 				return false;
 			}
 		}
-		
+
 		//remove extra newline from end of text
 		new_text = new_text[0:new_text.length-1];
-		
+
 		this.text = new_text;
-		
+
 		return found;
 	}
 }
@@ -1574,21 +1574,21 @@ public class ConkyTheme : ConkyConfigItem {
 	public string wallpaper_path = "";
 	public string text = "";
 	public string wallpaper_scaling = "";
-	
+
 	public Gee.ArrayList<ConkyRC> conkyrc_list;
 	private Main main_app;
-	
+
 	public ConkyTheme.empty(string theme_file_path){
 		init_path(theme_file_path);
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
 	}
-	
+
 	public ConkyTheme.from_file(string theme_file_path, Main _main_app){
 		main_app = _main_app;
 		init_path(theme_file_path);
 		init_image_path();
 		init_credits();
-		
+
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
 		foreach(string line in read_file(theme_file_path).split("\n")){
 			//remove quotes
@@ -1598,11 +1598,11 @@ public class ConkyTheme : ConkyConfigItem {
 			if (line.has_suffix("\"")){
 				line = line[0:line.length-1];
 			}
-			
+
 			//read options
 			if (line.contains("wallpaper-scaling") && (line.split(":").length == 2)){
 				string val = line.split(":")[1].strip().down();
-				
+
 				//check if option is valid
 				bool valid = false;
 				foreach(string option in App.bg_scaling){
@@ -1611,7 +1611,7 @@ public class ConkyTheme : ConkyConfigItem {
 						break;
 					}
 				}
-				
+
 				if (valid){
 					wallpaper_scaling = val;
 					continue;
@@ -1620,7 +1620,7 @@ public class ConkyTheme : ConkyConfigItem {
 					continue;
 				}
 			}
-			
+
 			//read wallpaper path
 			if (line.has_suffix(".png")||line.has_suffix(".jpg")||line.has_suffix(".jpeg")){
 				wallpaper_path = line.replace("~", Environment.get_home_dir());
@@ -1640,7 +1640,7 @@ public class ConkyTheme : ConkyConfigItem {
 
 	public void init_wallpaper_path(){
 		string[] ext_list = {".png",".jpg",".jpeg"};
-		
+
 		foreach(string ext in ext_list){
 			wallpaper_path = dir + "/wallpaper" + ext;
 			if (file_exists(wallpaper_path)){ return; }
@@ -1648,7 +1648,7 @@ public class ConkyTheme : ConkyConfigItem {
 
 		wallpaper_path = "";
 	}
-	
+
 	public void set_wallpaper(){
 		if ((wallpaper_path.length > 0)&&(file_exists(wallpaper_path))){
 			switch (App.desktop){
@@ -1680,7 +1680,7 @@ public class ConkyTheme : ConkyConfigItem {
 						cmd += "xfconf-query -c xfce4-desktop -p '%s' -s '%s'".printf(property.strip(), wallpaper_path);
 						string std_out2, std_err2;
 						execute_command_script_sync(cmd, out std_out2, out std_err2);
-					}	
+					}
 					break;
 				case "lxde": //limited support - wallpaper changes after logout and login
 					execute_command_sync("pcmanfm --set-wallpaper '%s'".printf(wallpaper_path));
@@ -1688,23 +1688,23 @@ public class ConkyTheme : ConkyConfigItem {
 						execute_command_sync("pcmanfm --wallpaper-mode '%s'".printf(get_scaling_value_for_desktop()));
 					}
 					break;
-				case "gnome": 
+				case "gnome":
 				case "unity":
 					if (execute_command_sync("gsettings get org.gnome.desktop.background picture-uri") == 0){
 						execute_command_sync("gsettings set org.gnome.desktop.background picture-uri 'file://%s'".printf(wallpaper_path));
 					}
-				
+
 					if (execute_command_sync("gsettings get org.gnome.desktop.background picture-options") == 0){
 						execute_command_sync("gsettings set org.gnome.desktop.background picture-options '%s'".printf(get_scaling_value_for_desktop()));
 					}
-					
+
 					if (execute_command_sync("gsettings get com.canonical.unity-greeter background") == 0){
 						execute_command_sync("gsettings set com.canonical.unity-greeter background '%s'".printf(wallpaper_path));
 					}
 					break;
 			}
-			
-			
+
+
 			/*if (wallpaper_scaling.length > 0){
 				Posix.system("feh --bg-%s '%s'".printf(wallpaper_scaling,wallpaper_path));
 			}
@@ -1713,7 +1713,7 @@ public class ConkyTheme : ConkyConfigItem {
 			}*/
 		}
 	}
-	
+
 	public string get_scaling_value_for_desktop(){
 		//get index
 		int index = 0;
@@ -1738,9 +1738,9 @@ public class ConkyTheme : ConkyConfigItem {
 			default:
 				return "";
 		}
-		
+
 	}
-	
+
 	public string get_current_wallpaper(){
 		switch (App.desktop){
 			case "gnome":
@@ -1789,7 +1789,7 @@ public class ConkyTheme : ConkyConfigItem {
 			rc.start();
 		}
 	}
-	
+
 	public override void stop(){
 		main_app.kill_all_conky();
 	}
