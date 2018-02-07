@@ -430,7 +430,7 @@ public class Main : GLib.Object {
 	public void find_conkyrc_files_in_path(string path){
 		string std_out = "";
 		string std_err = "";
-		string cmd = "grep -r \"^[[:blank:]]*TEXT[[:blank:]]*$\" \"%s\"".printf(path);
+		string cmd = "grep -r \"^[[:blank:]]*TEXT[[:blank:]]*$\\|conky\\.text[[:blank:]]*=\" \"%s\"".printf(path);
 		last_cmd = cmd;
 		int exit_code = execute_command_script_sync(cmd, out std_out, out std_err);
 
