@@ -808,6 +808,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 
 public class ConkyRC : ConkyConfigItem {
 	public string text = "";
+	public bool one_ten_config = false;
 
 	private Regex rex_conky_win;
 	private MatchInfo match;

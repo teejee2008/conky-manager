@@ -476,6 +476,17 @@ public class EditWidgetWindow : Dialog {
 
 		conf.read_file();
 		
+		//check for 1.10 config version
+		//default: one_ten_config = false;
+		string std_out = "";
+		string std_err = "";
+		string cmd = "grep -r \"conky\\.text[[:blank:]]*=\" \"%s\"".printf(conf.path);
+		int exit_code = execute_command_script_sync(cmd, out std_out, out std_err);
+
+		if (exit_code == 0){
+			conf.one_ten_config = true;
+		}
+
 		//location
 		gtk_combobox_set_value(cmb_alignment, 1, conf.alignment);
 		spin_gap_x.value = double.parse(conf.gap_x);
