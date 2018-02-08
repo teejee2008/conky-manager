@@ -1464,7 +1464,7 @@ public class ConkyRC : ConkyConfigItem {
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
 				if (s.index_of("=") != -1){
-					return s[s.index_of("=")+1:s.length].strip().split(",")[0];
+					return s[s.index_of("=")+1:s.length].strip().split(",")[0].replace("\'", " ").replace("\"", " ").strip();
 				}
 				else if (s.index_of(" ") != -1){
 					return s[s.index_of(" ")+1:s.length].strip();
@@ -1488,14 +1488,24 @@ public class ConkyRC : ConkyConfigItem {
 			if (s.has_prefix(param)){
 				if (!remove){
 					//replace line
-					newText += newLine + "\n";
+					if (one_ten_config){
+						newText += line.replace(get_value(param), newLine.split(" ")[1]) + "\n";
+					}
+					else{
+						newText += newLine + "\n";
+					}
 				}
 				found = true;
 			}
 			else if ((s == "text")&&(!found)){
 				if (!remove){
 					//insert line
-					newText += newLine + "\n";
+					if (one_ten_config){
+						newText += newLine.split(" ")[0] + " = " + newLine.split(" ")[1] + ",\n";
+					}
+					else{
+						newText += newLine + "\n";
+					}
 				}
 				newText += line + "\n";
 				found = true;
