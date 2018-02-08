@@ -1295,6 +1295,36 @@ public class ConkyRC : ConkyConfigItem {
 		}
 	}
 
+	public string minimum_width{
+		owned get{
+			string s = get_value("minimum_width");
+			if (s == "") { s = "0"; }
+			log_debug("Get: minimum_width " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "minimum_width " + value;
+			set_value("minimum_width", newLine);
+			log_debug("Set: minimum_width " + value);
+		}
+	}
+
+	public string minimum_height{
+		owned get{
+			string s = get_value("minimum_height");
+			if (s == "") { s = "0"; }
+			log_debug("Get: minimum_height " + s);
+			return s;
+		}
+		set
+		{
+			string newLine = "minimum_height " + value;
+			set_value("minimum_height", newLine);
+			log_debug("Set: minimum_height " + value);
+		}
+	}
+
 	public int height_padding{
 		get{
 			string[] arr = this.text.split("\n");
