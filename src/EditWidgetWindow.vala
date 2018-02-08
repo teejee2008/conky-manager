@@ -558,6 +558,17 @@ public class EditWidgetWindow : Dialog {
 		conf.stop();
 		conf.read_file();
 		
+		//check for 1.10 config version
+		//default: one_ten_config = false;
+		string std_out = "";
+		string std_err = "";
+		string cmd = "grep -r \"conky\\.text[[:blank:]]*=\" \"%s\"".printf(conf.path);
+		int exit_code = execute_command_script_sync(cmd, out std_out, out std_err);
+
+		if (exit_code == 0){
+			conf.one_ten_config = true;
+		}
+
 		debug("-----------------------------------------------------");
 		debug(_("Updating theme") + ": %s".printf(conf.name));
 
