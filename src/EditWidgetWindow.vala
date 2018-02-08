@@ -583,7 +583,13 @@ public class EditWidgetWindow : Dialog {
 		conf.own_window_colour = rgba_to_hex(cbtn_bg_color.rgba, false, false); 
 		
 		//window size 
-		conf.minimum_size = spin_min_width.value.to_string() + " " + spin_min_height.value.to_string();
+		if (conf.one_ten_config){
+			conf.minimum_width = spin_min_width.value.to_string();
+			conf.minimum_height = spin_min_height.value.to_string();
+		}
+		else{
+			conf.minimum_size = spin_min_width.value.to_string() + " " + spin_min_height.value.to_string();
+		}
 		conf.height_padding = (int) spin_height_padding.value;
 		
 		//time
