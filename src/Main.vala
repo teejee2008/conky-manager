@@ -1463,7 +1463,10 @@ public class ConkyRC : ConkyConfigItem {
 		foreach(string line in this.text.split("\n")){
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
-				if (s.index_of(" ") != -1){
+				if (s.index_of("=") != -1){
+					return s[s.index_of("=")+1:s.length].strip().split(",")[0];
+				}
+				else if (s.index_of(" ") != -1){
 					return s[s.index_of(" ")+1:s.length].strip();
 				}
 				else if (s.index_of("\t") != -1){
