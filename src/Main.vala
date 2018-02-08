@@ -1329,9 +1329,24 @@ public class ConkyRC : ConkyConfigItem {
 		get{
 			string[] arr = this.text.split("\n");
 			int count = 0;
+			int k = arr.length - 1;
 
-			//count empty lines at end of the file
-			for(int k = arr.length - 1; k >= 0; k--){
+			//skip empty lines to find ]] ending marker
+			if (one_ten_config){
+				for(k = arr.length - 1; k >= 0; k--){
+					if (arr[k].strip() == ""){
+						//skip blank lines after "]]"
+					}
+					else if (arr[k].strip() == "]]"){
+						k--;
+						count++;//fudge this so works with following previous existing code below
+						break;
+					}
+				}
+			}
+
+			//count empty lines at end of text section
+			for(k=k; k >= 0; k--){
 				if (arr[k].strip() == ""){
 					count++;
 				}
