@@ -1227,6 +1227,18 @@ public class ConkyRC : ConkyConfigItem {
 					s = "pseudo";
 				}
 			}
+			else if (own_window_transparent == "true"){
+				if(own_window_argb_visual == "true"){
+					//own_window_argb_value, if present, will be ignored by Conky
+					s = "trans";
+				}
+				else if (own_window_argb_visual == "false"){
+					s = "pseudo";
+				}
+				else{
+					s = "pseudo";
+				}
+			}
 			else if (own_window_transparent == "no"){
 				if(own_window_argb_visual == "yes"){
 					if (own_window_argb_value == "0"){
@@ -1246,6 +1258,25 @@ public class ConkyRC : ConkyConfigItem {
 					s = "opaque";
 				}
 			}
+			else if (own_window_transparent == "false"){
+				if(own_window_argb_visual == "true"){
+					if (own_window_argb_value == "0"){
+						s = "trans";
+					}
+					else if (own_window_argb_value == "255"){
+						s = "opaque";
+					}
+					else{
+						s = "semi";
+					}
+				}
+				else if (own_window_argb_visual == "false"){
+					s = "opaque";
+				}
+				else{
+					s = "opaque";
+				}
+			}
 			else{
 				s = "opaque";
 			}
@@ -1257,22 +1288,47 @@ public class ConkyRC : ConkyConfigItem {
 		set{
 			switch (value.down()){
 				case "opaque":
-					own_window_transparent = "no";
-					own_window_argb_visual = "no";
+					if (one_ten_config){
+						own_window_transparent = "false";
+						own_window_argb_visual = "false";
+					}
+					else {
+						own_window_transparent = "no";
+						own_window_argb_visual = "no";
+					}
 					break;
 				case "trans":
-					own_window_transparent = "yes";
-					own_window_argb_visual = "yes";
-					own_window_argb_value = "0";
+					if (one_ten_config){
+						own_window_transparent = "true";
+						own_window_argb_visual = "true";
+						own_window_argb_value = "0";
+					}
+					else {
+						own_window_transparent = "yes";
+						own_window_argb_visual = "yes";
+						own_window_argb_value = "0";
+					}
 					break;
 				case "pseudo":
-					own_window_transparent = "yes";
-					own_window_argb_visual = "no";
+					if (one_ten_config){
+						own_window_transparent = "true";
+						own_window_argb_visual = "false";
+					}
+					else {
+						own_window_transparent = "yes";
+						own_window_argb_visual = "no";
+					}
 					break;
 				case "semi":
 				default:
-					own_window_transparent = "no";
-					own_window_argb_visual = "yes";
+					if (one_ten_config){
+						own_window_transparent = "false";
+						own_window_argb_visual = "true";
+					}
+					else {
+						own_window_transparent = "no";
+						own_window_argb_visual = "yes";
+					}
 					break;
 			}
 
