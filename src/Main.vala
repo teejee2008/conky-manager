@@ -1366,17 +1366,35 @@ public class ConkyRC : ConkyConfigItem {
 			string newText = "";
 			string[] arr = this.text.split("\n");
 			int count = 0;
+			int skipExisting = 0;
 
 			//count empty lines at end of the file
-			for(int k = arr.length - 1; k >= 0; k--){
-				if (arr[k].strip() == ""){
-					count++;
-				}
-				else{
-					break;
+			if (one_ten_config){
+				bool counting = false;
+				for(int k = arr.length - 1; k >= 0; k--){
+					if (arr[k].strip() == ""){
+						count++;
+						if (counting) { skipExisting++; }
+					}
+					else if (arr[k].strip() == "]]"){
+						count++;
+						counting = true;
+					}
+					else{
+						break;
+					}
 				}
 			}
-
+			else{
+				for(int k = arr.length - 1; k >= 0; k--){
+					if (arr[k].strip() == ""){
+						count++;
+					}
+					else{
+						break;
+					}
+				}
+			}
 			int lastLineNumber = arr.length - count;
 
 			//remove all empty lines from end of text
@@ -1389,6 +1407,13 @@ public class ConkyRC : ConkyConfigItem {
 			//add empty lines at end of text
 			for(int k = 1; k <= value; k++){
 				newText += "\n";
+			}
+
+			if (one_ten_config){
+				//add the rest of file back from ]] to end
+				for(int k = lastLineNumber+skipExisting; k < arr.length-1; k++){
+					newText += arr[k] + "\n";
+				}
 			}
 
 			log_debug("Set: height_padding " + value.to_string());
