@@ -36,12 +36,12 @@ using TeeJee.Misc;
 
 public Main App;
 public const string AppName = "Conky Manager";
-public const string AppShortName = "conky-manager";
+public const string AppShortName = "conky-manager2";
 public const string AppVersion = "2.5";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 
-const string GETTEXT_PACKAGE = "conky-manager";
+const string GETTEXT_PACKAGE = "conky-manager2";
 const string LOCALE_DIR = "/usr/share/locale";
 
 extern void exit(int exit_code);
@@ -120,7 +120,7 @@ public class Main : GLib.Object {
 		app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		share_folder = "/usr/share";
 		data_dir = home + "/.conky";
-		app_conf_path = home + "/.config/conky-manager.json";
+		app_conf_path = home + "/.config/conky-manager2.json";
 		search_folders = new Gee.ArrayList<string>();
 
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
@@ -280,7 +280,7 @@ public class Main : GLib.Object {
 	}
 
 	public void init_theme_packs(){
-		string sharePath = "/usr/share/conky-manager/themepacks";
+		string sharePath = "/usr/share/conky-manager2/themepacks";
 		string config_file = data_dir + "/.themepacks";
 
 		//create empty config file if missing
