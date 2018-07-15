@@ -971,6 +971,7 @@ public class MainWindow : Window {
 		};
 
 		dialog.translators = {
+			"Vistaus (Dutch):https://github.com/Vistaus",
 			"gogo (Croatian):launchpad.net/~trebelnik-stefina",
 			"Radek Otáhal (Czech):radek.otahal@email.cz"
 		}; 
