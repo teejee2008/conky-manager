@@ -968,6 +968,7 @@ public class MainWindow : Window {
 
 		dialog.authors = {
 			"Tony George:teejeetech@gmail.com"
+			"Scott Caudle:zcotcaudle@gmail.com"
 		};
 
 		dialog.translators = {
