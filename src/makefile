@@ -6,7 +6,7 @@ launcherdir=$(sharedir)/applications
 mandir=$(sharedir)/man
 man1dir=$(mandir)/man1
 CFLAGS=--std=c99
-app_name=conky-manager
+app_name=conky-manager2
 app_fullname="Conky Manager"
 
 all:

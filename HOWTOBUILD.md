@@ -18,14 +18,14 @@ apt install build-essential git valac libgee-0.8-dev libgtk-3-dev libjson-glib-d
 ```
 
 
-## the following command will create a subdirectory from whatever directory you are currently in called conky-manager and download the files from github and put them in that subdirectory:
+## the following command will create a subdirectory from whatever directory you are currently in called conky-manager2 then download the files from github and put them in that subdirectory:
 ```
-git clone https://github.com/zcot/conky-manager.git
+git clone https://github.com/zcot/conky-manager2.git
 ```
 
 ## change the directory to that source code location:
 ```
-cd conky-manager
+cd conky-manager2
 ```
 
 ## compile the source:
