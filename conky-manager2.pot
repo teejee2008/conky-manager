@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Tony George (teejee2008@gmail.com)
-# This file is distributed under the same license as the conky-manager package.
+# This file is distributed under the same license as the conky-manager2 package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: conky-manager 2.0\n"
+"Project-Id-Version: conky-manager2 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2017-03-24 22:33+0530\n"
+"POT-Creation-Date: 2018-07-14 23:53-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Current Wallpaper"
 msgstr ""
 
-#: Main.vala:1769
+#: Main.vala:1909
 msgid "Current wallpaper source path"
 msgstr ""
 
@@ -385,7 +385,7 @@ msgstr ""
 msgid "Network"
 msgstr ""
 
-#: EditWidgetWindow.vala:522
+#: EditWidgetWindow.vala:539
 msgid "Network interface cannot be changed for selected widget"
 msgstr ""
 
@@ -482,7 +482,7 @@ msgstr ""
 msgid "Save running widgets and current desktop wallpaper as new theme"
 msgstr ""
 
-#: Main.vala:955
+#: Main.vala:956
 msgid "Saved"
 msgstr ""
 
@@ -567,7 +567,7 @@ msgstr ""
 msgid "Start/Restart Widget"
 msgstr ""
 
-#: Main.vala:866
+#: Main.vala:867
 msgid "Started"
 msgstr ""
 
@@ -591,7 +591,7 @@ msgstr ""
 msgid "Stop all running widgets"
 msgstr ""
 
-#: Main.vala:892 Utility.vala:751
+#: Main.vala:893 Utility.vala:751
 msgid "Stopped"
 msgstr ""
 
@@ -634,7 +634,7 @@ msgstr ""
 msgid "Time Format"
 msgstr ""
 
-#: EditWidgetWindow.vala:506
+#: EditWidgetWindow.vala:523
 msgid "Time format cannot be changed for selected widget"
 msgstr ""
 
@@ -675,7 +675,7 @@ msgstr ""
 msgid "Transparent"
 msgstr ""
 
-#: EditWidgetWindow.vala:545
+#: EditWidgetWindow.vala:573
 msgid "Updating theme"
 msgstr ""
 
@@ -701,7 +701,7 @@ msgstr ""
 msgid "Wallpaper"
 msgstr ""
 
-#: Main.vala:1773 Main.vala:1781
+#: Main.vala:1913 Main.vala:1921
 msgid "Wallpaper saved"
 msgstr ""
 
