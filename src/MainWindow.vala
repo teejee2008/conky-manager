@@ -967,12 +967,12 @@ public class MainWindow : Window {
 		dialog.set_transient_for (this);
 
 		dialog.authors = {
-			"Tony George:teejeetech@gmail.com"
+			"Tony George:teejeetech@gmail.com",
 			"Scott Caudle:zcotcaudle@gmail.com"
 		};
 
 		dialog.translators = {
-			"Vistaus (Dutch):https://github.com/Vistaus",
+			"Vistaus (Dutch):github.com/Vistaus",
 			"gogo (Croatian):launchpad.net/~trebelnik-stefina",
 			"Radek Otáhal (Czech):radek.otahal@email.cz"
 		}; 

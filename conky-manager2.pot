@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager2 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2018-07-14 23:53-0400\n"
+"POT-Creation-Date: 2018-07-15 01:32-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -373,7 +373,7 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: MainWindow.vala:1063
+#: MainWindow.vala:1065
 msgid "N/A"
 msgstr ""
 
@@ -494,7 +494,7 @@ msgstr ""
 msgid "Search for new themes"
 msgstr ""
 
-#: MainWindow.vala:1075
+#: MainWindow.vala:1077
 msgid "Searching directories..."
 msgstr ""
 
@@ -685,7 +685,7 @@ msgid ""
 "Press ENTER to start and stop."
 msgstr ""
 
-#: MainWindow.vala:1009
+#: MainWindow.vala:1011
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 
