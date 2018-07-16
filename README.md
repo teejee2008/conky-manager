@@ -18,3 +18,6 @@ It also provides support for the newer lua-based conky and configuration files(v
 Right now, the only installation method is to download and compile this source package, but it's only a few simple commands.
 
 Please see document [HOWTOBUILD.md](./HOWTOBUILD.md)
+
+(macOS note: To build this newer version for macOS you can use the git software if it is installed. Please see the 2 instructions in the following HOWTOBUILD.md document on how to [clone this repository](./HOWTOBUILD.md#clone-this-repository) -Alternately, you can use the magic green button to download the zip file, and then you extract it. Be sure to open Terminal into the source file directory. Then to do the actual software build and installation, follow the instructions provided here: [https://github.com/npyl/conky-manager](https://github.com/npyl/conky-manager#conky-manager) )
+
