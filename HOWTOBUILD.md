@@ -1,6 +1,6 @@
 # How to build this software. It was tested on Mint 18.x and 19 versions, but will probably build just the same on the various *ubuntu systems too.
 
-## required packages to build:
+## additional required packages to build:
  build-essential
  git
  valac
@@ -8,7 +8,7 @@
  libgtk-3-dev
  libjson-glib-dev
 
-## required run time packages:
+## additional required run time packages:
  p7zip-full
  imagemagick
 
