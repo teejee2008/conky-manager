@@ -344,7 +344,7 @@ public class Main : GLib.Object {
 	    }
 	}
 
-	public bool install_theme_pack(string pkgPath, bool checkOnly = false){
+	public bool install_theme_pack(string pkgPath, bool tarformat = false){
 		string cmd = "";
 		string std_out;
 		string std_err;
@@ -364,7 +364,10 @@ public class Main : GLib.Object {
 
 		//unzip
 		cmd = "cd \"" + temp_dir + "\"\n";
-		cmd += "7za x \"" + pkgPath + "\">nul\n";
+		if (tarformat) 
+            cmd += "7za x -so \"" + pkgPath + "\"  | tar xf - >nul\n";
+		else
+            cmd += "7za x \"" + pkgPath + "\">nul\n";
 
 		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 		if (ret_val != 0){
@@ -374,6 +377,7 @@ public class Main : GLib.Object {
 		}
 
 		//install
+        int archive_path_counter = 0;
 		foreach(string dirname in new string[]{".conky",".Conky",".fonts",".config/conky",".config/Conky"}){
 			string src_path = temp_dir + "/" + dirname;
 			string dst_path = Environment.get_home_dir() + "/" + dirname;
@@ -387,8 +391,23 @@ public class Main : GLib.Object {
 
 				//rsync folder
 				execute_command_sync("rsync -ai --numeric-ids '%s/' '%s'".printf(src_path,dst_path));
+                archive_path_counter++;
 			}
 		}
+        //if archive is not "conky theme" style containing files under .conky path just force to ~/.conky
+        if (archive_path_counter == 0)
+        {
+			string src_path = temp_dir;
+			string dst_path = Environment.get_home_dir() + "/.conky";
+
+			//create destination
+			if (!dir_exists(dst_path)){
+				create_dir(dst_path);
+			}
+
+			//rsync folder
+			execute_command_sync("rsync -ai --numeric-ids '%s/' '%s'".printf(src_path,dst_path));
+        }
 
 		//delete temp files
 		Posix.system("rm -rf \"" + temp_dir + "\"");

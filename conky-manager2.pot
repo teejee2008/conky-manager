@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager2 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2018-07-15 01:32-0400\n"
+"POT-Creation-Date: 2019-02-20 18:29-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Current Wallpaper"
 msgstr ""
 
-#: Main.vala:1909
+#: Main.vala:1928
 msgid "Current wallpaper source path"
 msgstr ""
 
@@ -213,11 +213,11 @@ msgid ""
 "Enter '0' to list running widgets"
 msgstr ""
 
-#: MainWindow.vala:945 Utility.vala:107
+#: MainWindow.vala:959 Utility.vala:107
 msgid "Error"
 msgstr ""
 
-#: MainWindow.vala:945
+#: MainWindow.vala:959
 msgid "Failed to import themes"
 msgstr ""
 
@@ -225,7 +225,7 @@ msgstr ""
 msgid "Failed to set ownership"
 msgstr ""
 
-#: Main.vala:371
+#: Main.vala:374
 msgid "Failed to unzip files from theme pack"
 msgstr ""
 
@@ -233,7 +233,7 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: Main.vala:560
+#: Main.vala:579
 msgid "Font Copied: "
 msgstr ""
 
@@ -287,16 +287,12 @@ msgstr ""
 msgid "Horizontal Gap"
 msgstr ""
 
-#: MainWindow.vala:389
+#: MainWindow.vala:389 MainWindow.vala:901
 msgid "Import"
 msgstr ""
 
-#: MainWindow.vala:901
-msgid "Import Theme Pack"
-msgstr ""
-
 #: MainWindow.vala:390
-msgid "Import Theme Pack (*.cmtp.7z)"
+msgid "Import Theme Pack (*.cmtp.7z) or various archive type"
 msgstr ""
 
 #: Main.vala:363
@@ -373,7 +369,7 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: MainWindow.vala:1065
+#: MainWindow.vala:1079
 msgid "N/A"
 msgstr ""
 
@@ -482,7 +478,7 @@ msgstr ""
 msgid "Save running widgets and current desktop wallpaper as new theme"
 msgstr ""
 
-#: Main.vala:956
+#: Main.vala:975
 msgid "Saved"
 msgstr ""
 
@@ -494,11 +490,11 @@ msgstr ""
 msgid "Search for new themes"
 msgstr ""
 
-#: MainWindow.vala:1077
+#: MainWindow.vala:1091
 msgid "Searching directories..."
 msgstr ""
 
-#: Main.vala:407
+#: Main.vala:426
 #, c-format
 msgid "Searching for conkyrc files... %d found"
 msgstr ""
@@ -567,7 +563,7 @@ msgstr ""
 msgid "Start/Restart Widget"
 msgstr ""
 
-#: Main.vala:867
+#: Main.vala:886
 msgid "Started"
 msgstr ""
 
@@ -591,7 +587,7 @@ msgstr ""
 msgid "Stop all running widgets"
 msgstr ""
 
-#: Main.vala:893 Utility.vala:751
+#: Main.vala:912 Utility.vala:751
 msgid "Stopped"
 msgstr ""
 
@@ -613,11 +609,11 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: MainWindow.vala:942
+#: MainWindow.vala:956
 msgid "Themes Imported"
 msgstr ""
 
-#: MainWindow.vala:942
+#: MainWindow.vala:956
 msgid "Themes imported successfully"
 msgstr ""
 
@@ -685,7 +681,7 @@ msgid ""
 "Press ENTER to start and stop."
 msgstr ""
 
-#: MainWindow.vala:1011
+#: MainWindow.vala:1025
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 
@@ -701,7 +697,7 @@ msgstr ""
 msgid "Wallpaper"
 msgstr ""
 
-#: Main.vala:1913 Main.vala:1921
+#: Main.vala:1932 Main.vala:1940
 msgid "Wallpaper saved"
 msgstr ""
 
