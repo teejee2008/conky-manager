@@ -624,30 +624,65 @@ public class Main : GLib.Object {
 
 	public void update_startup_script(){
 		string startupScript = data_dir + "/conky-startup.sh";
-
+		string home = Environment.get_home_dir ();
+		unowned string desktop_session = Environment.get_variable ("DESKTOP_SESSION");
 		bool atleast_one_widget_enabled = false;
 
-		string txt = "";
-		txt += "sleep %ds\n".printf(startup_delay);
-		txt += "killall conky\n";
+		string txt_start_conky = "";
+		txt_start_conky += "if [ \"$DESKTOP_SESSION\" = \"%s\" ]; then \n".printf(desktop_session);
+		txt_start_conky += "   sleep %ds\n".printf(startup_delay);
+		txt_start_conky += "   killall conky\n";
 		foreach(ConkyRC conf in conkyrc_list){
 			if (conf.enabled){
-				txt += "cd \"" + conf.dir + "\"\n";
-				txt += "conky -c \"" + conf.path + "\" &\n";
+				txt_start_conky += "   cd \"" + conf.dir.replace(home, "$HOME")  + "\"\n";
+				txt_start_conky += "   conky -c \"" + conf.path.replace(home, "$HOME") + "\" &\n";
 				atleast_one_widget_enabled = true;
 			}
 		}
+		txt_start_conky += "   exit 0\n";
+		txt_start_conky += "fi\n";
+		
+		string txt_no_conky = "";
+		txt_no_conky += "if [ \"$DESKTOP_SESSION\" = \"%s\" ]; then \n".printf(desktop_session);
+		txt_no_conky += "   # No widgets enabled!\n";
+		txt_no_conky += "   exit 0\n";
+		txt_no_conky += "fi\n";
+		
+		
+		string std_out = "";
+		string std_err = "";
+		
+		string cmd1 = "grep  -sq -E '^[[:space:]]*if[[:space:]]+\\[[[:space:]]+\"?\\$\\{?DESKTOP_SESSION\\}?\"?' \"%s\" || rm  \"%s\"".printf (startupScript, startupScript);
+		string cmd2 = "sed -i -r '/^[[:space:]]*if[[:space:]]+\\[[[:space:]]+\"?\\$\\{?DESKTOP_SESSION\\}?\"?[[:space:]]*==?[[:space:]]*\"%s\"[[:space:]]+\\]/,/^[[:space:]]*fi/d' \"%s\"".printf (desktop_session, startupScript);
 
 		if (file_exists(startupScript)){
-			file_delete(startupScript);
-		}
+			try{
+				execute_command_script_sync(cmd1, out std_out, out std_err);
+			}
+			catch (Error e) {
+				log_error (e.message);
+			}
+		}	
+
+		if (file_exists(startupScript)){
+			try{
+				execute_command_script_sync(cmd2, out std_out, out std_err);
+			}
+			catch (Error e) {
+				log_error (e.message);
+			}
+		} else {
+			write_file(startupScript, "#!/bin/sh\n\n"); // write shebang 
+		}	
 
 		if (atleast_one_widget_enabled){
-			write_file(startupScript, txt);
+			append_file(startupScript, txt_start_conky);
 		}
 		else{
-			write_file(startupScript, "# No widgets enabled!\n\nexit 0"); //write empty script
+			append_file(startupScript, txt_no_conky); 
 		}
+		
+		execute_command_sync ("chmod +x \"%s\"".printf (startupScript));
 	}
 
 	public bool check_startup(){
@@ -830,6 +865,7 @@ public class ConkyRC : ConkyConfigItem {
 	public bool one_ten_config = false;
 
 	private Regex rex_conky_win;
+	private Regex rex_conky_text;
 	private MatchInfo match;
 
 	private string err_line;
@@ -847,6 +883,7 @@ public class ConkyRC : ConkyConfigItem {
 
 		try{
 			rex_conky_win = new Regex("""\(0x([0-9a-zA-Z]*)\)""");
+			rex_conky_text = new Regex("""^[[:space:]]*conky[.]text[[:space:]]*=[[:space:]]""");
 		}
 		catch (Error e) {
 			log_error (e.message);
@@ -921,6 +958,14 @@ public class ConkyRC : ConkyConfigItem {
 	public void read_file(){
 		log_debug("Read config file from disk");
 		this.text = TeeJee.FileSystem.read_file(this.path);
+		this.one_ten_config = false;
+
+		foreach(string line in text.split("\n")){
+			if (rex_conky_text.match (line, 0, out match)){
+				this.one_ten_config = true;
+				break;
+			}
+		}
 	}
 
 	public void save_file(){
@@ -951,12 +996,12 @@ public class ConkyRC : ConkyConfigItem {
 		read_file();
 		wait_interval = 3;
 		foreach(string line in text.split("\n")){
-			if (line.contains("lua_load") && !(line.strip().has_prefix("#"))){
-				wait_interval = 10;
+			if (line.contains("lua_load") && !(line.strip().has_prefix("#")) && !(line.strip().has_prefix("--"))){
+				wait_interval = 4;
 				break;
 			}
 		}
-
+		
 		try {
 			thread_is_running = true;
 			Thread.create<void> (generate_preview_thread, true);
