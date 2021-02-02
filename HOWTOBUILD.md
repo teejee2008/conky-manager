@@ -7,6 +7,8 @@
  libgee-0.8-dev
  libgtk-3-dev
  libjson-glib-dev
+ gettext
+ libgettextpo-dev
 
 ## additional required run time packages:
  p7zip-full
@@ -14,7 +16,7 @@
 
 ## here is a one-shot installation command for all of the above packages:
 ```
-apt install build-essential git valac libgee-0.8-dev libgtk-3-dev libjson-glib-dev p7zip-full imagemagick
+apt install build-essential git valac libgee-0.8-dev libgtk-3-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick
 ```
 
 
