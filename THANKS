@@ -1,3 +1,4 @@
+fehlix added French translation, more lua-format detection, lua_load changes
 freddii for German translation
 afelinczak adds ninja meson support with vscode
 renyhp finds missing build deps for Ubuntu variations.
