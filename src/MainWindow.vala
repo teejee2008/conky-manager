@@ -986,6 +986,8 @@ public class MainWindow : Window {
 		};
 
 		dialog.translators = {
+			"freddii (German):github.com/freddii",
+			"fehlix (French):github.com/fehlix",
 			"tioguda (Portuguese - Brazil):github.com/tioguda",
 			"Vistaus (Dutch):github.com/Vistaus",
 			"gogo (Croatian):launchpad.net/~trebelnik-stefina",
