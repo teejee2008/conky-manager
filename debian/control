@@ -8,7 +8,7 @@ Homepage: http://teejeetech.blogspot.in/
 
 Package: conky-manager2
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, coreutils, conky, p7zip-full, rsync, imagemagick
+Depends: ${shlibs:Depends}, ${misc:Depends}, coreutils, conky | conky-all, p7zip-full, rsync, imagemagick
 #Recommends: 
 Description: Utility for managing Conky configuration files
  Utility for managing Conky configuration files
