@@ -32,8 +32,9 @@ dependencies = [
 
 install_data('src/' + app_name + '.desktop', install_dir : launcherdir)
 install_data('src/share/pixmaps/' + app_name + '.png', install_dir : sharedir + '/pixmaps')
-install_data('src/' + app_name + '.appdata.xml', install_dir : sharedir + '/appdata')
-install_subdir('src/share/conky-manager2/images', install_dir : sharedir + '/' + app_name) 
+install_data('src/' + app_name + '.appdata.xml', install_dir : sharedir + '/metainfo')
+install_data('man/' + app_name + '.1', install_dir : sharedir + '/man/man1')
+install_subdir('src/share/conky-manager2/images', install_dir : sharedir + '/' + app_name)
 
 subdir('po')
 
