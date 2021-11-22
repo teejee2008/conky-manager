@@ -37,7 +37,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Conky Manager";
 public const string AppShortName = "conky-manager2";
-public const string AppVersion = "2.72";
+public const string AppVersion = "2.73";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 

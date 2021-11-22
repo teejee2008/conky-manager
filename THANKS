@@ -1,3 +1,5 @@
+mok0 various debian packaging fixes, changes dev-art icon to actual quality artwork:)
+yeji0407 adds Korean translation
 fehlix added French translation, more lua-format detection, lua_load changes
 freddii for German translation
 afelinczak adds ninja meson support with vscode

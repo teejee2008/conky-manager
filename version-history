@@ -7,4 +7,4 @@
 **v2.6** Portuguese-Brazil added, default nvidia theme fix, support for import on non-ConkyManagerTheme archive.
 **v2.7** Fix 'Edit Widget' now includes network interface replacement for conky 'if_up' and 'addr' variables.
 **v2.72** French and German translations, lua detection additions, meson vscode and small fixes.
-
+**v2.73** Korean translation, debian packaging updates, add quality icon artwork.

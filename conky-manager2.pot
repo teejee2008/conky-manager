@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager2 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2019-02-20 18:29-0500\n"
+"POT-Creation-Date: 2021-11-21 23:30-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Current Wallpaper"
 msgstr ""
 
-#: Main.vala:1928
+#: Main.vala:1973
 msgid "Current wallpaper source path"
 msgstr ""
 
@@ -221,7 +221,7 @@ msgstr ""
 msgid "Failed to import themes"
 msgstr ""
 
-#: Utility.vala:1293
+#: Utility.vala:1309
 msgid "Failed to set ownership"
 msgstr ""
 
@@ -365,11 +365,11 @@ msgstr ""
 msgid "Missing Dependencies"
 msgstr ""
 
-#: Utility.vala:1023
+#: Utility.vala:1039
 msgid "Missing Icon"
 msgstr ""
 
-#: MainWindow.vala:1079
+#: MainWindow.vala:1086
 msgid "N/A"
 msgstr ""
 
@@ -478,7 +478,7 @@ msgstr ""
 msgid "Save running widgets and current desktop wallpaper as new theme"
 msgstr ""
 
-#: Main.vala:975
+#: Main.vala:1020
 msgid "Saved"
 msgstr ""
 
@@ -490,7 +490,7 @@ msgstr ""
 msgid "Search for new themes"
 msgstr ""
 
-#: MainWindow.vala:1091
+#: MainWindow.vala:1098
 msgid "Searching directories..."
 msgstr ""
 
@@ -563,7 +563,7 @@ msgstr ""
 msgid "Start/Restart Widget"
 msgstr ""
 
-#: Main.vala:886
+#: Main.vala:923
 msgid "Started"
 msgstr ""
 
@@ -587,7 +587,7 @@ msgstr ""
 msgid "Stop all running widgets"
 msgstr ""
 
-#: Main.vala:912 Utility.vala:751
+#: Main.vala:949 Utility.vala:767
 msgid "Stopped"
 msgstr ""
 
@@ -681,7 +681,7 @@ msgid ""
 "Press ENTER to start and stop."
 msgstr ""
 
-#: MainWindow.vala:1025
+#: MainWindow.vala:1032
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 
@@ -697,7 +697,7 @@ msgstr ""
 msgid "Wallpaper"
 msgstr ""
 
-#: Main.vala:1932 Main.vala:1940
+#: Main.vala:1977 Main.vala:1985
 msgid "Wallpaper saved"
 msgstr ""
 

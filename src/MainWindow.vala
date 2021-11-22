@@ -986,6 +986,7 @@ public class MainWindow : Window {
 		};
 
 		dialog.translators = {
+			"yeji0407 (Korean):github.com/yeji0407",
 			"freddii (German):github.com/freddii",
 			"fehlix (French):github.com/fehlix",
 			"tioguda (Portuguese - Brazil):github.com/tioguda",
@@ -1003,7 +1004,10 @@ public class MainWindow : Window {
 		}; 
 		
 		dialog.documenters = null; 
-		dialog.artists = null;
+		dialog.artists = {
+			"Morten Kjeldgaard"
+		}; 
+		
 		dialog.donations = {
 			"Adam Simmons",
 			"Andre Strobach",
