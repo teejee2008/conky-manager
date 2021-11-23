@@ -23,6 +23,7 @@ install:
 	mkdir -p $(DESTDIR)$(bindir)
 	mkdir -p $(DESTDIR)$(sharedir)
 	mkdir -p $(DESTDIR)$(launcherdir)
+	mkdir -p $(DESTDIR)$(man1dir)
 	mkdir -p $(DESTDIR)$(sharedir)/${app_name}
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
 	mkdir -p $(DESTDIR)$(sharedir)/appdata
@@ -33,6 +34,10 @@ install:
 	
 	#launcher
 	install -m 0755 ${app_name}.desktop "$(DESTDIR)$(launcherdir)"
+	
+	#manual
+	install -m 0755 ../man/${app_name}.1 "$(DESTDIR)$(man1dir)"
+	gzip "$(DESTDIR)$(man1dir)/${app_name}.1"
 	
 	#app icon
 	install -m 0755 share/pixmaps/${app_name}.png "$(DESTDIR)$(sharedir)/pixmaps"
@@ -74,14 +79,17 @@ uninstall:
 	#launcher
 	rm -f "$(DESTDIR)$(launcherdir)/${app_name}.desktop"
 	
+	#manual
+	rm -f "$(DESTDIR)$(man1dir)/${app_name}.1"
+	
 	#app icon
 	rm -f "$(DESTDIR)$(sharedir)/pixmaps/${app_name}.png"
-
+	
 	#appdata.xml
 	rm -f "$(DESTDIR)$(sharedir)/appdata/${app_name}.appdata.xml"
 	
 	#shared files
 	rm -rf "$(DESTDIR)$(sharedir)/${app_name}"
-
+	
     #translations
 	rm -f $(DESTDIR)$(localedir)/*/LC_MESSAGES/${app_name}.mo
