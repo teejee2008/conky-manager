@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager2 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2021-11-21 23:30-0500\n"
+"POT-Creation-Date: 2021-11-25 23:28-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "24 Hour"
 msgstr ""
 
-#: MainWindow.vala:423 MainWindow.vala:424
+#: MainWindow.vala:434 MainWindow.vala:435
 msgid "About"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 msgid "App config saved"
 msgstr ""
 
-#: MainWindow.vala:405 SettingsWindow.vala:47
+#: MainWindow.vala:416 SettingsWindow.vala:47
 msgid "Application Settings"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgstr ""
 msgid "Bottom Right"
 msgstr ""
 
-#: MainWindow.vala:121
+#: MainWindow.vala:122
 msgid "Browse:"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid "Commands listed below are not available"
 msgstr ""
 
-#: AboutWindow.vala:272 AboutWindow.vala:289 MainWindow.vala:257
+#: AboutWindow.vala:272 AboutWindow.vala:289 MainWindow.vala:258
 msgid "Credits"
 msgstr ""
 
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Current Wallpaper"
 msgstr ""
 
-#: Main.vala:1973
+#: Main.vala:1996
 msgid "Current wallpaper source path"
 msgstr ""
 
@@ -152,9 +152,13 @@ msgid ""
 "Feel free to send me an email if you find any issues in this application or "
 "if you need any changes. Suggestions and feedback are always welcome.\n"
 "\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
+"Thanks,                                                                                              "
+"Thank you,\n"
+"Tony "
+"George                                                                                   "
+"Scott Caudle\n"
+"(teejeetech@gmail.com)                                        "
+"(zcotcaudle@gmail.com)"
 msgstr ""
 
 #: Main.vala:266 Main.vala:272 Main.vala:278
@@ -170,15 +174,15 @@ msgstr ""
 msgid "Documenters"
 msgstr ""
 
-#: DonationWindow.vala:36 MainWindow.vala:414 MainWindow.vala:415
+#: DonationWindow.vala:36 MainWindow.vala:425 MainWindow.vala:426
 msgid "Donate"
 msgstr ""
 
-#: DonationWindow.vala:74
+#: DonationWindow.vala:88 DonationWindow.vala:124
 msgid "Donate with Google Wallet"
 msgstr ""
 
-#: DonationWindow.vala:67
+#: DonationWindow.vala:81 DonationWindow.vala:117
 msgid "Donate with PayPal"
 msgstr ""
 
@@ -187,7 +191,7 @@ msgstr ""
 msgid "Donations"
 msgstr ""
 
-#: MainWindow.vala:328
+#: MainWindow.vala:339
 msgid "Edit"
 msgstr ""
 
@@ -195,29 +199,29 @@ msgstr ""
 msgid "Edit Theme"
 msgstr ""
 
-#: EditWidgetWindow.vala:64 MainWindow.vala:329
+#: EditWidgetWindow.vala:64 MainWindow.vala:340
 msgid "Edit Widget"
 msgstr ""
 
-#: MainWindow.vala:338
+#: MainWindow.vala:349
 msgid "Edit file manually in a text editor"
 msgstr ""
 
-#: MainWindow.vala:444
+#: MainWindow.vala:455
 msgid "Enable"
 msgstr ""
 
-#: MainWindow.vala:184
+#: MainWindow.vala:185
 msgid ""
 "Enter name or path to filter.\n"
 "Enter '0' to list running widgets"
 msgstr ""
 
-#: MainWindow.vala:959 Utility.vala:107
+#: MainWindow.vala:1014 Utility.vala:107
 msgid "Error"
 msgstr ""
 
-#: MainWindow.vala:959
+#: MainWindow.vala:1014
 msgid "Failed to import themes"
 msgstr ""
 
@@ -229,7 +233,7 @@ msgstr ""
 msgid "Failed to unzip files from theme pack"
 msgstr ""
 
-#: MainWindow.vala:174
+#: MainWindow.vala:175
 msgid "Filter"
 msgstr ""
 
@@ -249,11 +253,11 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: GeneratePreviewWindow.vala:45 MainWindow.vala:369
+#: GeneratePreviewWindow.vala:45 MainWindow.vala:380
 msgid "Generate Preview"
 msgstr ""
 
-#: MainWindow.vala:370
+#: MainWindow.vala:381
 msgid "Generate preview images"
 msgstr ""
 
@@ -265,7 +269,7 @@ msgstr ""
 msgid "Generate preview images in PNG format instead of JPEG"
 msgstr ""
 
-#: MainWindow.vala:788 MainWindow.vala:862
+#: MainWindow.vala:843 MainWindow.vala:917
 msgid "Generating Previews"
 msgstr ""
 
@@ -287,11 +291,11 @@ msgstr ""
 msgid "Horizontal Gap"
 msgstr ""
 
-#: MainWindow.vala:389 MainWindow.vala:901
+#: MainWindow.vala:400 MainWindow.vala:956
 msgid "Import"
 msgstr ""
 
-#: MainWindow.vala:390
+#: MainWindow.vala:401
 msgid "Import Theme Pack (*.cmtp.7z) or various archive type"
 msgstr ""
 
@@ -321,7 +325,7 @@ msgstr ""
 msgid "LAN"
 msgstr ""
 
-#: MainWindow.vala:200
+#: MainWindow.vala:201
 msgid "List"
 msgstr ""
 
@@ -337,7 +341,7 @@ msgstr ""
 msgid "Locations"
 msgstr ""
 
-#: MainWindow.vala:337
+#: MainWindow.vala:348
 msgid "Manual Edit"
 msgstr ""
 
@@ -369,7 +373,7 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: MainWindow.vala:1086
+#: MainWindow.vala:1141
 msgid "N/A"
 msgstr ""
 
@@ -385,11 +389,11 @@ msgstr ""
 msgid "Network interface cannot be changed for selected widget"
 msgstr ""
 
-#: MainWindow.vala:296
+#: MainWindow.vala:297
 msgid "Next"
 msgstr ""
 
-#: MainWindow.vala:297
+#: MainWindow.vala:298
 msgid "Next Widget"
 msgstr ""
 
@@ -401,7 +405,7 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: DonationWindow.vala:95 EditThemeWindow.vala:205
+#: DonationWindow.vala:109 EditThemeWindow.vala:205
 #: GeneratePreviewWindow.vala:125 SettingsWindow.vala:215
 msgid "OK"
 msgstr ""
@@ -414,11 +418,11 @@ msgstr ""
 msgid "Opaque"
 msgstr ""
 
-#: MainWindow.vala:346
+#: MainWindow.vala:357
 msgid "Open Folder"
 msgstr ""
 
-#: MainWindow.vala:347
+#: MainWindow.vala:358
 msgid "Open Theme Folder"
 msgstr ""
 
@@ -434,15 +438,15 @@ msgstr ""
 msgid "Please install required packages and try running it again"
 msgstr ""
 
-#: MainWindow.vala:194
+#: MainWindow.vala:195
 msgid "Preview"
 msgstr ""
 
-#: MainWindow.vala:287
+#: MainWindow.vala:288
 msgid "Previous"
 msgstr ""
 
-#: MainWindow.vala:288
+#: MainWindow.vala:289
 msgid "Previous Widget"
 msgstr ""
 
@@ -450,7 +454,7 @@ msgstr ""
 msgid "Pseudo-Transparent"
 msgstr ""
 
-#: MainWindow.vala:360
+#: MainWindow.vala:371
 msgid "Refresh"
 msgstr ""
 
@@ -470,15 +474,15 @@ msgstr ""
 msgid "Run Conky at system startup"
 msgstr ""
 
-#: EditThemeWindow.vala:57 MainWindow.vala:160
+#: EditThemeWindow.vala:57 MainWindow.vala:161
 msgid "Save Theme"
 msgstr ""
 
-#: MainWindow.vala:164
+#: MainWindow.vala:165
 msgid "Save running widgets and current desktop wallpaper as new theme"
 msgstr ""
 
-#: Main.vala:1020
+#: Main.vala:1043
 msgid "Saved"
 msgstr ""
 
@@ -486,11 +490,11 @@ msgstr ""
 msgid "Scaling"
 msgstr ""
 
-#: MainWindow.vala:361
+#: MainWindow.vala:372
 msgid "Search for new themes"
 msgstr ""
 
-#: MainWindow.vala:1098
+#: MainWindow.vala:1153
 msgid "Searching directories..."
 msgstr ""
 
@@ -519,7 +523,7 @@ msgstr ""
 msgid "Semi-Transparent"
 msgstr ""
 
-#: DonationWindow.vala:81
+#: DonationWindow.vala:95 DonationWindow.vala:131
 msgid "Send Email"
 msgstr ""
 
@@ -543,7 +547,7 @@ msgid ""
 "be opaque."
 msgstr ""
 
-#: MainWindow.vala:404
+#: MainWindow.vala:415
 msgid "Settings"
 msgstr ""
 
@@ -551,19 +555,23 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: MainWindow.vala:247
+#: MainWindow.vala:248
 msgid "Source"
 msgstr ""
 
-#: MainWindow.vala:305 MainWindow.vala:314
+#: MainWindow.vala:316 MainWindow.vala:325
 msgid "Start"
 msgstr ""
 
-#: MainWindow.vala:306
+#: MainWindow.vala:317
 msgid "Start/Restart Widget"
 msgstr ""
 
-#: Main.vala:923
+#: MainWindow.vala:308
+msgid "Start/Restart Widget in Terminal"
+msgstr ""
+
+#: Main.vala:924 Main.vala:946
 msgid "Started"
 msgstr ""
 
@@ -571,24 +579,28 @@ msgstr ""
 msgid "Startup Delay (seconds)"
 msgstr ""
 
-#: MainWindow.vala:229 MainWindow.vala:231
+#: MainWindow.vala:230 MainWindow.vala:232
 msgid "Stop"
 msgstr ""
 
-#: MainWindow.vala:380
+#: MainWindow.vala:391
 msgid "Stop All Widgets"
 msgstr ""
 
-#: MainWindow.vala:315
+#: MainWindow.vala:326
 msgid "Stop Widget"
 msgstr ""
 
-#: MainWindow.vala:381
+#: MainWindow.vala:392
 msgid "Stop all running widgets"
 msgstr ""
 
-#: Main.vala:949 Utility.vala:767
+#: Main.vala:972 Utility.vala:767
 msgid "Stopped"
+msgstr ""
+
+#: MainWindow.vala:307
+msgid "Terminal Start"
 msgstr ""
 
 #: EditWidgetWindow.vala:230
@@ -605,15 +617,15 @@ msgstr ""
 msgid "Theme Name"
 msgstr ""
 
-#: MainWindow.vala:129
+#: MainWindow.vala:130
 msgid "Themes"
 msgstr ""
 
-#: MainWindow.vala:956
+#: MainWindow.vala:1011
 msgid "Themes Imported"
 msgstr ""
 
-#: MainWindow.vala:956
+#: MainWindow.vala:1011
 msgid "Themes imported successfully"
 msgstr ""
 
@@ -634,11 +646,11 @@ msgstr ""
 msgid "Time format cannot be changed for selected widget"
 msgstr ""
 
-#: MainWindow.vala:202
+#: MainWindow.vala:203
 msgid "Toggle List"
 msgstr ""
 
-#: MainWindow.vala:196
+#: MainWindow.vala:197
 msgid "Toggle Preview"
 msgstr ""
 
@@ -675,13 +687,13 @@ msgstr ""
 msgid "Updating theme"
 msgstr ""
 
-#: MainWindow.vala:480
+#: MainWindow.vala:491
 msgid ""
 "Use the keyboard arrow keys to browse.\n"
 "Press ENTER to start and stop."
 msgstr ""
 
-#: MainWindow.vala:1032
+#: MainWindow.vala:1087
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 
@@ -689,7 +701,7 @@ msgstr ""
 msgid "Vertical Gap"
 msgstr ""
 
-#: DonationWindow.vala:88
+#: DonationWindow.vala:102 DonationWindow.vala:138
 msgid "Visit Website"
 msgstr ""
 
@@ -697,7 +709,7 @@ msgstr ""
 msgid "Wallpaper"
 msgstr ""
 
-#: Main.vala:1977 Main.vala:1985
+#: Main.vala:2000 Main.vala:2008
 msgid "Wallpaper saved"
 msgstr ""
 
@@ -720,7 +732,7 @@ msgstr ""
 msgid "WiFi Network"
 msgstr ""
 
-#: EditThemeWindow.vala:222 MainWindow.vala:125
+#: EditThemeWindow.vala:222 MainWindow.vala:126
 msgid "Widgets"
 msgstr ""
 

@@ -55,6 +55,7 @@ public class MainWindow : Window {
 	private ToolButton btn_prev;
 	private ToolButton btn_next;
 	private ToolButton btn_start;
+	private ToolButton btn_start_terminal;
 	private ToolButton btn_stop;
 	private ToolButton btn_edit;
 	private ToolButton btn_edit_gui;
@@ -286,7 +287,7 @@ public class MainWindow : Window {
 		btn_prev.is_important = false;
 		btn_prev.label = _("Previous");
 		btn_prev.set_tooltip_text (_("Previous Widget"));
-        toolbar.add(btn_prev);
+//        toolbar.add(btn_prev);
 
         btn_prev.clicked.connect(btn_prev_clicked);
 
@@ -295,9 +296,19 @@ public class MainWindow : Window {
 		btn_next.is_important = false;
 		btn_next.label = _("Next");
 		btn_next.set_tooltip_text (_("Next Widget"));
-        toolbar.add(btn_next);
+//        toolbar.add(btn_next);
 
         btn_next.clicked.connect(btn_next_clicked);
+
+		//btn_start terminal
+		btn_start_terminal = new Gtk.ToolButton.from_stock ("gtk-media-play");
+		btn_start_terminal.is_important = false;
+		btn_start_terminal.icon_widget = get_shared_icon("utilities-terminal","utilities-terminal.png",32);
+		btn_start_terminal.label = _("Terminal Start");
+		btn_start_terminal.set_tooltip_text (_("Start/Restart Widget in Terminal"));
+        toolbar.add(btn_start_terminal);
+
+        btn_start_terminal.clicked.connect(btn_start_terminal_clicked);
 
 		//btn_start
 		btn_start = new Gtk.ToolButton.from_stock ("gtk-media-play");
@@ -625,7 +636,51 @@ public class MainWindow : Window {
 
 		show_preview(selected_item());
 	}
-	
+
+	private void btn_start_terminal_clicked(){
+		TreeModel model;
+		TreeStore store = (TreeStore) filterThemes.child_model;
+		TreeSelection selection = tv_widget.get_selection();
+		TreeIter iter, child_iter;
+		ConkyConfigItem item;
+
+		//check if selected
+		if (selection.count_selected_rows() == 0){ return; }
+
+		//get item
+		selection.get_selected(out model, out iter);
+		model.get(iter,1,out item,-1);
+
+		//show busy icon
+		gtk_set_busy(true, this);
+		gtk_do_events();
+
+		//start item
+		item.terminal_start();
+		show_preview(item);
+
+		//hide busy icon
+		gtk_set_busy(false, this);
+
+		//uncheck other items
+		if (item is ConkyTheme){
+			TreeIter iter2;
+			bool iterExists = model.get_iter_first (out iter2);
+			while (iterExists){
+				if (iter2 != iter){
+					//uncheck
+					filterThemes.convert_iter_to_child_iter(out child_iter, iter2);
+					store.set(child_iter, 0, false);
+				}
+				iterExists = model.iter_next (ref iter2);
+			}
+		}
+
+		//check item
+		filterThemes.convert_iter_to_child_iter(out child_iter, iter);
+		store.set(child_iter, 0, true, -1);
+	}
+
 	private void btn_start_clicked(){
 		TreeModel model;
 		TreeStore store = (TreeStore) filterThemes.child_model;

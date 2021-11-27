@@ -737,6 +737,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 	private string _credits = "";
 
 	public abstract void start();
+	public abstract void terminal_start();
 	public abstract void stop();
 
 	public void init_path(string theme_file_path){
@@ -918,6 +919,28 @@ public class ConkyRC : ConkyConfigItem {
 		cmd += "conky -c \"" + path + "\"\n";
 
 		execute_command_script_async(cmd);
+
+		Thread.usleep((ulong)1000000);
+		log_debug(_("Started") + ": " + path);
+
+		//set the flag for immediate effect
+		//will be updated by the refresh_status() timer
+		enabled = true;
+	}
+
+	public override void terminal_start(){
+		string cmd;
+
+		if (is_running()){
+			stop();
+		}
+
+		//Theme.install();
+
+		cmd = "cd \"" + dir + "\"\n";
+		cmd += "conky -c \"" + path + "\"\n";
+
+		execute_command_script_in_terminal_sync( create_temp_bash_script(cmd) );
 
 		Thread.usleep((ulong)1000000);
 		log_debug(_("Started") + ": " + path);
@@ -1991,6 +2014,14 @@ public class ConkyTheme : ConkyConfigItem {
 		set_wallpaper();
 		foreach(ConkyRC rc in conkyrc_list){
 			rc.start();
+		}
+	}
+
+	public override void terminal_start(){
+		main_app.kill_all_conky();
+		set_wallpaper();
+		foreach(ConkyRC rc in conkyrc_list){
+			rc.terminal_start();
 		}
 	}
 
