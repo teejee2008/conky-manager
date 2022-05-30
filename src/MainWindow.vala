@@ -422,8 +422,8 @@ public class MainWindow : Window {
 		btn_donate = new Gtk.ToolButton.from_stock ("gtk-dialog-info");
 		btn_donate.is_important = false;
 		btn_donate.icon_widget = get_shared_icon("donate","donate.svg",32);
-		btn_donate.label = _("Donate");
-		btn_donate.set_tooltip_text (_("Donate"));
+		btn_donate.label = _("Funding");
+		btn_donate.set_tooltip_text (_("Funding Support"));
         toolbar.add(btn_donate);
 
         btn_donate.clicked.connect(() => { show_donation_window(false); });
@@ -1086,12 +1086,15 @@ public class MainWindow : Window {
 		dialog.program_name = AppName;
 		dialog.comments = _("Utility for managing Conky configuration files");
 		dialog.copyright = "Copyright © 2014 Tony George (%s)".printf(AppAuthorEmail);
+		dialog.copyright2 = "Copyright © 2018 Scott Caudle (%s)".printf(AppAuthorEmail2);
 		dialog.version = AppVersion;
 		dialog.logo = get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.website = "http://teejeetech.in";
 		dialog.website_label = "http://teejeetech.blogspot.in";
+		dialog.website2 = "https://github.com/zcot/conky-manager2";
+		dialog.website_label2 = "project on github";
 
 		dialog.initialize();
 		dialog.show_all();
