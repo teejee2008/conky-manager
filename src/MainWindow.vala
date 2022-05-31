@@ -778,7 +778,9 @@ public class MainWindow : Window {
 	
 	private void btn_edit_clicked(){
 		ConkyConfigItem item = selected_item();
-		if (item != null) { exo_open_textfile(item.path); };
+		/*if (item != null) { exo_open_textfile(item.path); };
+        what is going on here, xdg-open should be sufficient. */
+		if (item != null) { xdg_open(item.path); };
 	}
 
 	private void btn_open_dir_clicked(){
