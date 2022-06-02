@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager2 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2021-11-25 23:28-0500\n"
+"POT-Creation-Date: 2022-06-02 10:07-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,11 +49,11 @@ msgstr ""
 msgid "All Widgets with Missing Previews"
 msgstr ""
 
-#: Main.vala:257
+#: Main.vala:258
 msgid "App config loaded"
 msgstr ""
 
-#: Main.vala:209
+#: Main.vala:210
 msgid "App config saved"
 msgstr ""
 
@@ -69,17 +69,17 @@ msgstr ""
 msgid "Apply Changes"
 msgstr ""
 
-#: AboutWindow.vala:330
+#: AboutWindow.vala:386
 #, c-format
 msgid "Artists"
 msgstr ""
 
-#: AboutWindow.vala:314
+#: AboutWindow.vala:370
 #, c-format
 msgid "Authors"
 msgstr ""
 
-#: AboutWindow.vala:285
+#: AboutWindow.vala:337
 msgid "Back"
 msgstr ""
 
@@ -116,15 +116,15 @@ msgstr ""
 msgid "Choose File"
 msgstr ""
 
-#: AboutWindow.vala:295 EditWidgetWindow.vala:461
+#: AboutWindow.vala:347 EditWidgetWindow.vala:461
 msgid "Close"
 msgstr ""
 
-#: Main.vala:164
+#: Main.vala:165
 msgid "Commands listed below are not available"
 msgstr ""
 
-#: AboutWindow.vala:272 AboutWindow.vala:289 MainWindow.vala:258
+#: AboutWindow.vala:324 AboutWindow.vala:341 MainWindow.vala:258
 msgid "Credits"
 msgstr ""
 
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Current Wallpaper"
 msgstr ""
 
-#: Main.vala:1996
+#: Main.vala:1997
 msgid "Current wallpaper source path"
 msgstr ""
 
@@ -152,16 +152,20 @@ msgid ""
 "Feel free to send me an email if you find any issues in this application or "
 "if you need any changes. Suggestions and feedback are always welcome.\n"
 "\n"
-"Thanks,                                                                                              "
-"Thank you,\n"
-"Tony "
-"George                                                                                   "
-"Scott Caudle\n"
-"(teejeetech@gmail.com)                                        "
-"(zcotcaudle@gmail.com)"
+"Thanks,\n"
+"Tony George\n"
+"(teejeetech@gmail.com)\n"
+"\n"
+"Bionic to Focal to Jammy support, 1.10+ config support, magic archive "
+"import, terminal debug function, and more\n"
+"-help finance the efforts with these buttons to the right.\n"
+"                                                                                          Scott "
+"Caudle\n"
+"                                                                                (zcotcaudle@gmail."
+"com)"
 msgstr ""
 
-#: Main.vala:266 Main.vala:272 Main.vala:278
+#: Main.vala:267 Main.vala:273 Main.vala:279
 msgid "Directory Created"
 msgstr ""
 
@@ -169,24 +173,20 @@ msgstr ""
 msgid "Discard Changes"
 msgstr ""
 
-#: AboutWindow.vala:346
+#: AboutWindow.vala:402
 #, c-format
 msgid "Documenters"
 msgstr ""
 
-#: DonationWindow.vala:36 MainWindow.vala:425 MainWindow.vala:426
-msgid "Donate"
-msgstr ""
-
-#: DonationWindow.vala:88 DonationWindow.vala:124
+#: DonationWindow.vala:88
 msgid "Donate with Google Wallet"
 msgstr ""
 
-#: DonationWindow.vala:81 DonationWindow.vala:117
+#: DonationWindow.vala:81
 msgid "Donate with PayPal"
 msgstr ""
 
-#: AboutWindow.vala:354
+#: AboutWindow.vala:410
 #, c-format
 msgid "Donations"
 msgstr ""
@@ -217,11 +217,11 @@ msgid ""
 "Enter '0' to list running widgets"
 msgstr ""
 
-#: MainWindow.vala:1014 Utility.vala:107
+#: MainWindow.vala:1016 Utility.vala:107
 msgid "Error"
 msgstr ""
 
-#: MainWindow.vala:1014
+#: MainWindow.vala:1016
 msgid "Failed to import themes"
 msgstr ""
 
@@ -229,7 +229,7 @@ msgstr ""
 msgid "Failed to set ownership"
 msgstr ""
 
-#: Main.vala:374
+#: Main.vala:375
 msgid "Failed to unzip files from theme pack"
 msgstr ""
 
@@ -237,16 +237,32 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: Main.vala:579
+#: DonationWindow.vala:124
+msgid "Financial support Stripe"
+msgstr ""
+
+#: Main.vala:580
 msgid "Font Copied: "
 msgstr ""
 
-#: Main.vala:319
+#: Main.vala:320
 msgid "Found theme pack [installed]"
 msgstr ""
 
-#: Main.vala:327
+#: Main.vala:328
 msgid "Found theme pack [new]"
+msgstr ""
+
+#: DonationWindow.vala:117
+msgid "Fund with Credit Card/PayPal"
+msgstr ""
+
+#: MainWindow.vala:425
+msgid "Funding"
+msgstr ""
+
+#: DonationWindow.vala:36 MainWindow.vala:426
+msgid "Funding Support"
 msgstr ""
 
 #: SettingsWindow.vala:76
@@ -269,7 +285,7 @@ msgstr ""
 msgid "Generate preview images in PNG format instead of JPEG"
 msgstr ""
 
-#: MainWindow.vala:843 MainWindow.vala:917
+#: MainWindow.vala:845 MainWindow.vala:919
 msgid "Generating Previews"
 msgstr ""
 
@@ -291,7 +307,7 @@ msgstr ""
 msgid "Horizontal Gap"
 msgstr ""
 
-#: MainWindow.vala:400 MainWindow.vala:956
+#: MainWindow.vala:400 MainWindow.vala:958
 msgid "Import"
 msgstr ""
 
@@ -299,7 +315,7 @@ msgstr ""
 msgid "Import Theme Pack (*.cmtp.7z) or various archive type"
 msgstr ""
 
-#: Main.vala:363
+#: Main.vala:364
 msgid "Importing"
 msgstr ""
 
@@ -365,7 +381,7 @@ msgstr ""
 msgid "Minimum Width"
 msgstr ""
 
-#: Main.vala:133
+#: Main.vala:134
 msgid "Missing Dependencies"
 msgstr ""
 
@@ -373,7 +389,7 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: MainWindow.vala:1141
+#: MainWindow.vala:1146
 msgid "N/A"
 msgstr ""
 
@@ -434,7 +450,7 @@ msgstr ""
 msgid "Please enter theme name"
 msgstr ""
 
-#: Main.vala:165
+#: Main.vala:166
 msgid "Please install required packages and try running it again"
 msgstr ""
 
@@ -482,7 +498,7 @@ msgstr ""
 msgid "Save running widgets and current desktop wallpaper as new theme"
 msgstr ""
 
-#: Main.vala:1043
+#: Main.vala:1044
 msgid "Saved"
 msgstr ""
 
@@ -494,11 +510,11 @@ msgstr ""
 msgid "Search for new themes"
 msgstr ""
 
-#: MainWindow.vala:1153
+#: MainWindow.vala:1158
 msgid "Searching directories..."
 msgstr ""
 
-#: Main.vala:426
+#: Main.vala:427
 #, c-format
 msgid "Searching for conkyrc files... %d found"
 msgstr ""
@@ -571,7 +587,7 @@ msgstr ""
 msgid "Start/Restart Widget in Terminal"
 msgstr ""
 
-#: Main.vala:924 Main.vala:946
+#: Main.vala:925 Main.vala:947
 msgid "Started"
 msgstr ""
 
@@ -595,7 +611,7 @@ msgstr ""
 msgid "Stop all running widgets"
 msgstr ""
 
-#: Main.vala:972 Utility.vala:767
+#: Main.vala:973 Utility.vala:767
 msgid "Stopped"
 msgstr ""
 
@@ -621,15 +637,15 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: MainWindow.vala:1011
+#: MainWindow.vala:1013
 msgid "Themes Imported"
 msgstr ""
 
-#: MainWindow.vala:1011
+#: MainWindow.vala:1013
 msgid "Themes imported successfully"
 msgstr ""
 
-#: AboutWindow.vala:322
+#: AboutWindow.vala:378
 #, c-format
 msgid "Third Party Tools"
 msgstr ""
@@ -666,7 +682,7 @@ msgstr ""
 msgid "Top Right"
 msgstr ""
 
-#: AboutWindow.vala:338
+#: AboutWindow.vala:394
 #, c-format
 msgid "Translators"
 msgstr ""
@@ -693,7 +709,7 @@ msgid ""
 "Press ENTER to start and stop."
 msgstr ""
 
-#: MainWindow.vala:1087
+#: MainWindow.vala:1089
 msgid "Utility for managing Conky configuration files"
 msgstr ""
 
@@ -701,7 +717,7 @@ msgstr ""
 msgid "Vertical Gap"
 msgstr ""
 
-#: DonationWindow.vala:102 DonationWindow.vala:138
+#: DonationWindow.vala:102
 msgid "Visit Website"
 msgstr ""
 
@@ -709,7 +725,7 @@ msgstr ""
 msgid "Wallpaper"
 msgstr ""
 
-#: Main.vala:2000 Main.vala:2008
+#: Main.vala:2001 Main.vala:2009
 msgid "Wallpaper saved"
 msgstr ""
 
@@ -759,4 +775,8 @@ msgstr ""
 
 #: EditWidgetWindow.vala:152
 msgid "[GAP_Y] Vertical distance from window border (in pixels)"
+msgstr ""
+
+#: DonationWindow.vala:138
+msgid "github site"
 msgstr ""
