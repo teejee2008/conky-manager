@@ -626,7 +626,8 @@ public class Main : GLib.Object {
 	public void update_startup_script(){
 		string startupScript = data_dir + "/conky-startup.sh";
 		string home = Environment.get_home_dir ();
-		unowned string desktop_session = Environment.get_variable ("DESKTOP_SESSION");
+        unowned string desktop_session = Environment.get_variable ("DESKTOP_SESSION");
+        if (desktop_session == "(null)") desktop_session = "";
 		bool atleast_one_widget_enabled = false;
 
 		string txt_start_conky = "";

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager2 2.0\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2022-06-02 10:07-0400\n"
+"POT-Creation-Date: 2023-06-02 22:55-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Current Wallpaper"
 msgstr ""
 
-#: Main.vala:1997
+#: Main.vala:2000
 msgid "Current wallpaper source path"
 msgstr ""
 
@@ -498,7 +498,7 @@ msgstr ""
 msgid "Save running widgets and current desktop wallpaper as new theme"
 msgstr ""
 
-#: Main.vala:1044
+#: Main.vala:1047
 msgid "Saved"
 msgstr ""
 
@@ -587,7 +587,7 @@ msgstr ""
 msgid "Start/Restart Widget in Terminal"
 msgstr ""
 
-#: Main.vala:925 Main.vala:947
+#: Main.vala:928 Main.vala:950
 msgid "Started"
 msgstr ""
 
@@ -611,7 +611,7 @@ msgstr ""
 msgid "Stop all running widgets"
 msgstr ""
 
-#: Main.vala:973 Utility.vala:767
+#: Main.vala:976 Utility.vala:767
 msgid "Stopped"
 msgstr ""
 
@@ -725,7 +725,7 @@ msgstr ""
 msgid "Wallpaper"
 msgstr ""
 
-#: Main.vala:2001 Main.vala:2009
+#: Main.vala:2004 Main.vala:2012
 msgid "Wallpaper saved"
 msgstr ""
 
