@@ -9,13 +9,24 @@ Simple tool for managing Conky configs.
 
 This is a fork of the old original Conky Manager by teejee2008(Tony George).
 
-This latest version supports Ubuntu 16-21 versions as well as Mint 18-20 and any other Ubuntu flavor or derivative.
+This latest version supports Ubuntu 16-22 versions as well as Mint 18-21.x and any other Ubuntu flavor or derivative.
 
 It also provides support for the newer lua-based conky and configuration files(v1.10)
 
 
 ## Installation
-Right now, the only installation method is to download and compile this source package, but it's only a few simple commands.
+
+**For Ubuntu and derivatives:**
+
+```bash
+sudo add-apt-repository ppa:teejee2008/foss
+sudo apt update
+sudo apt install conky-manager2
+```
+
+**Other Distributions**
+
+Right now, the alternate installation method is to download and compile this source package, but it's only a few simple commands. It will provide `make install` as well as building a `.deb`.
 
 Please see document [HOWTOBUILD.md](./HOWTOBUILD.md)
 
