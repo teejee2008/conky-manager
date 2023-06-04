@@ -35,7 +35,7 @@ cd conky-manager2
 ```
 make
 ```
-
+( follow instructions here to build a `.deb` file instead: https://gist.github.com/zcot/ff43f40ceaf970623bfd18ead1bd65b2 )
 ## install the finished program into the local file system:
 ```
 sudo make install
